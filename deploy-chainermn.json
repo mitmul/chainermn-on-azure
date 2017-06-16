@@ -118,7 +118,7 @@
       "[uri(deployment().properties.templateLink.uri, 'install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'setup_chainermn.yml')]"
     ],
-    "commandToExecute": "bash install-chainer.sh -m 1"
+    "commandToExecute": "bash install-chainer.sh"
   },
   "resources": [
     {
