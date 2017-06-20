@@ -197,7 +197,6 @@ nvidia_docker_ubuntu()
 setup_chainermn()
 {
 	setup_cuda8
-
 	if is_centos; then
 
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
