@@ -199,7 +199,7 @@ setup_chainermn()
 	setup_cuda8
 
 	if is_centos; then
-<<<<<<< HEAD
+
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
 		
 		sudo nvidia-smi -pm 1
@@ -312,8 +312,8 @@ setup_chainermn()
 	pip install cupy
 	pip install chainer
 	MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm					
->>>>>>> 375b70190a97518f5f387f30b701b81fe80d9dfe
+	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm				
+
 	fi
 
 	if is_ubuntu; then
