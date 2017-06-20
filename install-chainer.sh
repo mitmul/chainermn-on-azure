@@ -202,8 +202,7 @@ setup_chainermn()
 
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
 		yum install git-all
-		sudo nvidia-smi -pm 1
-		
+		sudo nvidia-smi -pm 1		
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 		  cd /opt
