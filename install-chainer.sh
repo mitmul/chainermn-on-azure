@@ -207,8 +207,8 @@ setup_chainermn()
 	fi
 	pip install --upgrade pip
 
-	wget https://raw.githubusercontent.com/xpillons/azure-hpc/dev/Compute-Grid-Infra/apps/chainer/setup_chainermn.yml
-	ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
+	#wget https://raw.githubusercontent.com/xpillons/azure-hpc/dev/Compute-Grid-Infra/apps/chainer/setup_chainermn.yml
+	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
 }
 
 mkdir -p /var/local
