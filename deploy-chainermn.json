@@ -116,9 +116,10 @@
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
     "scriptsToDownload": [
       "[uri(deployment().properties.templateLink.uri, 'install-chainer.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'setup_chainermn.yml')]"
+      "[uri(deployment().properties.templateLink.uri, 'setup_chainermn.yml')]",
+	  "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]"
     ],
-    "commandToExecute": "bash install-chainer.sh -m 1"
+    "commandToExecute": "bash install-chainer.sh -m 1;chainermn.sh"
   },
   "resources": [
     {
