@@ -4,7 +4,7 @@ log()
 {
 	echo "$1"
 }
-
+log "$0,$1,$2,$3"
 usage() { echo "Usage: $0 [-m ] " 1>&2; exit 1; }
 
 while getopts :m: optname; do
@@ -215,7 +215,7 @@ setup_chainermn()
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
-MGMT_HOSTNAME=$1
+MGMT_HOSTNAME=$3
 
 # User
 HPC_USER=hpcuser

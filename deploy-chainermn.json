@@ -80,6 +80,7 @@
     "natStartPort": 50000,
     "natEndPort": 51000,
     "natBackendPort": 22,
+    "masterName": "[parameters('masterName')]",
     "virtualNetworkName": "chainer-vnet",
     "subnetName": "chainer-subnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
@@ -130,7 +131,7 @@
       "[uri(deployment().properties.templateLink.uri, 'setup_chainermn.yml')]",
       "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]"
     ],
-    "commandToExecute": "bash install-chainer.sh -m 1"
+    "commandToExecute": "[concat('bash install-chainer.sh -m 1 ',variables('masterName'),';','bash chainermn.sh')]"
   },
   "resources": [
     {
