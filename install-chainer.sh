@@ -215,6 +215,7 @@ setup_chainermn()
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
+MGMT_HOSTNAME=$1
 
 # User
 HPC_USER=hpcuser
