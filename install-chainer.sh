@@ -1,4 +1,7 @@
 #!/bin/bash
+
+
+
 #############################################################################
 log()
 {
@@ -19,6 +22,19 @@ while getopts :m: optname; do
 		;;
   esac
 done
+
+# Shares
+SHARE_HOME=/share/home
+SHARE_SCRATCH=/share/scratch
+MASTER_NAME=$3
+NFS_MOUNT=/data
+NFS_ON_MASTER=/data
+
+# User
+HPC_USER=hpcuser
+HPC_UID=7007
+HPC_GROUP=hpc
+HPC_GID=7007
 
 is_ubuntu()
 {
@@ -212,28 +228,28 @@ setup_chainermn()
 	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
 }
 
-# Shares
-SHARE_HOME=/share/home
-SHARE_SCRATCH=/share/scratch
-MGMT_HOSTNAME=$3
-
-# User
-HPC_USER=hpcuser
-HPC_UID=7007
-HPC_GROUP=hpc
-HPC_GID=7007
 install_pkgs()
 {
     yum -y install epel-release
     yum -y install zlib zlib-devel bzip2 bzip2-devel bzip2-libs openssl openssl-devel openssl-libs gcc gcc-c++ nfs-utils rpcbind mdadm wget python-pip openmpi openmpi-devel automake autoconf
 }
+mount_nfs()
+{		
+	mkdir -p ${NFS_MOUNT}
 
+	log "mounting NFS on " ${MASTER_NAME}
+	showmount -e ${MASTER_NAME}
+	mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+	
+	echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+}
 setup_user()
 {
+    yum -y install nfs-utils nfs-utils-lib
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
 
-	echo "$MGMT_HOSTNAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+	echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
 	mount -a
 	mount
    
@@ -260,6 +276,7 @@ fi
 ##---Enable password-less login ---##
 install_pkgs
 setup_user
+mount_nfs
 ##---end ---##
 nvidia_drivers
 check_docker
