@@ -123,7 +123,7 @@ fi
 setup_disks
 mount_nfs
 setup_user
-setup_user2
+#setup_user2
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 exit 0
