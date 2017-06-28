@@ -212,13 +212,54 @@ setup_chainermn()
 	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
 }
 
+# Shares
+SHARE_HOME=/share/home
+SHARE_SCRATCH=/share/scratch
+
+# User
+HPC_USER=hpcuser
+HPC_UID=7007
+HPC_GROUP=hpc
+HPC_GID=7007
+install_pkgs()
+{
+    yum -y install epel-release
+    yum -y install zlib zlib-devel bzip2 bzip2-devel bzip2-libs openssl openssl-devel openssl-libs gcc gcc-c++ nfs-utils rpcbind mdadm wget python-pip openmpi openmpi-devel automake autoconf
+}
+
+setup_user()
+{
+    mkdir -p $SHARE_HOME
+    mkdir -p $SHARE_SCRATCH
+
+	echo "$MGMT_HOSTNAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+	mount -a
+	mount
+   
+    groupadd -g $HPC_GID $HPC_GROUP
+
+    # Don't require password for HPC user sudo
+    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Disable tty requirement for sudo
+    sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+
+	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+
+    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
+}
+
+
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
     echo "We're already configured, exiting..."
     exit 0
 fi
-
+##---Enable password-less login ---##
+install_pkgs
+setup_user
+##---end ---##
 nvidia_drivers
 check_docker
 

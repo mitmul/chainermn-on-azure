@@ -30,12 +30,6 @@ HPC_UID=7007
 HPC_GROUP=hpc
 HPC_GID=7007
 
-MASTER_NAME=`hostname`
-USERNAME=$1
-templatelink="$2"
-
-
-
 setup_disks()
 {
     mkdir -p $SHARE_HOME

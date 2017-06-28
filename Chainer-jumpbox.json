@@ -56,12 +56,10 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "adminUserName": "[parameters('adminUserName')]",
-    "templatelink": "[uri(deployment().properties.templateLink.uri, 'scripts')]",
-    "lustreInstall": "[concat('bash install_lustre.sh ', 'meta ', variables('templatelink'))]",
-    "virtualNetworkName": "grid-vnet",
+    "virtualNetworkName": "chainer-vnet",
     "networkInterfaceName": "[concat(parameters('virtualMachineName'), 'nic')]",
     "networkSecurityGroupName": "nsg-master",
-    "subnetName": "lustre-subnet",
+    "subnetName": "chainer-subnet",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
     "publicIPAddressName": "[concat(parameters('virtualMachineName'), 'pip')]",
@@ -238,10 +236,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]",
-            "[uri(deployment().properties.templateLink.uri, 'scripts/install_lustre.sh')]"
+            "[uri(deployment().properties.templateLink.uri, 'jumpbox-setup.sh')]"
           ],
-          "commandToExecute": "[concat('bash jumpbox-setup.sh ',variables('adminUserName'),'; ', variables('lustreInstall'))]"
+          "commandToExecute": "bash jumpbox-setup.sh"
         }
       }
     }
