@@ -236,7 +236,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'jumpbox-setup.sh')]"
+            "https://raw.githubusercontent.com/azmigproject/ChainerMN/Jumpbox/jumpbox-setup.sh"
           ],
           "commandToExecute": "bash jumpbox-setup.sh"
         }
