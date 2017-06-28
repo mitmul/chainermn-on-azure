@@ -97,7 +97,8 @@ setup_user2()
 
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
 
-    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
+    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
+	chown $HPC_USER:$HPC_GROUP $SHARE_APPS	
 
 }
 
