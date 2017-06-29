@@ -15,9 +15,8 @@ HPC_GID=7007
 #############################################################################
 log()
 {
-	echo "$1"
+	echo "$0,$1,$2,$3"
 }
-log "$0,$1,$2,$3"
 usage() { echo "Usage: $0 [-m ] [-s <masterName>] " 1>&2; exit 1; }
 
 while getopts :m:s: optname; do
