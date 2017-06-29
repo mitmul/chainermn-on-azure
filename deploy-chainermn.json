@@ -131,7 +131,7 @@
       "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'cn-setup.sh')]"
     ],
-    "commandToExecute": "[concat('bash cn-setup.sh -m ',variables('masterName'))]"
+    "commandToExecute": "[concat('bash install-chainer.sh -m 1 -s ',variables('masterName'))]"
   },
   "resources": [
     {
