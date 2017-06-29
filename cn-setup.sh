@@ -26,22 +26,7 @@ while getopts :m:S:s:q:n:c: optname; do
   case $optname in
     m)  # master name
 		export MASTER_NAME=${OPTARG}
-		;;
-    S)  # Shared Storage (beegfs, nfsonmaster)
-		export SHARED_STORAGE=${OPTARG}
-		;;
-    s)  # Scheduler (pbspro)
-		export SCHEDULER=${OPTARG}
-		;;
-    n)  # monitoring
-		export MONITORING=${OPTARG}
-		;;
-    c)  # post install command
-		export POST_INSTALL_COMMAND=${OPTARG}
-		;;
-    q)  # queue name
-		export QNAME=${OPTARG}
-		;;
+		;;    
 	*)
 		usage
 		;;
