@@ -274,9 +274,9 @@ if [ -e "$SETUP_MARKER" ]; then
     exit 0
 fi
 ##---Enable password-less login ---##
-install_pkgs
-setup_user
-mount_nfs
+#install_pkgs
+#setup_user
+#mount_nfs
 ##---end ---##
 nvidia_drivers
 check_docker
