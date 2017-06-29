@@ -129,9 +129,10 @@
     "scriptsToDownload": [
       "[uri(deployment().properties.templateLink.uri, 'install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'setup_chainermn.yml')]",
-      "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]"
+      "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]",
+      "https://raw.githubusercontent.com/xpillons/azure-hpc/master/Compute-Grid-Infra/cn-setup.sh"
     ],
-    "commandToExecute": "[concat('bash install-chainer.sh -m 1 ',variables('masterName'),';','bash chainermn.sh')]"
+    "commandToExecute": "bash cn-setup.sh -m mastername -S nfsonmaster hostname"
   },
   "resources": [
     {
