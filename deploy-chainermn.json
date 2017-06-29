@@ -132,7 +132,7 @@
       "[uri(deployment().properties.templateLink.uri, 'chainermn.sh')]",
       "https://raw.githubusercontent.com/xpillons/azure-hpc/master/Compute-Grid-Infra/cn-setup.sh"
     ],
-    "commandToExecute": "bash cn-setup.sh -m mastername -S nfsonmaster hostname"
+    "commandToExecute": "bash cn-setup.sh -m linuxjump -S nfsonmaster hostname"
   },
   "resources": [
     {
