@@ -202,7 +202,7 @@ if [ -n "$POST_INSTALL_COMMAND" ]; then
 	eval $POST_INSTALL_COMMAND
 fi
 # Create marker file so we know we're configured
-touch $SETUP_MARKER
+#touch $SETUP_MARKER
 
-shutdown -r +1 &
+#shutdown -r +1 &
 exit 0
