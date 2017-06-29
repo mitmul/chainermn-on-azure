@@ -62,11 +62,7 @@ mount_nfs()
 setup_user()
 {
 	if is_centos; then
-		yum -y install nfs-utils nfs-utils-lib
-	elif is_suse; then
-		zypper -n install nfs-client
-	elif is_ubuntu; then
-		apt-get -qy install nfs-common 
+		yum -y install nfs-utils nfs-utils-lib	
 	fi
 
     mkdir -p $SHARE_HOME
@@ -103,5 +99,5 @@ fi
 setup_user
 mount_nfs
 # Create marker file so we know we're configured
-#touch $SETUP_MARKER
+touch $SETUP_MARKER
 exit 0
