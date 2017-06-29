@@ -20,7 +20,7 @@ log()
 log "$0,$1,$2,$3"
 usage() { echo "Usage: $0 [-m ] [-s <masterName>] " 1>&2; exit 1; }
 
-while getopts :m: optname; do
+while getopts :m:s: optname; do
   log "Option $optname set with value ${OPTARG}"
   
   case $optname in
