@@ -24,7 +24,7 @@ To setup ChainerMN two steps need to be executed :
 2. Provision the compute nodes where ChainerMN is setup
 
 ## Create the jumpbox
-The template __deploy-master.json__ will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
+The template __deploy-jumpbox.json__ will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
 
 You have to provide these parameters to the template :
 * _Location_ : Select the location where NC series is available(for example East US,South Central US). 
