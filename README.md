@@ -16,7 +16,7 @@ Table of Contents
  
 # Compute grid in Azure
 
-These templates will build a compute grid made by a single master VMs running the management services, multiple VM Scaleset for deploying compute nodes, and optionally a set of nodes to run [BeeGFS](http://www.beegfs.com/) as a parallel shared file system. Ganglia is an option for monitoring the cluster load, and [PBS Pro](http://www.pbspro.org/) can optionally be setup for job scheduling.
+These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for deploying ChainerMN.
 
 # Deployment steps
 To setup ChainerMN two steps need to be executed :
