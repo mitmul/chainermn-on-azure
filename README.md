@@ -1,8 +1,3 @@
-## Deploy jumpbox
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-jumpbox.json)
-
-## Deploy ChainerMN
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-chainermn.json)
 
 
 Table of Contents
@@ -14,9 +9,9 @@ Table of Contents
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
  
-# Compute grid in Azure
+# ChainerMN on Azure
 
-These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for deploying ChainerMN.
+These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
 
 # Deployment steps
 To setup ChainerMN two steps need to be executed :
@@ -33,26 +28,32 @@ You have to provide these parameters to the template :
 * _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
 
+## Deploy jumpbox
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-jumpbox.json)
+
 ### Check your deployment
-Login into the jumpbox, do "sudo su hpcuser" to switch from adminuser to hpcuser.
+Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcuser.
+
 ## Provision the compute nodes
-Compute nodes are provisioned using VM Scalesets, each set can have up to 100 VMs. You will have to provide the number of VM per scalesets and how many sets you want to create. All scalesets will contains the same VM instances.
 
 You have to provide these parameters to the template :
 * _Location_ : Select the same location where jumpbox is deployed.
-* _Virtual Machine Size_ : Select from NC series(Standerd_NC6, Standerd_NC12, Standerd_NC24, Standerd_NC24r)
-* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) however we tested ChainerMN on CentOS-HPC_7.3 so recommended CentOS-HPC_7.3.
+* _Virtual Machine Size_ : Select from NC series(standard_NC6, standard_NC12, standard_NC24, standard_NC24r)
+* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) recommended CentOS-HPC_7.3.
 * _VM prefix Name_ : It is vm prefix.
 * _Instance Count_ : it is the no. of instances inside a VMSS.
 * _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
 * _Master Name_ : The short name of the Master VM
-* _Admin User Name_ : number of VM scaleset to create. Default is 1, maximum is 100.
+* _Admin User Name_ : This is the name of the administrator account to create on the VM.
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
+
+## Deploy ChainerMN
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-chainermn.json)
 
 ## Validating MPI
 Intel MPI and Infiniband are only available for A8/A9 and H16r instances. A default user named **hpcuser** has been created on the compute nodes and on the master node with passwordless access so it can be immediately used to run MPI across nodes.
 
-To begin, you need first to ssh on the master and then switch to the **hpcuser** user. From there, ssh one one of the compute nodes, and configure MPI by following the instructions from [here](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-linux-classic-rdma-cluster#configure-intel-mpi)
+To begin, you need first to ssh on the master and then switch to the **hpcuser** user. From there, ssh to one of the compute nodes, and configure MPI by following the instructions from [here](https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-linux-classic-rdma-cluster#configure-intel-mpi)
 
 To run the 2 node pingpong test, execute the following command
 
