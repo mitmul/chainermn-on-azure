@@ -34,7 +34,7 @@ You have to provide these parameters to the template :
 ### Check your deployment
 Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcuser.
 
-## Provision the compute nodes
+## Provision the ChainerMN nodes
 
 You have to provide these parameters to the template :
 * _Location_ : Select the same location where jumpbox is deployed.
