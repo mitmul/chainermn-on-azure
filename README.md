@@ -27,10 +27,10 @@ To setup ChainerMN two steps need to be executed :
 The template __deploy-master.json__ will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
 
 You have to provide these parameters to the template :
-* _Location_ : Select the location where NC series is available(East US,South Central US). 
-* _Virtual Machine Name_ : To specify the shared storage to use. Allowed values are : none, beegfs, nfsonmaster.
-* _Virtual Machine Size_ : the job scheduler to be setup. Allowed values are : none, pbspro
-* _Admin Username_ : This is the name of the administrator account to create on the VM
+* _Location_ : Select the location where NC series is available(for example East US,South Central US). 
+* _Virtual Machine Name_ : Enter the virtual machine name. 
+* _Virtual Machine Size_ : Select virtual machine size from the dropdown.
+* _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
 
 ### Check your deployment
@@ -39,12 +39,12 @@ You have to provide these parameters to the template :
 Compute nodes are provisioned using VM Scalesets, each set can have up to 100 VMs. You will have to provide the number of VM per scalesets and how many sets you want to create. All scalesets will contains the same VM instances.
 
 You have to provide these parameters to the template :
-* _Location_ : Select the location where NC series is available(East US,South Central US)
+* _Location_ : Select the same location where jumpbox is deployed.
 * _Virtual Machine Size_ : Select from NC series(Standerd_NC6, Standerd_NC12, Standerd_NC24, Standerd_NC24r)
-* _VM Image_ : default is **none**. Allowed values are (pbspro, none)
-* _VM prefix Name_ : default is **ganglia**. Allowed values are (ganglia, none)
-* _Instance Count_ : OS to use for compute nodes. Default and recommended value is **CentOS_7.2**
-* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET
+* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) however we tested ChainerMN on CentOS-HPC_7.3 so recommended CentOS-HPC_7.3.
+* _VM prefix Name_ : It is vm prefix.
+* _Instance Count_ : it is the no. of instances inside a VMSS.
+* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
 * _Master Name_ : The short name of the Master VM
 * _Admin User Name_ : number of VM scaleset to create. Default is 1, maximum is 100.
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
