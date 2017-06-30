@@ -34,7 +34,7 @@ You have to provide these parameters to the template :
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
 
 ### Check your deployment
-
+Login into the jumpbox, do "sudo su hpcuser" to switch from adminuser to hpcuser.
 ## Provision the compute nodes
 Compute nodes are provisioned using VM Scalesets, each set can have up to 100 VMs. You will have to provide the number of VM per scalesets and how many sets you want to create. All scalesets will contains the same VM instances.
 
