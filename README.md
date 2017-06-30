@@ -23,12 +23,6 @@ Table of Contents
 
 These templates will build a compute grid made by a single master VMs running the management services, multiple VM Scaleset for deploying compute nodes, and optionally a set of nodes to run [BeeGFS](http://www.beegfs.com/) as a parallel shared file system. Ganglia is an option for monitoring the cluster load, and [PBS Pro](http://www.pbspro.org/) can optionally be setup for job scheduling.
 
-
-# VM Infrastructure
-The following diagram shows the overall Compute, Storage and Network infrastructure which is going to be provisioning within Azure to support running HPC applications.
-
-![Grid Infrastructure](doc/Infra.PNG)
-
 # Deployment steps
 To setup ChainerMN two steps need to be executed :
 1. Create the jumpbox
@@ -38,8 +32,8 @@ To setup ChainerMN two steps need to be executed :
 The template __deploy-master.json__ will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
 
 You have to provide these parameters to the template :
-* _Location_ : Location 
-* _Virtual Machine Name_ : to specify the shared storage to use. Allowed values are : none, beegfs, nfsonmaster.
+* _Location_ : Select the location where NC series is available(East US,South Central US). 
+* _Virtual Machine Name_ : To specify the shared storage to use. Allowed values are : none, beegfs, nfsonmaster.
 * _Virtual Machine Size_ : the job scheduler to be setup. Allowed values are : none, pbspro
 * _Admin Username_ : This is the name of the administrator account to create on the VM
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
@@ -50,21 +44,15 @@ You have to provide these parameters to the template :
 Compute nodes are provisioned using VM Scalesets, each set can have up to 100 VMs. You will have to provide the number of VM per scalesets and how many sets you want to create. All scalesets will contains the same VM instances.
 
 You have to provide these parameters to the template :
-* _VMsku_ : Instance type to provision. Default is **Standard_D3_v2**
-* _sharedStorage_ : default is **none**. Allowed values are (nfsonmaster, beegfs, none)
-* _scheduler_ : default is **none**. Allowed values are (pbspro, none)
-* _monitoring_ : default is **ganglia**. Allowed values are (ganglia, none)
-* _computeNodeImage_ : OS to use for compute nodes. Default and recommended value is **CentOS_7.2**
-* _vmSSPrefix_ : 8 characters prefix to use to name the compute nodes. The naming pattern will be **prefixAABBBBBB** where _AA_ is two digit number of the scaleset and _BBBBBB_ is the 8 hexadecimal value inside the Scaleset
-* _instanceCountPerVMSS_ : number of VMs instance inside a single scaleset. Default is 2, maximum is 100
-* _numberOfVMSS_ : number of VM scaleset to create. Default is 1, maximum is 100
-* _RGvnetName_ : The name of the Resource Group used to deploy the Master VM and the VNET.
-* _adminUsername_ : This is the name of the administrator account to create on the VM. It is recommended to use the same than for the Master VM.
-* _adminPassword_ : Password to associate to the administrator account. It is highly encourage to use SSH authentication and passwordless instead.
-* _sshKeyData_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
-* _masterName_ : The short name of the Master VM
-* _postInstallCommand_ : a post installation command to launch after povisioning. This command needs to be encapsulated in quotes, for example **'bash /data/postinstall.sh'**.
-* _imageId_ : Specify the resource ID of the image to be used in the format **/subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroup}/providers/Microsoft.Compute/images/{ImageName}** this value is only used when the _computeNodeImage_ is set to **CustomLinux** or **CustomWindows**
+* _Location_ : Select the location where NC series is available(East US,South Central US)
+* _Virtual Machine Size_ : Select from NC series(Standerd_NC6, Standerd_NC12, Standerd_NC24, Standerd_NC24r)
+* _VM Image_ : default is **none**. Allowed values are (pbspro, none)
+* _VM prefix Name_ : default is **ganglia**. Allowed values are (ganglia, none)
+* _Instance Count_ : OS to use for compute nodes. Default and recommended value is **CentOS_7.2**
+* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET
+* _Master Name_ : The short name of the Master VM
+* _Admin User Name_ : number of VM scaleset to create. Default is 1, maximum is 100.
+* _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
 
 ## Validating MPI
 Intel MPI and Infiniband are only available for A8/A9 and H16r instances. A default user named **hpcuser** has been created on the compute nodes and on the master node with passwordless access so it can be immediately used to run MPI across nodes.
@@ -150,35 +138,6 @@ You should expect an output as the one below
 
 
     # All processes entering MPI_Finalize
-
-## Running a Pallas job with PBS Pro
-
-ssh on the master node and switch to the **hpcuser** user. Then change directory to home
-
-    sudo su hpcuser
-    cd
-
-create a shell script named **pingpong.sh** with the content listed below
-
-    #!/bin/bash
-
-    # set the number of nodes and processes per node
-    #PBS -l nodes=2:ppn=1
-
-    # set name of job
-    #PBS -N mpi-pingpong
-    source /opt/intel/impi/5.1.3.181/bin64/mpivars.sh
-
-    mpirun -env I_MPI_FABRICS=dapl -env I_MPI_DAPL_PROVIDER=ofa-v2-ib0 -env I_MPI_DYNAMIC_CONNECTION=0 IMB-MPI1 pingpong
-
-Then submit a job
-
-    qsub pingpong.sh
-
-The job output will be written in the current directory in files named **mpi-pingpong.e*** and **mpi-pingpong.o***
-
-The **mpi-pingpong.o*** file should contains the MPI pingpong output as shown above when doing the manual test.
-
 
 ____
 
