@@ -1,24 +1,19 @@
 ## Deploy jumpbox
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2FChainer-jumpbox.json)
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-jumpbox.json)
 
 ## Deploy ChainerMN
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2FJumpbox%2Fdeploy-chainermn.json)
 
 
-<!--## Deploy Chainer
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-chainer.json)-->
-
 Table of Contents
 =================
 * [Compute grid in Azure](#compute-grid-in-azure)
-* [VM Infrastructure](#vm-infrastructure)  
 * [Deployment steps](#deployment-steps)
   * [Create the jumpbox](#create-the-jumpbox)
   * [Provision the compute nodes](#provision-the-compute-nodes)
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
-  * [Running a Pallas job with PBS Pro](#running-a-pallas-job-with-pbs-pro)
-
+ 
 # Compute grid in Azure
 
 These templates will build a compute grid made by a single master VMs running the management services, multiple VM Scaleset for deploying compute nodes, and optionally a set of nodes to run [BeeGFS](http://www.beegfs.com/) as a parallel shared file system. Ganglia is an option for monitoring the cluster load, and [PBS Pro](http://www.pbspro.org/) can optionally be setup for job scheduling.
