@@ -159,8 +159,7 @@
             "name": "LoadBalancerFrontEnd",
             "properties": {
               "publicIPAddress": {
-                "id": "[variables('publicIPAddressID')]"
-              }
+                              }
             }
           }
         ],
