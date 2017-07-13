@@ -19,7 +19,7 @@ log()
 }
 usage() { echo "Usage: $0 [-s <masterName>] " 1>&2; exit 1; }
 
-while getopts :s: optname; do
+while getopts :m:s: optname; do
   log "Option $optname set with value ${OPTARG}"
   
   case $optname in
@@ -35,6 +35,16 @@ is_centos()
 {
 	python -mplatform | grep -qi CentOS
 	return $?
+}
+mount_nfs()
+{
+	log "install NFS"
+	mkdir -p ${NFS_MOUNT}
+	log "mounting NFS on " ${MASTER_NAME}
+	showmount -e ${MASTER_NAME}
+	mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+	
+	echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
 }
 setup_user()
 {
@@ -60,16 +70,6 @@ setup_user()
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
 
     chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
-}
-mount_nfs()
-{
-	log "install NFS"	
-	mkdir -p ${NFS_MOUNT}
-	log "mounting NFS on " ${MASTER_NAME}
-	showmount -e ${MASTER_NAME}
-	mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
-	
-	echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
 }
 base_pkgs_centos()
 {
@@ -112,7 +112,9 @@ setup_chainermn()
 {
 	setup_cuda8
 	if is_centos; then
-		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm				
+
+		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
+				
 	fi	
 	#wget https://raw.githubusercontent.com/xpillons/azure-hpc/dev/Compute-Grid-Infra/apps/chainer/setup_chainermn.yml
 	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
