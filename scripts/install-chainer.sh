@@ -113,11 +113,9 @@ setup_chainermn()
 	setup_cuda8
 	if is_centos; then
 
-		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
+		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170426.x86_64.rpm
 				
 	fi	
-	#wget https://raw.githubusercontent.com/xpillons/azure-hpc/dev/Compute-Grid-Infra/apps/chainer/setup_chainermn.yml
-	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
 }
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
