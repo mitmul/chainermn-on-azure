@@ -17,16 +17,13 @@ log()
 {
 	echo "$0,$1,$2,$3"
 }
-usage() { echo "Usage: $0 [-m ] [-s <masterName>] " 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-s <masterName>] " 1>&2; exit 1; }
 
 while getopts :m:s: optname; do
   log "Option $optname set with value ${OPTARG}"
   
   case $optname in
-    m)  # master name
-		export CHAINER_MN=${OPTARG}
-		;;
-    s)  # master name
+       s)  # master name
 		export MASTER_NAME=${OPTARG}
 		;;
 	*)
@@ -80,19 +77,6 @@ setup_user()
 
     chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
 }
-
-check_docker()
-{
-	log "check if docker is installed"
-	docker
-	if [ $? -eq 0 ]
-	then
-		export CHAINERONDOCKER=1
-	else
-		export CHAINERONDOCKER=0
-	fi
-}
-
 base_pkgs_centos()
 {
 	# don't do update as it will break the NVidia drivers
@@ -130,45 +114,6 @@ setup_cuda8_centos()
 
 	nvidia-smi
 }
-
-setup_numpy()
-{
-	log "setup_numpy"
-	pip3 install numpy
-}
-
-setup_cudnn()
-{
-	log "setup_cudnn"
-	curl -fsSL http://developer.download.nvidia.com/compute/redist/cudnn/v5.1/cudnn-8.0-linux-x64-v5.1.tgz -O
-	tar -xzf cudnn-8.0-linux-x64-v5.1.tgz -C /usr/local
-	rm cudnn-8.0-linux-x64-v5.1.tgz
-}
-
-setup_chainer()
-{
-	log "setup_chainer"
-	pip3 install chainer -vvvv
-}
-
-nvidia_docker()
-{
-	log "nvidia_docker"
-	if is_centos; then
-		nvidia_docker_centos
-	fi
-}
-
-# from https://github.com/NVIDIA/nvidia-docker/wiki/Deploy-on-Azure
-nvidia_docker_centos()
-{
-	# Install nvidia-docker and nvidia-docker-plugin
-	wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker-1.0.1-1.x86_64.rpm
-	rpm -i /tmp/nvidia-docker*.rpm && rm /tmp/nvidia-docker*.rpm
-	systemctl start nvidia-docker
-}
-
-# from https://github.com/NVIDIA/nvidia-docker/wiki/Deploy-on-Azure
 setup_chainermn()
 {
 	setup_cuda8
@@ -177,8 +122,6 @@ setup_chainermn()
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.0.144-20170426.x86_64.rpm
 				
 	fi	
-	pip install --upgrade pip
-
 	#wget https://raw.githubusercontent.com/xpillons/azure-hpc/dev/Compute-Grid-Infra/apps/chainer/setup_chainermn.yml
 	#ansible-playbook -i "localhost," -c local setup_chainermn.yml -vv
 }
@@ -197,22 +140,7 @@ fi
 setup_user
 mount_nfs
 check_docker
-
-if [ "$CHAINER_MN" == "1" ]; then
-	setup_chainermn
-else
-	if [ "$CHAINERONDOCKER" == "1" ]; then
-		nvidia_docker
-	else
-		base_pkgs_centos
-		setup_python_centos
-		setup_cuda8
-		setup_numpy
-		setup_cudnn
-		setup_chainer
-	fi
-fi
-
+setup_chainermn
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 exit 0

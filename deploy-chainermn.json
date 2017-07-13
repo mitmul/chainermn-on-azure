@@ -41,7 +41,9 @@
         "Standard_L32s",
         "Standard_H8",
         "Standard_H16mr",
-        "Standard_H16r"
+        "Standard_H16r",
+        "Standard_A8",
+        "Standard_A9"
       ],
       "metadata": {
         "description": "GPU VM sku to use for the VM"
@@ -152,7 +154,7 @@
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]"
     ],
-    "commandToExecute": "[concat('bash install-chainer.sh -m 1 -s ',variables('masterName'),';','bash install-chainermn.sh')]"
+    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"
   },
   "resources": [
     {
