@@ -3,7 +3,7 @@
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
-NFS_ON_MASTER=/share/home
+NFS_ON_MASTER=/data
 NFS_MOUNT=/data
 
 # User
@@ -19,14 +19,14 @@ log()
 }
 usage() { echo "Usage: $0 [-s <masterName>] " 1>&2; exit 1; }
 
-while getopts :m:s: optname; do
+while getopts :s: optname; do
   log "Option $optname set with value ${OPTARG}"
   
   case $optname in
        s)  # master name
 		export MASTER_NAME=${OPTARG}
 		;;
-	*)
+	   *)
 		usage
 		;;
   esac
