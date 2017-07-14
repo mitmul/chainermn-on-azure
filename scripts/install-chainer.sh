@@ -3,7 +3,7 @@
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
-NFS_ON_MASTER=/data
+NFS_ON_MASTER=/share/home
 NFS_MOUNT=/data
 
 # User
