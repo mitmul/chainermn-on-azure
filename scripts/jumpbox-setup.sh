@@ -67,7 +67,7 @@ setup_user()
 	echo "    PasswordAuthentication no" >> $SHARE_HOME/$HPC_USER/.ssh/config
 
 	# Fix .ssh folder ownership
-	#chown -R $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER
+	chown -R $HPC_USER:$HPC_GROUP $SHARE_HOME/$HPC_USER
 
 	# Fix permissions
 	chmod 700 $SHARE_HOME/$HPC_USER/.ssh
@@ -81,7 +81,7 @@ setup_user()
 install_intelmpi()
 {
   cd /opt
-  #sudo mv intel intel_old
+  sudo mv intel intel_old
   sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
   sudo tar zxvf l_mpi_2017.3.196.tgz
   sudo rm -rf l_mpi_2017.3.196.tgz
