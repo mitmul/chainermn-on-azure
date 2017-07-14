@@ -71,12 +71,6 @@ setup_user()
 
     chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
 }
-base_pkgs_centos()
-{
-	# don't do update as it will break the NVidia drivers
-	#yum -x WALinuxAgent -y update
-	yum -y install gcc-c++
-}
 setup_python_centos()
 {
 	yum -y install epel-release
