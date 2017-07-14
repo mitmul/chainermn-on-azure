@@ -104,7 +104,7 @@ setup_cuda8_centos()
 }
 setup_chainermn()
 {
-	setup_cuda8
+	#setup_cuda8
 	if is_centos; then
 		#yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170426.x86_64.rpm
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm				
