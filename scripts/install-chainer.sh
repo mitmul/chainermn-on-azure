@@ -92,7 +92,7 @@ setup_cuda8()
 setup_cuda8_centos()
 {
 	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
-	rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 	yum -y install dkms
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
 	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
@@ -124,6 +124,7 @@ if is_centos; then
 fi
 setup_user
 mount_nfs
+yum -y update
 setup_chainermn
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
