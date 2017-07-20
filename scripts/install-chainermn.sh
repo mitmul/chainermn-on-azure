@@ -1,11 +1,27 @@
+#!/bin/bash
+
+#############################################################################
+
+sudo yum update -y
+sudo yum groupinstall -y "Infiniband Support"
+
+check_infini()
+{
+  ibv_devices | grep mlx4_0
+  return $?
+}
 check_gpu()
 {
-	lspci | grep NVIDIA
-	return $?
+  lspci | grep NVIDIA
+  return $?
 }
 if check_gpu
 then
-yum -y install git-all
+if check_infini
+then
+ #Code to setup ChainerMN on GPU based machine with infinband
+
+ yum -y install git-all
 sudo nvidia-smi -pm 1
 
 if [ ! -d /opt/l_mpi_2017.3.196 ]; then
@@ -60,7 +76,20 @@ PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 pip install chainer
 MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
-shutdown -r +1
+
+else 
+echo "Only GPU"
+fi
+else
+if check_infini
+then
+echo "CPU with Infini"
+else
+echo "CPU only"
+fi
+fi
+
 else
 echo "Machine is CPU based"
 fi
+shutdown -r +1
