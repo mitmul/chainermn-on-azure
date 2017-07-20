@@ -43,7 +43,10 @@
         "Standard_H16mr",
         "Standard_H16r",
         "Standard_A8",
-        "Standard_A9"
+        "Standard_A9",
+        "Standard_NV24",
+        "Standard_NV12",
+        "Standard_NV6"
       ],
       "metadata": {
         "description": "GPU VM sku to use for the VM"
