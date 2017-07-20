@@ -44,6 +44,8 @@
         "Standard_H16r",
         "Standard_A8",
         "Standard_A9",
+        "Standard_A10",
+        "Standard_A11",
         "Standard_NV24",
         "Standard_NV12",
         "Standard_NV6"
