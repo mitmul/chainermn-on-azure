@@ -177,7 +177,14 @@
               "createOption": "FromImage",
               "caching": "ReadOnly"
             },
-            "dataDisks": []
+            "dataDisks": [
+              {
+                "lun": 1,
+                "createOption": "Empty",
+                "caching": "ReadOnly",
+                "diskSizeGB": 50
+              }
+            ]
           },
           "extensionProfile": {
             "extensions": [
