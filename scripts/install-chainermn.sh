@@ -81,14 +81,14 @@ then
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 
 	else 
-	echo "Only GPU"
+		echo "Only GPU"
 	fi
 else
 	if check_infini;
 	then
 		echo "CPU with Infini"
 	else
-	echo "CPU only"
+		echo "CPU only"
 	fi
 fi
 shutdown -r +1
