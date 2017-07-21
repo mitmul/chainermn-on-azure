@@ -1,9 +1,7 @@
 #!/bin/bash
 
 #############################################################################
-
-sudo yum update -y
-sudo yum groupinstall -y "Infiniband Support"
+yum install -y libibverbs-utils
 
 check_infini()
 {
@@ -20,9 +18,14 @@ then
 if check_infini
 then
  #Code to setup ChainerMN on GPU based machine with infinband
-
  yum -y install git-all
-sudo nvidia-smi -pm 1
+ sudo nvidia-smi -pm 1
+ sudo yum groupinstall -y "Infiniband Support"
+ sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
+ sudo chkconfig rdma on
+ sudo chkconfig opensm on
+ sudo service rdma start
+ sudo service opensm start
 
 if [ ! -d /opt/l_mpi_2017.3.196 ]; then
   cd /opt

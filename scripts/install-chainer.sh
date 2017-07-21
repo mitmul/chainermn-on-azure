@@ -125,7 +125,7 @@ if is_centos; then
 fi
 setup_user
 mount_nfs
-#yum update -y
+sudo yum update -y
 setup_chainermn
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
