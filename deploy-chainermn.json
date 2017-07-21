@@ -179,7 +179,7 @@
             },
             "dataDisks": [
               {
-                "lun": 1,
+                "lun": 2,
                 "createOption": "Empty",
                 "caching": "ReadOnly",
                 "diskSizeGB": 2048
