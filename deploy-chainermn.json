@@ -182,7 +182,7 @@
                 "lun": 1,
                 "createOption": "Empty",
                 "caching": "ReadOnly",
-                "diskSizeGB": 50
+                "diskSizeGB": 2048
               }
             ]
           },
