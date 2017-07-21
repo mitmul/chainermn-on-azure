@@ -1,22 +1,9 @@
 #!/bin/bash
 
 #############################################################################
-yum install -y libibverbs-utils
-
-check_infini()
+setup_gpu_infiniband()
 {
-  ibv_devices | grep mlx4_0
-  return $?
-}
-check_gpu()
-{
-  lspci | grep NVIDIA
-  return $?
-}
-if check_gpu;then
-	if check_infini;then
-		#Code to setup ChainerMN on GPU based machine with infinband
-		yum -y install git-all
+yum -y install git-all
 		sudo nvidia-smi -pm 1		
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
@@ -71,7 +58,24 @@ if check_gpu;then
 		pip install chainer
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+}
 
+yum install -y libibverbs-utils
+
+check_infini()
+{
+  ibv_devices | grep mlx4_0
+  return $?
+}
+check_gpu()
+{
+  lspci | grep NVIDIA
+  return $?
+}
+if check_gpu;then
+	if check_infini;then
+		#Code to setup ChainerMN on GPU based machine with infinband
+		setup_gpu_infiniband
 	else 
 		echo "Only GPU"
 	fi
