@@ -3,7 +3,7 @@
 #############################################################################
 setup_gpu_infiniband()
 {
-yum -y install git-all
+        yum -y install git-all
 		sudo nvidia-smi -pm 1		
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
@@ -76,6 +76,12 @@ if check_gpu;then
 	if check_infini;then
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_gpu_infiniband
+		sudo yum groupinstall -y "Infiniband Support"
+		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
+		sudo chkconfig rdma on
+		sudo chkconfig opensm on
+		sudo service rdma start
+		sudo service opensm start
 	else 
 		echo "Only GPU"
 	fi
