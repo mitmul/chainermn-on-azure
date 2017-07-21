@@ -12,15 +12,13 @@ if [ ! -d /opt/l_mpi_2017.3.196 ]; then
   sudo ./install.sh --silent silent.cfg
 fi
 
-if grep -q "I_MPI" ~/.bashrc; then :; else
-  echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-  echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-  echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-  echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-  echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
-  echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-  echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-fi
+echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 
 if [ ! -d /opt/anaconda3 ]; then
   cd /opt
@@ -30,18 +28,14 @@ if [ ! -d /opt/anaconda3 ]; then
   source /opt/anaconda3/bin/activate
 fi
 
-if grep -q "anaconda" ~/.bashrc; then :; else
-  echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
-fi
+echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
 
 if [ ! -d /opt/nccl ]; then
   cd /opt && git clone https://github.com/NVIDIA/nccl.git
   cd nccl && sudo make -j && sudo make install
 fi
 
-if grep -q "LD_LIBRARY_PATH" ~/.bashrc; then :; else
-  echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
-fi
+echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 
 if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
   cd /usr/local
