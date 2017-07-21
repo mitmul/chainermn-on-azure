@@ -17,13 +17,7 @@ if check_gpu;then
 	if check_infini;then
 		#Code to setup ChainerMN on GPU based machine with infinband
 		yum -y install git-all
-		sudo nvidia-smi -pm 1
-		sudo yum groupinstall -y "Infiniband Support"
-		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
-		sudo chkconfig rdma on
-		sudo chkconfig opensm on
-		sudo service rdma start
-		sudo service opensm start
+		sudo nvidia-smi -pm 1		
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
