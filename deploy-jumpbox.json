@@ -3,7 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "jumpbox"
     },
     "virtualMachineSize": {
       "type": "string",
