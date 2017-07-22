@@ -175,7 +175,8 @@
             "imageReference": "[variables('vmOSSettings').imageReference]",
             "osDisk": {
               "createOption": "FromImage",
-              "caching": "ReadOnly"
+              "caching": "ReadOnly",
+              "diskSizeGB": 2048
             },
             "dataDisks": [
               {
