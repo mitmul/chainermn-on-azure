@@ -64,7 +64,7 @@ yum install -y libibverbs-utils
 
 check_infini()
 {
-  ibv_devices | grep mlx4_0
+  ibv_devices | grep mlx4
   return $?
 }
 check_gpu()
