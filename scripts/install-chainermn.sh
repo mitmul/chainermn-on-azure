@@ -12,13 +12,13 @@ if [ ! -d /opt/l_mpi_2017.3.196 ]; then
   sudo ./install.sh --silent silent.cfg
 fi
 
-echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
-echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+echo 'export I_MPI_FABRICS=shm:dapl' >> /share/home/.bashrc
+echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /share/home/.bashrc
+echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /share/home/.bashrc
+echo 'export I_MPI_FALLBACK_DEVICE=0' >> /share/home/.bashrc
+echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> /share/home/.bashrc
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/.bashrc
+echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/.bashrc
 
 if [ ! -d /opt/anaconda3 ]; then
   cd /opt
