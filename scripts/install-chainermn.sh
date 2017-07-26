@@ -12,13 +12,15 @@ if [ ! -d /opt/l_mpi_2017.3.196 ]; then
   sudo ./install.sh --silent silent.cfg
 fi
 
-echo 'export I_MPI_FABRICS=shm:dapl' >> /share/home/hpcuser/.bashrc
-echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /share/home/hpcuser/.bashrc
-echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /share/home/hpcuser/.bashrc
-echo 'export I_MPI_FALLBACK_DEVICE=0' >> /share/home/hpcuser/.bashrc
-echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> /share/home/hpcuser/.bashrc
-echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/hpcuser/.bashrc
-echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/hpcuser/.bashrc
+if grep -q "I_MPI" /share/home/hpcuser/.bashrc; then :; else
+  sudo echo 'export I_MPI_FABRICS=shm:dapl' >> /share/home/hpcuser/.bashrc
+  sudo echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /share/home/hpcuser/.bashrc
+  sudo echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /share/home/hpcuser/.bashrc
+  sudo echo 'export I_MPI_FALLBACK_DEVICE=0' >> /share/home/hpcuser/.bashrc
+  sudo echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> /share/home/hpcuser/.bashrc
+  sudo echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/hpcuser/.bashrc
+  sudo echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/hpcuser/.bashrc
+fi
 
 if [ ! -d /opt/anaconda3 ]; then
   cd /opt
@@ -28,14 +30,18 @@ if [ ! -d /opt/anaconda3 ]; then
   source /opt/anaconda3/bin/activate
 fi
 
-echo 'source /opt/anaconda3/bin/activate' >> /share/home/hpcuser/.bashrc
+if grep -q "anaconda" /share/home/hpcuser/.bashrc; then :; else
+  sudo echo 'source /opt/anaconda3/bin/activate' >> /share/home/hpcuser/.bashrc
+fi
 
 if [ ! -d /opt/nccl ]; then
   cd /opt && git clone https://github.com/NVIDIA/nccl.git
   cd nccl && sudo make -j && sudo make install
 fi
 
-echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> /share/home/hpcuser/.bashrc
+if grep -q "LD_LIBRARY_PATH" /share/home/hpcuser/.bashrc; then :; else
+  sudo echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> /share/home/hpcuser/.bashrc
+fi
 
 if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
   cd /usr/local
