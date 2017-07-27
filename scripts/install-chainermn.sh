@@ -84,6 +84,7 @@ if check_gpu;then
 		sudo service opensm start
 	else 
 		echo "Only GPU"
+		setup_gpu_infiniband
 	fi
 else
 	if check_infini;then
