@@ -124,7 +124,7 @@ check_gpu()
 if check_gpu;then
 	if check_infini;then
 		#Code to setup ChainerMN on GPU based machine with infinband
-		setup_gpu_infiniband
+		setup_chainermn_gpu_infiniband
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
 		sudo chkconfig rdma on
@@ -132,8 +132,8 @@ if check_gpu;then
 		sudo service rdma start
 		sudo service opensm start
 	else 
-		echo "Only GPU"
-		setup_gpu_infiniband
+		#Code to setup ChainerMN on GPU based machine
+		setup_chainermn_gpu
 	fi
 else
 	if check_infini;then
