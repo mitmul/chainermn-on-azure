@@ -105,11 +105,7 @@ setup_cuda8_centos()
 }
 setup_chainermn()
 {
-	setup_cuda8
-	if is_centos; then		
-		#yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm	
-		echo "removed RDMA"			
-	fi	
+	setup_cuda8	
 }
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
