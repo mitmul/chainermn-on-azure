@@ -5,7 +5,16 @@ setup_chainermn_gpu()
 {
         yum -y install git-all
 		sudo nvidia-smi -pm 1		
-		
+		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
+			cd /opt
+			sudo mv intel intel_old
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo rm -rf l_mpi_2017.3.196.tgz
+			cd l_mpi_2017.3.196
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
+		fi
 		if grep -q "I_MPI" ~/.bashrc; then :; else
 			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
