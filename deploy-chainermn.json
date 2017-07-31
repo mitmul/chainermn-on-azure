@@ -131,7 +131,7 @@
         "capacity": "[parameters('instanceCount')]"
       },
       "properties": {
-        "overprovision": "false",
+        "overprovision": "true",
         "upgradePolicy": {
           "mode": "Manual"
         },
