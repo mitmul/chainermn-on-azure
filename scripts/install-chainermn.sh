@@ -1,6 +1,11 @@
 yum -y install git-all
 sudo nvidia-smi -pm 1
-sudo yum install -y libibverbs-utils infiniband-diags libibmad-devel libibumad-devellibibverbs-utils infiniband-diags 
+sudo yum groupinstall -y "Infiniband Support"
+sudo yum install -y perftest qperf opensm git libverbs-devel libibverbs-utils infiniband-diags libibmad-devel libibumad-devel
+sudo chkconfig rdma on
+sudo chkconfig opensm on
+sudo service rdma start
+sudo service opensm start
 
 if [ ! -d /opt/l_mpi_2017.3.196 ]; then
   cd /opt
