@@ -8,6 +8,7 @@ Table of Contents
   * [Provision the compute nodes](#provision-the-compute-nodes)
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
+* [Check status of the ChainerMN nodes](#Check-status-of-the-ChainerMN-nodes)
  
 # ChainerMN on Azure
 
@@ -49,6 +50,10 @@ You have to provide these parameters to the template :
 
 ## Deploy ChainerMN
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-chainermn.json)
+
+## Check status of the ChainerMN nodes
+ Use scripts "prerequisite.sh" to install the prerequsite (Azure CLI, Telnet and JQ) and "check_status.sh" for checking the status of    the individual instances of VMSS if VM is not running restart to them.
+ Follow the document "ScriptsExecution.docx" to run the scripts.
 
 ## Validating MPI
 Intel MPI and Infiniband are only available for A8/A9 and H16r instances. A default user named **hpcuser** has been created on the compute nodes and on the master node with passwordless access so it can be immediately used to run MPI across nodes.
@@ -137,6 +142,9 @@ You should expect an output as the one below
 
 ____
 
+
+
+ 
 
 
 
