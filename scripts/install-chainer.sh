@@ -91,19 +91,9 @@ setup_cuda8()
 }
 setup_cuda8_centos()
 {
-	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
-<<<<<<< HEAD
-	rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
-=======
-<<<<<<< HEAD
+	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	
 	#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
-=======
-	rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
->>>>>>> testgpu
->>>>>>> origin/master
 	yum -y install dkms
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
 	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
@@ -115,19 +105,7 @@ setup_cuda8_centos()
 }
 setup_chainermn()
 {
-<<<<<<< HEAD
 	setup_cuda8	
-=======
-<<<<<<< HEAD
-	setup_cuda8
-	if is_centos; then
-		#yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170426.x86_64.rpm
-		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm				
-	fi	
-=======
-	setup_cuda8	
->>>>>>> testgpu
->>>>>>> origin/master
 }
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
@@ -143,15 +121,6 @@ if is_centos; then
 fi
 setup_user
 mount_nfs
-<<<<<<< HEAD
-#sudo yum update -y
-=======
-<<<<<<< HEAD
-#yum update -y
-=======
-#sudo yum update -y
->>>>>>> testgpu
->>>>>>> origin/master
 setup_chainermn
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
