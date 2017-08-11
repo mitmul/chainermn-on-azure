@@ -55,7 +55,9 @@ setup_chainermn_gpu()
 		PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 		pip install chainer
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
+                sudo nvidia-smi -pm 1
 }
 
 setup_chainermn_gpu_infiniband()
@@ -115,7 +117,9 @@ setup_chainermn_gpu_infiniband()
 		PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 		pip install chainer
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
+                sudo nvidia-smi -pm 1
+		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 }
 
 yum install -y libibverbs-utils
