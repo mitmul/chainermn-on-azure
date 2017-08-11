@@ -41,6 +41,7 @@
         "Standard_L8s",
         "Standard_L16s",
         "Standard_L32s"
+
       ],
       "metadata": {
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
