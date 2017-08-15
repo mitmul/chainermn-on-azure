@@ -26,7 +26,6 @@ if grep -q "I_MPI" /share/home/hpcuser/.bashrc; then :; else
   sudo echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> /share/home/hpcuser/.bashrc
   sudo echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/hpcuser/.bashrc
   sudo echo 'export CPATH=/usr/local/cuda/include:$CPATH' >> /share/home/hpcuser/.bashrc
-  sudo echo 'export CFLAGS="-I/usr/local/cuda/include"' >> /share/home/hpcuser/.bashrc
   sudo echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/hpcuser/.bashrc
 fi
 
@@ -62,6 +61,8 @@ PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 pip install chainer
 MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
+pip install chainercv
+conda install -y opencv
 ulimit -s unlimited
 shutdown -r +1
 
