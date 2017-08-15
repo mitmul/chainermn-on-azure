@@ -29,7 +29,7 @@ You have to provide these parameters to the template :
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
 
 ## Deploy jumpbox
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FChainerMN%2Fmaster%2Fdeploy-jumpbox.json)
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-jumpbox.json)
 
 ### Check your deployment
 Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcuser.
@@ -48,7 +48,7 @@ You have to provide these parameters to the template :
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
 
 ## Deploy ChainerMN
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FChainerMN%2Fmaster%2Fdeploy-chainermn.json)
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-chainermn.json)
 
 ## Validating MPI
 Intel MPI and Infiniband are only available for A8/A9 and H16r instances. A default user named **hpcuser** has been created on the compute nodes and on the master node with passwordless access so it can be immediately used to run MPI across nodes.
