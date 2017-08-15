@@ -64,5 +64,7 @@ CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/ch
 pip install chainercv
 conda install -y opencv
 ulimit -s unlimited
+sudo mkdir /mnt/share
+sudo mount jumpbox:/mnt/resource /mnt/share
 shutdown -r +1
 
