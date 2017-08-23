@@ -57,8 +57,8 @@ if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
   sudo rm -rf cudnn-8.0-linux-x64-v6.0.tgz
 fi
 
-PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
-pip install chainer
+PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy==1.0.0.1
+pip install chainer==2.0.1
 MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
 pip install chainercv
