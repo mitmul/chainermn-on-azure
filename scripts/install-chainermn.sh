@@ -66,5 +66,15 @@ conda install -y opencv
 ulimit -s unlimited
 sudo mkdir /mnt/share
 sudo mount jumpbox:/mnt/resource /mnt/share
+
+sudo nvidia-smi -pm 1
+sudo nvidia-smi -i 0 -ac 2505,875
+sudo nvidia-smi -i 1 -ac 2505,875
+sudo nvidia-smi -i 2 -ac 2505,875
+sudo nvidia-smi -i 3 -ac 2505,875
+sudo nvidia-smi -i 0 --ecc-config=0
+sudo nvidia-smi -i 1 --ecc-config=0
+sudo nvidia-smi -i 2 --ecc-config=0
+sudo nvidia-smi -i 3 --ecc-config=0
 shutdown -r +1
 
