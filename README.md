@@ -8,6 +8,7 @@ Table of Contents
   * [Provision the compute nodes](#provision-the-compute-nodes)
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
+* [TIPS](#TIPS)
  
 # ChainerMN on Azure
 
@@ -138,5 +139,15 @@ You should expect an output as the one below
 ____
 
 
+# TIPS
 
+Transfer dataset
 
+```
+[On jumpbox]
+nc -l 9999 | pigz -d | tar xv
+
+[On client]
+ssh -L 9999:localhost:9999 hpcuser@[Azure Jumpbox IP]
+tar cf - ILSVRC2012 | pigz -c | nc localhost 9999
+```
