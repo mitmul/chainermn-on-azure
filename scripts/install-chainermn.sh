@@ -60,8 +60,8 @@ fi
 PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy==1.0.0.1
 pip install chainer==2.0.1
 MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
-pip install chainercv
+CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.0.0
+pip install git+https://github.com/chainer/chainercv
 conda install -y opencv
 ulimit -s unlimited
 sudo mkdir /mnt/share
