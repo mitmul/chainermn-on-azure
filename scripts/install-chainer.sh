@@ -57,7 +57,7 @@ setup_user()
 		yum -y install nfs-utils nfs-utils-lib	
 	fi
 	if is_ubuntu; then
-		sudo apt-get install nfs-kernel-server	
+		sudo apt-get -y install nfs-kernel-server	
 	fi
 	
 
