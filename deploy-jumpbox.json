@@ -98,6 +98,20 @@
       }
     ]
   },
+  "computeImages": {
+      "CentOS_7.3": {
+        "publisher": "OpenLogic",
+        "offer": "CentOS",
+        "sku": "7.3",
+        "version": "latest"
+      },
+      "Ubuntu_16.04": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04-LTS",
+        "version": "latest"
+      }
+    },
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
@@ -210,9 +224,7 @@
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "storageProfile": {
-          "imageReference": {
-           "imageReference": "[variables('computeImages')[parameters('vmImage')]]"
-          },
+         "imageReference": "[variables('computeImages')[parameters('vmImage')]]"
           "osDisk": {
             "createOption": "fromImage",
             "managedDisk": {
