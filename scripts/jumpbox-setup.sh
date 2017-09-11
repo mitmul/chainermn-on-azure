@@ -116,10 +116,11 @@ mount_nfs()
 
 
     echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-    systemctl enable rpcbind || echo "Already enabled"
-    systemctl enable nfs-server || echo "Already enabled"
-    systemctl start rpcbind || echo "Already enabled"
-    systemctl start nfs-server || echo "Already enabled"
+    sudo service nfs-kernel-server start
+   # systemctl enable rpcbind || echo "Already enabled"
+   # systemctl enable nfs-server || echo "Already enabled"
+   # systemctl start rpcbind || echo "Already enabled"
+   # systemctl start nfs-server || echo "Already enabled"
 		
 }
 SETUP_MARKER=/var/tmp/master-setup.marker
