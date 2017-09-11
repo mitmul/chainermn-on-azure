@@ -224,7 +224,7 @@
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "storageProfile": {
-         "imageReference": "[variables('computeImages')[parameters('vmImage')]]"
+         "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
           "osDisk": {
             "createOption": "fromImage",
             "managedDisk": {
