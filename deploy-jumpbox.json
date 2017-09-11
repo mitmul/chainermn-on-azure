@@ -88,7 +88,8 @@
       },
       "P30": {
         "size": 1023
-      }
+      }    
+    },
     "computeImages": {
       "CentOS_7.3": {
         "publisher": "OpenLogic",
@@ -102,7 +103,6 @@
         "sku": "16.04-LTS",
         "version": "latest"
       }
-    },
     },
     "metadataDiskArray": [
       {
