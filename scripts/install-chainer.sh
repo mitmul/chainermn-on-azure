@@ -94,6 +94,9 @@ setup_cuda8()
 	if is_centos; then
 		setup_cuda8_centos
 	fi
+	if is_ubuntu; then
+		setup_cuda8_ubuntu
+	fi
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh
@@ -110,6 +113,15 @@ setup_cuda8_centos()
 	yum clean expire-cache
 	yum -y install cuda
 
+	nvidia-smi
+}
+setup_cuda8_ubuntu()
+{
+	apt-get install -y linux-headers-$(uname -r)
+	curl -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	apt-get update
+	apt-get install -y cuda
 	nvidia-smi
 }
 setup_chainermn()
