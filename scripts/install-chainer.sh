@@ -31,6 +31,11 @@ while getopts :s: optname; do
 		;;
   esac
 done
+is_ubuntu()
+{
+	python -mplatform | grep -qi Ubuntu
+	return $?
+}
 is_centos()
 {
 	python -mplatform | grep -qi CentOS
@@ -51,6 +56,10 @@ setup_user()
 	if is_centos; then
 		yum -y install nfs-utils nfs-utils-lib	
 	fi
+	if is_ubuntu; then
+		apt-get -y install nfs-utils nfs-utils-lib	
+	fi
+	
 
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
