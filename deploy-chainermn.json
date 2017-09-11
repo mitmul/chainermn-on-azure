@@ -162,7 +162,7 @@
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]"
     ],
-    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"
+    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'))]"
   },
   "resources": [
     {
