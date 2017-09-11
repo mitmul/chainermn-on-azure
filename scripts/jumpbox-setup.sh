@@ -108,7 +108,8 @@ mount_nfs()
 	if is_ubuntu; then
 		#sudo apt-get install nfs-common rpcbind	
 		sudo apt-get update
-		sudo apt-get -y install nfs-common
+		sudo apt-get install nfs-kernel-server
+		#sudo apt-get -y install nfs-common
 	fi
 	
 
