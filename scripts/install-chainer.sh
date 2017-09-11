@@ -134,4 +134,4 @@ mount_nfs
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 exit 0
-shutdown -r+1
+shutdown -r +1
