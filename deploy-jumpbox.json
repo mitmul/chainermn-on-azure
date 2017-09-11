@@ -89,7 +89,7 @@
       "P30": {
         "size": 1023
       }
-        "computeImages": {
+    "computeImages": {
       "CentOS_7.3": {
         "publisher": "OpenLogic",
         "offer": "CentOS",
