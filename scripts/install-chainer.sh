@@ -41,6 +41,22 @@ is_centos()
 	python -mplatform | grep -qi CentOS
 	return $?
 }
+base_pkgs()
+{
+ 	log "base_pkgs"
+	if is_ubuntu; then
+		base_pkgs_ubuntu
+	elif is_centos; then
+		base_pkgs_centos
+	fi
+}
+base_pkgs_ubuntu()
+{
+	git clone https://github.com/Azure/WALinuxAgent.git
+	cd WALinuxAgent
+	sudo apt-get install python3-pip
+	sudo python3 ./setup.py install --force
+}
 mount_nfs()
 {
 	log "install NFS"
