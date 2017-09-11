@@ -140,10 +140,6 @@ setup_cuda8_ubuntu()
 	apt-get install -y cuda
 	nvidia-smi
 }
-setup_chainermn()
-{
-	setup_cuda8	
-}
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
@@ -158,7 +154,8 @@ if is_centos; then
 fi
 setup_user
 mount_nfs
-#setup_chainermn
+base_pkgs
+setup_cuda8
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 exit 0
