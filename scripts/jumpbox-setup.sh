@@ -38,7 +38,16 @@ setup_disks()
 
 	chown $HPC_USER:$HPC_GROUP $SHARE_APPS
 }
-
+is_ubuntu()
+{
+	python -mplatform | grep -qi Ubuntu
+	return $?
+}
+is_centos()
+{
+	python -mplatform | grep -qi CentOS
+	return $?
+}
 setup_user()
 {
     # disable selinux
@@ -93,8 +102,15 @@ install_intelmpi()
 mount_nfs()
 {
 	log "install NFS"
+	if is_centos; then
+		yum -y install nfs-utils nfs-utils-lib	
+	fi
+	if is_ubuntu; then
+		apt-get -y install nfs-utils nfs-utils-lib	
+	fi
+	
 
-	yum -y install nfs-utils nfs-utils-lib
+
 
     echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
     systemctl enable rpcbind || echo "Already enabled"
