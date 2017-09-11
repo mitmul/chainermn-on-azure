@@ -124,7 +124,7 @@ if [ -e "$SETUP_MARKER" ]; then
     echo "We're already configured, exiting..."
     exit 0
 fi
-install_intelmpi
+#install_intelmpi
 setup_disks
 mount_nfs
 setup_user
