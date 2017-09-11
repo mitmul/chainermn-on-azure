@@ -89,16 +89,7 @@
       "P30": {
         "size": 1023
       }
-    },
-    "metadataDiskArray": [
-      {
-        "diskSizeGB": "[variables('PremiumStorageMap')[variables('currentDataDiskSize')].size]",
-        "lun": "0",
-        "createOption": "Empty"
-      }
-    ]
-  },
-  "computeImages": {
+        "computeImages": {
       "CentOS_7.3": {
         "publisher": "OpenLogic",
         "offer": "CentOS",
@@ -112,6 +103,15 @@
         "version": "latest"
       }
     },
+    },
+    "metadataDiskArray": [
+      {
+        "diskSizeGB": "[variables('PremiumStorageMap')[variables('currentDataDiskSize')].size]",
+        "lun": "0",
+        "createOption": "Empty"
+      }
+    ]
+  },
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
