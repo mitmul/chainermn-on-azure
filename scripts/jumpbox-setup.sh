@@ -106,7 +106,9 @@ mount_nfs()
 		yum -y install nfs-utils nfs-utils-lib	
 	fi
 	if is_ubuntu; then
-		sudo apt-get install nfs-common rpcbind	
+		#sudo apt-get install nfs-common rpcbind	
+		sudo apt-get update
+		sudo apt-get -y install nfs-common
 	fi
 	
 
