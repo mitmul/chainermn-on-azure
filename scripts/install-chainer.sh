@@ -52,6 +52,13 @@ base_pkgs()
 }
 base_pkgs_ubuntu()
 {
+       #Insall Kernal 
+       cd /etc/apt/
+       echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list
+       sudo apt-get update
+       sudo apt-get install linux-azure
+       
+       # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
 	sudo apt-get install python3-pip
