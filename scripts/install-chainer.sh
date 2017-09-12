@@ -66,6 +66,11 @@ base_pkgs_ubuntu()
 	cd WALinuxAgent
 	sudo apt-get install python3-pip
 	sudo python3 ./setup.py install --force
+	
+       #Set memlock unlimited
+       cd /etc/security/
+       echo "*   hard   memlock  unlimited ">>limits.conf
+       echo "*   soft   memlock  unlimited ">>limits.conf
 }
 mount_nfs()
 {
