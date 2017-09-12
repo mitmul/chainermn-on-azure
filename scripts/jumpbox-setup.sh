@@ -51,9 +51,10 @@ is_centos()
 setup_user()
 {
     # disable selinux
-    #sed -i 's/enforcing/disabled/g' /etc/selinux/config
-    #setenforce permissive
-    
+    if is_centos; then    
+    sed -i 's/enforcing/disabled/g' /etc/selinux/config
+    setenforce permissive
+    fi
      groupadd -g $HPC_GID $HPC_GROUP
 
     # Don't require password for HPC user sudo
