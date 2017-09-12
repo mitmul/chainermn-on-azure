@@ -103,6 +103,7 @@ mount_nfs()
 {
 	log "install NFS"
 	if is_centos; then
+		log "install NFS CentOS"
 		yum -y install nfs-utils nfs-utils-lib	
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
 		systemctl enable rpcbind || echo "Already enabled"
@@ -111,17 +112,14 @@ mount_nfs()
                 systemctl start nfs-server || echo "Already enabled"
 	fi
 	if is_ubuntu; then
+	       log "Install NFS on Ubuntu"
 		#sudo apt-get install nfs-common rpcbind	
 		sudo apt-get update
 		sudo apt-get -y install nfs-kernel-server
 		#sudo apt-get -y install nfs-common
-	fi
-	
-
-
-
-    		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
+		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
    	        sudo service nfs-kernel-server start
+	fi   		
   
 		
 }
