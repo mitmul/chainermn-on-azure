@@ -118,7 +118,8 @@ mount_nfs()
 		sudo apt-get -y install nfs-kernel-server
 		#sudo apt-get -y install nfs-common
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-   	        sudo service nfs-kernel-server start
+   	        sudo systemctl enable nfs-kernel-server.service
+		sudo systemctl start nfs-kernel-server.service
 	fi   		
   
 		
