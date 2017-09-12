@@ -51,13 +51,13 @@ is_centos()
 setup_user()
 {
     # disable selinux
-    sed -i 's/enforcing/disabled/g' /etc/selinux/config
-    setenforce permissive
+    #sed -i 's/enforcing/disabled/g' /etc/selinux/config
+    #setenforce permissive
     
-    groupadd -g $HPC_GID $HPC_GROUP
+     groupadd -g $HPC_GID $HPC_GROUP
 
     # Don't require password for HPC user sudo
-    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+     echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
     
     # Disable tty requirement for sudo
     sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
@@ -118,9 +118,9 @@ mount_nfs()
 		sudo apt-get -y install nfs-kernel-server
 		#sudo apt-get -y install nfs-common
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-		sudo /etc/init.d/nfs-kernel-server start
-   	        #sudo systemctl enable nfs-kernel-server.service
-		#sudo systemctl start nfs-kernel-server.service
+		#sudo /etc/init.d/nfs-kernel-server start
+   	        sudo systemctl enable nfs-kernel-server.service
+		sudo systemctl start nfs-kernel-server.service
 	fi   		
   
 		
