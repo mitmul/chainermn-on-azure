@@ -69,6 +69,15 @@ base_pkgs_ubuntu()
 }
 mount_nfs()
 {
+	if is_centos; then
+		yum -y install nfs-utils nfs-utils-lib	
+	fi
+	if is_ubuntu; then
+	
+		#sudo apt-get -y install nfs-common	
+		apt-get -qy install nfs-common
+	fi
+
 	log "install NFS"
 	mkdir -p ${NFS_MOUNT}
 	log "mounting NFS on " ${MASTER_NAME}
@@ -84,7 +93,8 @@ setup_user()
 	fi
 	if is_ubuntu; then
 		sudo apt-get update
-		sudo apt-get -y install nfs-common	
+		#sudo apt-get -y install nfs-common	
+		apt-get -qy install nfs-common
 	fi
 	
 
