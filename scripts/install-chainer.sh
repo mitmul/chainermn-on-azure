@@ -64,7 +64,7 @@ base_pkgs_ubuntu()
        # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
-	sudo apt-get install python3-pip
+	sudo apt-get -y install python3-pip
 	sudo python3 ./setup.py install --force
 	
        #Set memlock unlimited
