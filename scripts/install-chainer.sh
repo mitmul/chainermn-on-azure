@@ -54,7 +54,7 @@ base_pkgs_ubuntu()
 {
        #Insall Kernal 
        cd /etc/apt/
-       echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list
+       echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
        sudo apt-get update
        sudo apt-get -y install linux-azure
        
@@ -79,8 +79,8 @@ mount_nfs()
 	fi
 	if is_ubuntu; then
 	
-		#sudo apt-get -y install nfs-common	
-		apt-get -qy install nfs-common
+		sudo apt-get -y install nfs-common	
+		#apt-get -qy install nfs-common
 	fi
 
 	log "install NFS"
@@ -98,8 +98,8 @@ setup_user()
 	fi
 	if is_ubuntu; then
 		sudo apt-get update
-		#sudo apt-get -y install nfs-common	
-		apt-get -qy install nfs-common
+		sudo apt-get -y install nfs-common	
+		#apt-get -qy install nfs-common
 	fi
 	
 
@@ -107,6 +107,10 @@ setup_user()
     mkdir -p $SHARE_SCRATCH
 
 	echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+	if is_ubuntu; then
+		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
+		showmount -e ${MASTER_NAME}
+	fi
 	mount -a
 	mount
    
