@@ -73,7 +73,7 @@ setup_chainermn_gpu()
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
-                sudo nvidia-smi -pm 1
+               
 }
 
 setup_chainermn_gpu_infiniband()
@@ -138,7 +138,7 @@ setup_chainermn_gpu_infiniband()
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn       
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
-		sudo nvidia-smi -pm 1
+		
 }
 	if is_ubuntu; then
 	apt install ibverbs-utils
@@ -160,6 +160,7 @@ if check_gpu;then
 	if check_infini;then
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
+		sudo nvidia-smi -pm 1
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 		if is_centos; then
 		sudo yum groupinstall -y "Infiniband Support"
@@ -169,10 +170,11 @@ if check_gpu;then
 		sudo service rdma start
 		sudo service opensm start
 		fi		
-		sudo nvidia-smi -pm 1
+		
 	else 
 		#Code to setup ChainerMN on GPU based machine
 		setup_chainermn_gpu
+		sudo nvidia-smi -pm 1
 		create_cron_job()
 		{
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
