@@ -182,7 +182,7 @@ if check_gpu;then
 		{
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 			crontab -l > downloadsecretcron
-			echo '@reboot hostname >> /root/scripts/execution.log' >> downloadsecretcron
+			echo '@reboot /root/cronjob.sh >> /root/scripts/execution.log' >> downloadsecretcron
 			crontab downloadsecretcron
 			rm downloadsecretcron
 		}
