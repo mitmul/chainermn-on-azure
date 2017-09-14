@@ -105,8 +105,9 @@ setup_user()
 
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
-
-	echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+        if is_centos; then
+		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
+	fi	
 	if is_ubuntu; then
 		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
 		showmount -e ${MASTER_NAME}
