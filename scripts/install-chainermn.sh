@@ -17,7 +17,7 @@ setup_chainermn_gpu()
 		if is_ubuntu; then
 		sudo apt-get update
 		sudo apt-get install git
-		elif is_centos; then
+		if is_centos; then
 		yum -y install git-all
 		fi
 			
@@ -80,7 +80,7 @@ setup_chainermn_gpu_infiniband()
 {
         	if is_ubuntu; then
 		
-		elif is_centos; then
+		if is_centos; then
 		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
         	yum -y install git-all
 		fi				
@@ -142,7 +142,7 @@ setup_chainermn_gpu_infiniband()
 }
 	if is_ubuntu; then
 	apt install ibverbs-utils
-	elif is_centos; then
+	if is_centos; then
 	yum install -y libibverbs-utils
 	fi
 
