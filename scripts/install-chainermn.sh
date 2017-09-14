@@ -173,7 +173,16 @@ if check_gpu;then
 	else 
 		#Code to setup ChainerMN on GPU based machine
 		setup_chainermn_gpu
+		create_cron_job()
+		{
+			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
+			crontab -l > downloadsecretcron
+			echo '@reboot hostname >> /root/scripts/execution.log' >> downloadsecretcron
+			crontab downloadsecretcron
+			rm downloadsecretcron
+		}
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+		create_cron_job
 	fi
 else
 	if check_infini;then
@@ -182,4 +191,5 @@ else
 		echo "CPU only"
 	fi
 fi
+
 shutdown -r +1
