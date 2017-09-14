@@ -17,6 +17,7 @@ setup_chainermn_gpu()
 		if is_ubuntu; then
 		sudo apt-get update
 		sudo apt-get install git
+		fi
 		if is_centos; then
 		yum -y install git-all
 		fi
@@ -79,10 +80,11 @@ setup_chainermn_gpu()
 setup_chainermn_gpu_infiniband()
 {
         	if is_ubuntu; then
-		
+			echo"command for ubuntu"
+		fi
 		if is_centos; then
-		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
-        	yum -y install git-all
+			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
+			yum -y install git-all
 		fi				
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
@@ -140,11 +142,12 @@ setup_chainermn_gpu_infiniband()
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		
 }
-	if is_ubuntu; then
+if is_ubuntu; then
 	apt install ibverbs-utils
-	if is_centos; then
+fi
+if is_centos; then
 	yum install -y libibverbs-utils
-	fi
+fi
 
 check_infini()
 {
