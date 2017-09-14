@@ -14,8 +14,13 @@ is_centos()
 }
 setup_chainermn_gpu()
 {
-        yum -y install git-all
-		sudo nvidia-smi -pm 1		
+		if is_ubuntu; then
+		sudo apt-get update
+		sudo apt-get install git
+		elif is_centos; then
+		yum -y install git-all
+		fi
+			
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
 			sudo mv intel intel_old
@@ -73,9 +78,12 @@ setup_chainermn_gpu()
 
 setup_chainermn_gpu_infiniband()
 {
-        yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
-        yum -y install git-all
-		sudo nvidia-smi -pm 1		
+        	if is_ubuntu; then
+		
+		elif is_centos; then
+		yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
+        	yum -y install git-all
+		fi				
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
@@ -130,20 +138,23 @@ setup_chainermn_gpu_infiniband()
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn       
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
-		
+		sudo nvidia-smi -pm 1
 }
-
-yum install -y libibverbs-utils
+	if is_ubuntu; then
+	apt install ibverbs-utils
+	elif is_centos; then
+	yum install -y libibverbs-utils
+	fi
 
 check_infini()
 {
-  ibv_devices | grep mlx4
-  return $?
+	ibv_devices | grep mlx4
+	return $?
 }
 check_gpu()
 {
-  lspci | grep NVIDIA
-  return $?
+	lspci | grep NVIDIA
+	return $?
 }
 if check_gpu;then
 	if check_infini;then
