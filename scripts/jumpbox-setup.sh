@@ -34,9 +34,9 @@ setup_disks()
 {
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
-	mkdir -p $SHARE_APPS
+    mkdir -p $SHARE_APPS
 
-	chown $HPC_USER:$HPC_GROUP $SHARE_APPS
+	
 }
 is_ubuntu()
 {
@@ -102,7 +102,7 @@ install_intelmpi()
 
 mount_nfs()
 {
-	log "install NFS"
+	
 	if is_centos; then
 		log "install NFS CentOS"
 		yum -y install nfs-utils nfs-utils-lib	
@@ -113,16 +113,11 @@ mount_nfs()
                 systemctl start nfs-server || echo "Already enabled"
 	fi
 	if is_ubuntu; then
-	       log "Install NFS on Ubuntu"
-		#sudo apt-get install nfs-common rpcbind	
+	       log "Install NFS on Ubuntu"			
 		sudo apt-get update
-		sudo apt-get -y install nfs-kernel-server
-		#sudo apt-get -y install nfs-common
+		sudo apt-get -y install nfs-kernel-server		
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-		exportfs -a
-		#echo "$SHARE_HOME    *(rw)" >> /etc/exports
-		#sudo systemctl restart nfs-kernel-server
-		#sudo /etc/init.d/nfs-kernel-server start
+		exportfs -a		
    	        sudo systemctl enable nfs-kernel-server.service
 		sudo systemctl start nfs-kernel-server.service
 	fi   		
