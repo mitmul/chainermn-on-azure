@@ -160,16 +160,20 @@ if check_gpu;then
 	if check_infini;then
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
+		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+		if is_centos; then
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
 		sudo service rdma start
 		sudo service opensm start
+		fi		
 		sudo nvidia-smi -pm 1
 	else 
 		#Code to setup ChainerMN on GPU based machine
 		setup_chainermn_gpu
+		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	fi
 else
 	if check_infini;then
