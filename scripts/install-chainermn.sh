@@ -1,6 +1,17 @@
 #!/bin/bash
 
 #############################################################################
+
+is_ubuntu()
+{
+	python -mplatform | grep -qi Ubuntu
+	return $?
+}
+is_centos()
+{
+	python -mplatform | grep -qi CentOS
+	return $?
+}
 setup_chainermn_gpu()
 {
         yum -y install git-all
