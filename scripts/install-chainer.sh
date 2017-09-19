@@ -71,6 +71,11 @@ base_pkgs_ubuntu()
        cd /etc/security/
        echo " *               hard    memlock          unlimited">>limits.conf
        echo " *               soft    memlock          unlimited">>limits.conf
+       
+       # Disable unattended-upgrades to avoide automatic updates
+       cd /etc/apt/apt.conf.d
+       sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
+       sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
 }
 mount_nfs()
 {
