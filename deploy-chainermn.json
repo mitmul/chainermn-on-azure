@@ -162,7 +162,7 @@
     "scriptsToDownload": [
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/cronjob.sh')]"
+      "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]"
     ],
     "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"    
   },
