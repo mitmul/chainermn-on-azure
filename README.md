@@ -8,7 +8,7 @@ Table of Contents
   * [Provision the compute nodes](#provision-the-compute-nodes)
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
-* [Check status of the ChainerMN nodes](#Check-status-of-the-ChainerMN-nodes)
+* [Check status of the ChainerMN nodes](#check-status-of-the-chainermn-nodes)
  
 # ChainerMN on Azure
 
@@ -51,7 +51,7 @@ You have to provide these parameters to the template :
 ## Deploy ChainerMN
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-chainermn.json)
 
-## Check status of the ChainerMN nodes
+## Check status of the chainermn nodes
  Use scripts "prerequisite.sh" to install the prerequsite (Azure CLI, Telnet and JQ) and "check_status.sh" for checking the status of    the individual instances of VMSS if VM is not running restart to them.
  Follow the document "ScriptsExecution.docx" to run the scripts.
 
