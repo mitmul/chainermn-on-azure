@@ -30,6 +30,7 @@ The template __deploy-jumpbox.json__ will provision the networking infrastructur
 You have to provide these parameters to the template :
 * _Location_ : Select the location where NC series is available(for example East US,South Central US). 
 * _Virtual Machine Name_ : Enter the virtual machine name. 
+* _VM Image_ : Select Ubuntu_16.04 from the dropdown.
 * _Virtual Machine Size_ : Select virtual machine size from the dropdown.
 * _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
@@ -45,7 +46,7 @@ Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcu
 You have to provide these parameters to the template :
 * _Location_ : Select the same location where jumpbox is deployed.
 * _Virtual Machine Size_ : Select from NC series(standard_NC6, standard_NC12, standard_NC24, standard_NC24r)
-* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) recommended CentOS-HPC_7.3.
+* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3, Ubuntu_16.04 ) recommended Ubuntu_16.04 .
 * _VM prefix Name_ : It is vm prefix.
 * _Instance Count_ : it is the no. of instances inside a VMSS.
 * _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
@@ -68,6 +69,7 @@ The template __deploy-jumpbox.json__ will provision the networking infrastructur
 You have to provide these parameters to the template :
 * _Location_ : Select the location where NC series is available(for example East US,South Central US). 
 * _Virtual Machine Name_ : Enter the virtual machine name. 
+* _VM Image_ : Select CentOS_7.3 from the dropdown.
 * _Virtual Machine Size_ : Select virtual machine size from the dropdown.
 * _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
