@@ -3,6 +3,7 @@
 Table of Contents
 =================
 * [Compute grid in Azure](#compute-grid-in-azure)
+* [ChainerMN On CentOS](#chainermn-on-centos)
 * [Deployment steps](#deployment-steps)
   * [Create the jumpbox](#create-the-jumpbox)
   * [Provision the compute nodes](#provision-the-compute-nodes)
