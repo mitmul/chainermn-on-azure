@@ -55,7 +55,7 @@ You have to provide these parameters to the template :
 ## Check status of the ChainerMN nodes
  Use scripts "prerequisite.sh" to install the prerequsite (Azure CLI, Telnet and JQ) and "check_status.sh" for checking the status of    the individual instances of VMSS if VM is not running restart to them.
  Follow the document "ScriptsExecution.docx" to run the scripts.
-
+# Running applications
 ## Validating MPI
 Intel MPI and Infiniband are only available for A8/A9 and H16r instances. A default user named **hpcuser** has been created on the compute nodes and on the master node with passwordless access so it can be immediately used to run MPI across nodes.
 
