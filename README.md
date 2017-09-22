@@ -3,9 +3,14 @@
 Table of Contents
 =================
 * [Compute grid in Azure](#compute-grid-in-azure)
+* [ChainerMN On CentOS](#chainermn-on-centos)
 * [Deployment steps](#deployment-steps)
   * [Create the jumpbox](#create-the-jumpbox)
   * [Provision the compute nodes](#provision-the-compute-nodes)
+* [ChainerMN On Ubuntu](#chainermn-on-ubuntu)
+* [Deployment steps](#deployment-steps)
+  * [Create the jumpbox](#create-the-jumpbox)
+  * [Provision the compute nodes](#provision-the-compute-nodes) 
 * [Running Applications](#running-applications)
   * [Validating MPI](#validating-mpi)
 * [Check status of the ChainerMN nodes](#check-status-of-the-chainermn-nodes)
@@ -13,7 +18,7 @@ Table of Contents
 # ChainerMN on Azure
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
-
+# Chainermn on ubuntu
 # Deployment steps
 To setup ChainerMN two steps need to be executed :
 1. Create the jumpbox
@@ -50,6 +55,45 @@ You have to provide these parameters to the template :
 
 ## Deploy ChainerMN
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-chainermn.json)
+
+# Chainermn on centos
+# Deployment steps
+To setup ChainerMN two steps need to be executed :
+1. Create the jumpbox
+2. Provision the compute nodes where ChainerMN is setup
+
+## Create the jumpbox
+The template __deploy-jumpbox.json__ will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
+
+You have to provide these parameters to the template :
+* _Location_ : Select the location where NC series is available(for example East US,South Central US). 
+* _Virtual Machine Name_ : Enter the virtual machine name. 
+* _Virtual Machine Size_ : Select virtual machine size from the dropdown.
+* _Admin Username_ : This is the name of the administrator account to create on the VM.
+* _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
+
+## Deploy jumpbox
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-jumpbox.json)
+
+### Check your deployment
+Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcuser.
+
+## Provision the ChainerMN nodes
+
+You have to provide these parameters to the template :
+* _Location_ : Select the same location where jumpbox is deployed.
+* _Virtual Machine Size_ : Select from NC series(standard_NC6, standard_NC12, standard_NC24, standard_NC24r)
+* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) recommended CentOS-HPC_7.3.
+* _VM prefix Name_ : It is vm prefix.
+* _Instance Count_ : it is the no. of instances inside a VMSS.
+* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
+* _Master Name_ : The short name of the Master VM
+* _Admin User Name_ : This is the name of the administrator account to create on the VM.
+* _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
+
+## Deploy ChainerMN
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fmaster%2Fdeploy-chainermn.json)
+
 
 ## Check status of the chainermn nodes
  Use scripts "prerequisite.sh" to install the prerequsite (Azure CLI, Telnet and JQ) and "check_status.sh" for checking the status of    the individual instances of VMSS if VM is not running restart to them.
