@@ -143,7 +143,7 @@ setup_chainermn_gpu_infiniband()
 		
 }
 if is_ubuntu; then
-	apt install ibverbs-utils
+	apt install ibverbs-utils	
 fi
 if is_centos; then
 	yum install -y libibverbs-utils
@@ -151,6 +151,7 @@ fi
 
 check_infini()
 {
+        sudo modprobe rdma_ucm
 	ibv_devices | grep mlx4
 	return $?
 }
@@ -172,7 +173,19 @@ if check_gpu;then
 		sudo chkconfig opensm on
 		sudo service rdma start
 		sudo service opensm start
-		fi		
+		fi
+		if is_centos; then
+		create_cron_job()
+		{
+			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
+			crontab -l > downloadsecretcron
+			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
+			crontab downloadsecretcron
+			rm downloadsecretcron
+		}
+		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+		create_cron_job
+		fi
 		
 	else 
 		#Code to setup ChainerMN on GPU based machine
