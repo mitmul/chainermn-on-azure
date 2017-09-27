@@ -191,11 +191,12 @@ if check_gpu;then
 		#Code to setup ChainerMN on GPU based machine
 		setup_chainermn_gpu
 		sudo nvidia-smi -pm 1
+		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh /
 		create_cron_job()
 		{
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 			crontab -l > downloadsecretcron
-			echo '@reboot /root//var/lib/waagent/custom-script/download/1/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
+			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
 			crontab downloadsecretcron
 			rm downloadsecretcron
 		}
