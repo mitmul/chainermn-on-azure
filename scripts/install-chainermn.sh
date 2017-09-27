@@ -195,7 +195,7 @@ if check_gpu;then
 		{
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 			crontab -l > downloadsecretcron
-			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
+			echo '@reboot /root//var/lib/waagent/custom-script/download/1/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
 			crontab downloadsecretcron
 			rm downloadsecretcron
 		}
