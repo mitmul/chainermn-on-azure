@@ -143,7 +143,11 @@ setup_chainermn_gpu_infiniband()
 		
 }
 if is_ubuntu; then
-	apt install ibverbs-utils	
+       # enable rdma
+       cd /etc/
+       sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
+       sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
+       apt install ibverbs-utils	
 fi
 if is_centos; then
 	yum install -y libibverbs-utils
