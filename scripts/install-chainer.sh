@@ -5,13 +5,6 @@ SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
 NFS_ON_MASTER=/share/home
 NFS_MOUNT=/data
-
-#additional
-NEW_CONTENT=OS.EnableRDMA=y
-OLD_CONTENT=# OS.EnableRDMA=y
-OLD_CONTENTUP=# OS.UpdateRdmaDriver=y
-NEW_CONTENTUP=OS.UpdateRdmaDriver=y
-
 # User
 HPC_USER=hpcuser
 HPC_UID=7007
