@@ -62,8 +62,8 @@ base_pkgs_ubuntu()
       
        # enable rdma
        cd /etc/
-       sed -i  's*# OS.EnableRDMA=y*OS.EnableRDMA=y*g;' waagent.conf
-       sed -i  's*# OS.UpdateRdmaDriver=y*OS.UpdateRdmaDriver=y*g;' waagent.conf
+       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
        
        # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
