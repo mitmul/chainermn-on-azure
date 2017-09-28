@@ -68,7 +68,7 @@ base_pkgs_ubuntu()
        
        # Install dapl, rdmacm, ibverbs, and mlx4
        sudo apt-get -y install libdapl2 libmlx4-1    
-       enable_rdma
+       #enable_rdma
        # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
