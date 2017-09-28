@@ -66,12 +66,7 @@ base_pkgs_ubuntu()
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
 	sudo apt-get -y install python3-pip
-	sudo python3 ./setup.py install --force
-	
-       # enable rdma
-       cd /etc/
-       sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
-       sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
+	sudo python3 ./setup.py install --force      
 	
        #Set memlock unlimited
        cd /etc/security/
