@@ -12,6 +12,16 @@ is_centos()
 	python -mplatform | grep -qi CentOS
 	return $?
 }
+enable_rdma()
+{
+       # enable rdma    
+       cd /etc/
+       echo "OS.EnableRDMA=y">>/etc/waagent.conf
+       echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+       #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+}
+
 setup_chainermn_gpu()
 {
 		if is_ubuntu; then
@@ -162,6 +172,7 @@ check_gpu()
 }
 if check_gpu;then
 	if check_infini;then
+	        enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
 		sudo nvidia-smi -pm 1
@@ -189,7 +200,8 @@ if check_gpu;then
 		
 	else 
 		#Code to setup ChainerMN on GPU based machine
-		setup_chainermn_gpu
+		enable_rdma
+		setup_chainermn_gpu		
 		sudo nvidia-smi -pm 1
 		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
 		create_cron_job()
