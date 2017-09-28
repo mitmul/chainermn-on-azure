@@ -15,11 +15,11 @@ is_centos()
 enable_rdma()
 {
        # enable rdma    
-       cd /etc/
-       echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-       #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-       #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+       #cd /etc/
+       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
+       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
 setup_chainermn_gpu()
