@@ -49,6 +49,15 @@ base_pkgs()
 		base_pkgs_centos
 	fi
 }
+enable_rdma()
+{
+       # enable rdma    
+       cd /etc/
+       echo "OS.EnableRDMA=y">>/etc/waagent.conf
+       echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+       #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+}
 base_pkgs_ubuntu()
 {
        #Insall Kernal 
@@ -58,15 +67,8 @@ base_pkgs_ubuntu()
        sudo apt-get -y install linux-azure
        
        # Install dapl, rdmacm, ibverbs, and mlx4
-       sudo apt-get -y install libdapl2 libmlx4-1      
-      
-       # enable rdma    
-       cd /etc/
-       echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-       #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-       #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
-       
+       sudo apt-get -y install libdapl2 libmlx4-1    
+       enable_rdma
        # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
