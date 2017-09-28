@@ -59,18 +59,19 @@ base_pkgs_ubuntu()
        sudo apt-get -y install linux-azure
        
        # Install dapl, rdmacm, ibverbs, and mlx4
-       sudo apt-get -y install libdapl2 libmlx4-1
-       
-       # enable rdma
-       cd /etc/
-       sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
-       sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
+       sudo apt-get -y install libdapl2 libmlx4-1      
+      
        
        # WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
 	sudo apt-get -y install python3-pip
 	sudo python3 ./setup.py install --force
+	
+       # enable rdma
+       cd /etc/
+       sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
+       sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
 	
        #Set memlock unlimited
        cd /etc/security/
