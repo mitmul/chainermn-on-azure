@@ -172,7 +172,7 @@ check_gpu()
 }
 if check_gpu;then
 	if check_infini;then
-	        #enable_rdma
+	        enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
 		sudo nvidia-smi -pm 1
@@ -200,7 +200,7 @@ if check_gpu;then
 		
 	else 
 		#Code to setup ChainerMN on GPU based machine
-		#enable_rdma
+		enable_rdma
 		setup_chainermn_gpu		
 		sudo nvidia-smi -pm 1
 		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
