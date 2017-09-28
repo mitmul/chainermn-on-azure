@@ -62,7 +62,7 @@ base_pkgs_ubuntu()
        sudo apt-get -y install libdapl2 libmlx4-1
        
        # enable rdma
-       cd /etc
+       cd /etc/
        sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
        sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
        
