@@ -142,11 +142,7 @@ setup_chainermn_gpu_infiniband()
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		
 }
-if is_ubuntu; then
-       # enable rdma
-       cd /etc/
-       sed -i  's/# OS.EnableRDMA=y/OS.EnableRDMA=y/g;' waagent.conf
-       sed -i  's/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g;' waagent.conf
+if is_ubuntu; then       
        apt install ibverbs-utils	
 fi
 if is_centos; then
