@@ -53,10 +53,10 @@ enable_rdma()
 {
        # enable rdma    
        cd /etc/
-       echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-       #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-       #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
+       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
+       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
 }
 base_pkgs_ubuntu()
 {
