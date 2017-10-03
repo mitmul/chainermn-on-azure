@@ -14,14 +14,18 @@ is_centos()
 }
 enable_rdma()
 {
-       # enable rdma    
-       #cd /etc/
-       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       # enable rdma      
        sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
        sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
-
+create_cron_job()
+		{
+			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
+			crontab -l > downloadsecretcron
+			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
+			crontab downloadsecretcron
+			rm downloadsecretcron
+		}
 setup_chainermn_gpu()
 {
 		if is_ubuntu; then
@@ -81,8 +85,7 @@ setup_chainermn_gpu()
 
 		PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 		pip install chainer
-		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir		
 		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
                
 }
@@ -148,8 +151,8 @@ setup_chainermn_gpu_infiniband()
 		PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
 		pip install chainer
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn       
-		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn      
+		
 		
 }
 if is_ubuntu; then       
@@ -203,15 +206,7 @@ if check_gpu;then
 		enable_rdma
 		setup_chainermn_gpu		
 		sudo nvidia-smi -pm 1
-		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
-		create_cron_job()
-		{
-			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
-			crontab -l > downloadsecretcron
-			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
-			crontab downloadsecretcron
-			rm downloadsecretcron
-		}
+		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~		
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 		create_cron_job
 	fi
