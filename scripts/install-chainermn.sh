@@ -20,6 +20,7 @@ setup_chainermn_gpu()
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
@@ -82,7 +83,8 @@ setup_chainermn_gpu_infiniband()
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
+			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc			
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
 
