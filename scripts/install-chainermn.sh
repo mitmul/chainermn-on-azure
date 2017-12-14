@@ -25,6 +25,7 @@ setup_chainermn_gpu()
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
 
+
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
 			sudo curl -L -O https://repo.continuum.io/archive/Anaconda3-4.4.0-Linux-x86_64.sh
