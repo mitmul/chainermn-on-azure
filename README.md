@@ -28,12 +28,14 @@ The template [deploy-jumpbox.json](deploy-jumpbox.json) will provision the netwo
 
 You have to provide these parameters to the template :
 
-* _Location_ : Select the location where NC series is available(for example East US,South Central US). 
-* _Virtual Machine Name_ : Enter the virtual machine name. 
-* _VM Image_ : Select Ubuntu_16.04 from the dropdown.
-* _Virtual Machine Size_ : Select virtual machine size from the dropdown.
-* _Admin Username_ : This is the name of the administrator account to create on the VM.
-* _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
+| Parameter name | Description |
+|:---------------|:------------|
+| _Location_ | Select the location where NC series is available(for example East US,South Central US). |
+| _Virtual Machine Name_ | Enter the virtual machine name. |
+| _VM Image_ | The default is Ubuntu_16.04. The current choice is ( Ubuntu_16.04 ) |
+| _Virtual Machine Size_ | Select virtual machine size from the dropdown. |
+| _Admin Username_ | This is the name of the administrator account to create on the VM. |
+| _Admin Public Key_ | The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key' |
 
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-jumpbox.json)
 
@@ -47,15 +49,17 @@ The template [deploy-chainermn.json](deploy-chainermn.json) will provision Virtu
 
 You have to provide these parameters to the template :
 
-* _Location_ : Select the same location where jumpbox is deployed.
-* _Virtual Machine Size_ : Select from NC series(standard_NC6, standard_NC12, standard_NC24, standard_NC24r)
-* _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3, Ubuntu_16.04 ) recommended Ubuntu_16.04 .
-* _VM prefix Name_ : It is vm prefix.
-* _Instance Count_ : it is the no. of instances inside a VMSS.
-* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
-* _Master Name_ : The short name of the Master VM
-* _Admin User Name_ : This is the name of the administrator account to create on the VM.
-* _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
+| Parameter name | Description |
+|:---------------|:------------|
+| _Location_ | Select the same location where jumpbox is deployed. |
+| _Virtual Machine Size_ | Select from NC series(standard_NC6, standard_NC12, standard_NC24, standard_NC24r) |
+| _VM Image_ | Default is **Ubuntu_16.04** allowed values are currently ( Ubuntu_16.04 ) recommended Ubuntu_16.04 . |
+| _VM prefix Name_ | It is vm prefix. |
+| _Instance Count_ | it is the no. of instances inside a VMSS. |
+| _Vnet RG_ | The name of the Resource Group used to deploy the Master VM and the VNET. |
+| _Master Name_ | The short name of the Master VM |
+| _Admin User Name_ | This is the name of the administrator account to create on the VM. |
+| _SSH Key Data_ | The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'. |
 
 #### 1. Deploy ChainerMN
 

@@ -19,7 +19,6 @@ done
 
 # Shares
 SHARE_HOME=/share/home
-SHARE_APPS=/share/apps
 
 # User
 HPC_USER=hpcuser
@@ -30,20 +29,17 @@ HPC_GID=7007
 install_intelmpi()
 {
   cd /opt
-  sudo mv intel intel_old
   sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
   sudo tar zxvf l_mpi_2017.3.196.tgz
   sudo rm -rf l_mpi_2017.3.196.tgz
   cd l_mpi_2017.3.196
   sudo sed -i -e "s/decline/accept/g" silent.cfg
   sudo ./install.sh --silent silent.cfg
-  sudo 
 }
 
 setup_disks()
 {
     mkdir -p $SHARE_HOME
-    mkdir -p $SHARE_APPS
 }
 
 mount_nfs()
