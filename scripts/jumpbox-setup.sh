@@ -7,16 +7,15 @@ log()
 }
 
 while getopts :a:k:u:t:p optname; do
-  log "Option $optname set with value ${OPTARG}"
-  
-  case $optname in
-    a)  # storage account
-		export AZURE_STORAGE_ACCOUNT=${OPTARG}
-		;;
-    k)  # storage key
-		export AZURE_STORAGE_ACCESS_KEY=${OPTARG}
-		;;
-  esac
+	log "Option $optname set with value ${OPTARG}"
+	case $optname in
+		a)  # storage account
+			export AZURE_STORAGE_ACCOUNT=${OPTARG}
+			;;
+		k)  # storage key
+			export AZURE_STORAGE_ACCESS_KEY=${OPTARG}
+			;;
+	esac
 done
 
 # Shares
@@ -34,17 +33,25 @@ setup_disks()
 {
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
-	mkdir -p $SHARE_APPS
-
-	chown $HPC_USER:$HPC_GROUP $SHARE_APPS
+    mkdir -p $SHARE_APPS
 }
-
+is_ubuntu()
+{
+	python -mplatform | grep -qi Ubuntu
+	return $?
+}
+is_centos()
+{
+	python -mplatform | grep -qi CentOS
+	return $?
+}
 setup_user()
 {
     # disable selinux
-    sed -i 's/enforcing/disabled/g' /etc/selinux/config
-    setenforce permissive
-    
+    if is_centos; then    
+		sed -i 's/enforcing/disabled/g' /etc/selinux/config
+		setenforce permissive
+    fi
     groupadd -g $HPC_GID $HPC_GROUP
 
     # Don't require password for HPC user sudo
@@ -92,17 +99,26 @@ install_intelmpi()
 
 mount_nfs()
 {
-	log "install NFS"
-
-	yum -y install nfs-utils nfs-utils-lib
-
-    echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-    echo "/mnt/resource  *(rw,async)" >> /etc/exports
-    systemctl enable rpcbind || echo "Already enabled"
-    systemctl enable nfs-server || echo "Already enabled"
-    systemctl start rpcbind || echo "Already enabled"
-    systemctl start nfs-server || echo "Already enabled"
-		
+	if is_centos; then
+		log "install NFS CentOS"
+		yum -y install nfs-utils nfs-utils-lib
+		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
+		echo "/mnt/resource  *(rw,async)" >> /etc/exports
+		systemctl enable rpcbind || echo "Already enabled"
+		systemctl enable nfs-server || echo "Already enabled"
+		systemctl start rpcbind || echo "Already enabled"
+		systemctl start nfs-server || echo "Already enabled"
+	fi
+	if is_ubuntu; then
+		log "Install NFS on Ubuntu"	
+		sudo apt-get update
+		sudo apt-get -y install nfs-kernel-server
+		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
+		echo "/mnt/resource  *(rw,async)" >> /etc/exports
+		exportfs -a
+		sudo systemctl enable nfs-kernel-server.service
+		sudo systemctl start nfs-kernel-server.service
+	fi	
 }
 SETUP_MARKER=/var/tmp/master-setup.marker
 if [ -e "$SETUP_MARKER" ]; then

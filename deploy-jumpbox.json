@@ -4,11 +4,22 @@
   "parameters": {
     "virtualMachineName": {
       "type": "String",
-      "defaultValue": "jumpbox"
+      "defaultValue": "jumpbox",
+    },
+      "vmImage": {
+      "type": "string",
+      "defaultValue": "Ubuntu_16.04",
+      "allowedValues": [
+        "CentOS_7.3",
+        "Ubuntu_16.04"
+      ],
+      "metadata": {
+        "description": "The VM OS image"
+      }
     },
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue": "Standard_DS3_v2",
+      "defaultValue": "Standard_L8s",
       "allowedValues": [
         "Standard_DS1",
         "Standard_DS2",
@@ -42,13 +53,15 @@
         "Standard_L8s",
         "Standard_L16s",
         "Standard_L32s"
+
       ],
       "metadata": {
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
     "adminUsername": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ubuntu",
     },
     "adminPublicKey": {
       "type": "String"
@@ -77,6 +90,20 @@
       },
       "P30": {
         "size": 1023
+      }    
+    },
+    "computeImages": {
+      "CentOS_7.3": {
+        "publisher": "OpenLogic",
+        "offer": "CentOS",
+        "sku": "7.3",
+        "version": "latest"
+      },
+      "Ubuntu_16.04": {
+        "publisher": "Canonical",
+        "offer": "UbuntuServer",
+        "sku": "16.04-LTS",
+        "version": "latest"
       }
     },
     "metadataDiskArray": [
@@ -199,12 +226,7 @@
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "OpenLogic",
-            "offer": "CentOS",
-            "sku": "7.3",
-            "version": "latest"
-          },
+         "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
           "osDisk": {
             "createOption": "fromImage",
             "managedDisk": {
