@@ -3,7 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "jumpbox",
     },
       "vmImage": {
       "type": "string",
@@ -18,7 +19,7 @@
     },
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue": "Standard_DS3_v2",
+      "defaultValue": "Standard_L8s",
       "allowedValues": [
         "Standard_DS1",
         "Standard_DS2",
@@ -59,7 +60,8 @@
       }
     },
     "adminUsername": {
-      "type": "String"
+      "type": "String",
+      "defaultValue": "ubuntu",
     },
     "adminPublicKey": {
       "type": "String"
