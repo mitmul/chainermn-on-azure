@@ -19,16 +19,16 @@ log()
 usage() { echo "Usage: $0 [-s <masterName>] " 1>&2; exit 1; }
 
 while getopts :s: optname; do
-  log "Option $optname set with value ${OPTARG}"
-  
-  case $optname in
-       s)  # master name
-		export MASTER_NAME=${OPTARG}
-		;;
-	   *)
-		usage
-		;;
-  esac
+	log "Option $optname set with value ${OPTARG}"
+
+	case $optname in
+		s)  # master name
+			export MASTER_NAME=${OPTARG}
+			;;
+		*)
+			usage
+			;;
+	esac
 done
 is_ubuntu()
 {
@@ -51,12 +51,12 @@ base_pkgs()
 }
 enable_rdma()
 {
-       # enable rdma    
-       cd /etc/
-       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
-       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
+	# enable rdma    
+	cd /etc/
+	#echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	#echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
+	sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
 }
 base_pkgs_ubuntu()
 {
@@ -88,12 +88,10 @@ base_pkgs_ubuntu()
 mount_nfs()
 {
 	if is_centos; then
-		yum -y install nfs-utils nfs-utils-lib	
+		yum -y install nfs-utils nfs-utils-lib
 	fi
 	if is_ubuntu; then
-	
-		sudo apt-get -y install nfs-common	
-		#apt-get -qy install nfs-common
+		sudo apt-get -y install nfs-common
 	fi
 
 	log "install NFS"
@@ -112,13 +110,11 @@ setup_user()
 	if is_ubuntu; then
 		sudo apt-get update
 		sudo apt-get -y install nfs-common	
-		#apt-get -qy install nfs-common
 	fi
-	
 
     mkdir -p $SHARE_HOME
     mkdir -p $SHARE_SCRATCH
-        if is_centos; then
+	if is_centos; then
 		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
 	fi	
 	if is_ubuntu; then
@@ -147,41 +143,40 @@ setup_python_centos()
 	curl -O https://bootstrap.pypa.io/get-pip.py
 	python3 get-pip.py
 }
-
-setup_cuda8()
+setup_cuda9()
 {
-	log "setup_cuda8"
+	log "setup_cuda9"
 	if is_centos; then
-		setup_cuda8_centos
+		setup_cuda9_centos
 	fi
 	if is_ubuntu; then
-		setup_cuda8_ubuntu
+		setup_cuda9_ubuntu
 	fi
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh
 }
-setup_cuda8_centos()
+setup_cuda9_centos()
 {
-	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	
-	#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
-	yum -y install dkms
-	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
-	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
-	rpm -i ${CUDA_RPM}
-	yum clean expire-cache
-	yum -y install cuda
+	sudo yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r)
+	curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.1.85-1.x86_64.rpm
+	sudo rpm --install cuda-repo-rhel7-9.1.85-1.x86_64.rpm
+	sudo rm -rf cuda-repo-rhel7-9.1.85-1.x86_64.rpm
+	sudo yum clean all
+	sudo yum -y install cuda
 
 	nvidia-smi
 }
 setup_cuda8_ubuntu()
 {
-	apt-get install -y linux-headers-$(uname -r)
-	curl -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-	dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-	apt-get update
-	apt-get install -y cuda
+	sudo apt-get install linux-headers-$(uname -r)
+	curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo rm -rf cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/amd64/7fa2af80.pub
+	sudo apt-get update
+	sudo apt-get install -y cuda
+
 	nvidia-smi
 }
 mkdir -p /var/local
@@ -199,7 +194,7 @@ fi
 setup_user
 mount_nfs
 base_pkgs
-setup_cuda8
+setup_cuda9
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 #shutdown -r +1 &
