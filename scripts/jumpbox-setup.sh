@@ -96,7 +96,6 @@ install_intelmpi()
   sudo sed -i -e "s/decline/accept/g" silent.cfg
   sudo ./install.sh --silent silent.cfg
 }
-
 mount_nfs()
 {
 	if is_centos; then
