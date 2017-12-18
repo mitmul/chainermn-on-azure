@@ -55,7 +55,7 @@ You have to provide these parameters to the template :
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
 
 ## Deploy ChainerMN
-[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fchainermnubuntu%2Fdeploy-chainermn.json)
+[![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-chainermn.json)
 
 # Chainermn on centos
 # Deployment steps
