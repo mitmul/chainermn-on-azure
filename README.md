@@ -1,14 +1,3 @@
-Table of Contents
-=================
-* [Compute grid in Azure](#compute-grid-in-azure)
-* [ChainerMN On Ubuntu](#chainermn-on-ubuntu)
-* [Deployment steps](#deployment-steps)
-  * [Create the jumpbox](#create-the-jumpbox)
-  * [Provision the compute nodes](#provision-the-compute-nodes) 
-* [Running Applications](#running-applications)
-  * [Validating MPI](#validating-mpi)
-* [Check status of the ChainerMN nodes](#check-status-of-the-chainermn-nodes)
- 
 # ChainerMN on Azure
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
