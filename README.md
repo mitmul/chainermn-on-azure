@@ -2,16 +2,14 @@
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
 
-## Chainermn on ubuntu
-
-### Deployment steps
+## Deployment steps
 
 To setup ChainerMN, two steps need to be executed :
 
 1. Create a jumpbox
 2. Provision compute nodes where ChainerMN will be setup
 
-#### 1. Deploy a jumpbox
+### 1. Deploy a jumpbox
 
 The template [deploy-jumpbox.json](deploy-jumpbox.json) will provision the networking infrastructure as well as a master VM exposing an SSH endpoint for remote connection.   
 
@@ -28,11 +26,7 @@ You have to provide these parameters to the template :
 
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-jumpbox.json)
 
-#### 2. Check your deployment
-
-Login into the jumpbox, do "sudo su hpcuser" to switch from default user to hpcuser.
-
-### Provision the ChainerMN nodes
+### 2. Provision the ChainerMN nodes
 
 The template [deploy-chainermn.json](deploy-chainermn.json) will provision Virtual Machine Scale Sets that are the worker nodes for ChainerMN.
 
@@ -50,15 +44,7 @@ You have to provide these parameters to the template :
 | _Admin User Name_ | This is the name of the administrator account to create on the VM. |
 | _SSH Key Data_ | The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'. |
 
-#### 1. Deploy ChainerMN
-
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmitmul%2FARMTemplate4ChainerMN%2Fmaster%2Fdeploy-chainermn.json)
-
-#### 2. Check status of the chainermn nodes
-
-Use the script "prerequisite.sh" to install the prerequsite (Azure CLI, Telnet and JQ) and "check_status.sh" for checking the status of    the individual instances of VMSS if VM is not running restart to them.
-
-Follow the document "ScriptsExecution.docx" to run the scripts.
 
 ## Validating MPI
 
