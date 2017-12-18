@@ -3,7 +3,7 @@
 # Shares
 SHARE_HOME=/share/home
 NFS_ON_MASTER=/share/home
-NFS_MOUNT=/data
+NFS_MOUNT=/mnt/resource
 # User
 HPC_USER=hpcuser
 HPC_UID=7007
@@ -69,6 +69,7 @@ mount_nfs()
 	sudo showmount -e ${MASTER_NAME}
 	sudo mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
 	sudo echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+	sudo chown -R hpcuser:hpc ${NFS_MOUNT}
 }
 
 base_pkgs()

@@ -2,6 +2,7 @@
 
 CUPY_VERSION=2.2.0
 CHAINER_VERSION=3.2.0
+CHAINERMN_VERSION=1.0.0
 
 check_gpu()
 {
@@ -32,14 +33,15 @@ setup_chainermn()
 		cd l_mpi_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
+		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
-	if grep -q "I_MPI" ~/.bashrc; then :; else
-		echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+	if grep -q "I_MPI" /share/home/.bashrc; then :; else
+		echo 'export I_MPI_FABRICS=shm:dapl' >> /share/home/.bashrc
+		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /share/home/.bashrc
+		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /share/home/.bashrc
+		echo 'export I_MPI_FALLBACK_DEVICE=0' >> /share/home/.bashrc
+		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/.bashrc
+		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/.bashrc
 	fi
 
 	# Install Anaconda3
@@ -47,19 +49,23 @@ setup_chainermn()
 		cd /opt
 		sudo curl -L -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 		sudo bash Anaconda3-5.0.1-Linux-x86_64.sh -b -p /opt/anaconda3
+		sudo rm -rf Anaconda3-5.0.1-Linux-x86_64.sh
 		sudo chown hpcuser:hpc -R anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
 	if grep -q "anaconda" ~/.bashrc; then :; else
-		echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
+		echo 'source /opt/anaconda3/bin/activate' >> /share/home/.bashrc
 	fi
 
 	# Install NCCL2
 	if [ ! -d /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
 		cd /opt
 		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
 		sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+		sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
 		sudo rm -rf libnccl2_2.1.2-1+cuda9.0_amd64.deb
+		sudo rm -rf libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
 	fi
 
 	# Install cuDNN7
@@ -75,8 +81,8 @@ setup_chainermn()
 
 	pip install cupy==${CUPY_VERSION}
 	pip install chainer==${CHAINER_VERSION}
-	MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir		
-	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn               
+	pip install mpi4py --no-cache-dir
+	pip install chainermn==${CHAINERMN_VERSION}	               
 }
 
 create_cron_job()
@@ -91,9 +97,9 @@ create_cron_job()
 if check_gpu; then
 	#Code to setup ChainerMN on GPU based machine
 	enable_rdma
-	setup_chainermn_gpu		
+	setup_chainermn	
 	sudo nvidia-smi -pm 1
-	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~		
+	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh /share/home
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	create_cron_job
 fi
