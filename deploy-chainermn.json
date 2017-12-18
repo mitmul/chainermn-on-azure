@@ -161,12 +161,12 @@
     "computeApiVersion": "2016-04-30-preview",
     "networkApiVersion": "2016-03-30",
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
-    "scriptsToDownload": [
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]"
-    ],
-    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"    
+    // "scriptsToDownload": [
+    //   "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
+    //   "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]",
+    //   "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]"
+    // ],
+    // "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"    
   },
   "resources": [
     {

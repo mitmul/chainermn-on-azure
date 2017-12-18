@@ -60,30 +60,30 @@ enable_rdma()
 }
 base_pkgs_ubuntu()
 {
-       #Insall Kernal 
-       cd /etc/apt/
-       echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
-       sudo apt-get update
-       sudo apt-get -y install linux-azure
-       
-       # Install dapl, rdmacm, ibverbs, and mlx4
-       sudo apt-get -y install libdapl2 libmlx4-1    
-       #enable_rdma
-       # WALinux Agent Installation
+	#Install Kernel 
+	cd /etc/apt/
+	echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
+	sudo apt-get update
+	sudo apt-get -y install linux-azure
+	
+	# Install dapl, rdmacm, ibverbs, and mlx4
+	sudo apt-get -y install libdapl2 libmlx4-1    
+	# enable_rdma
+	# WALinux Agent Installation
 	git clone https://github.com/Azure/WALinuxAgent.git
 	cd WALinuxAgent
 	sudo apt-get -y install python3-pip
 	sudo python3 ./setup.py install --force      
 	
-       #Set memlock unlimited
-       cd /etc/security/
-       echo " *               hard    memlock          unlimited">>limits.conf
-       echo " *               soft    memlock          unlimited">>limits.conf
-       
-       # Disable unattended-upgrades to avoide automatic updates
-       cd /etc/apt/apt.conf.d
-       sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
-       sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
+	#Set memlock unlimited
+	cd /etc/security/
+	echo " *               hard    memlock          unlimited">>limits.conf
+	echo " *               soft    memlock          unlimited">>limits.conf
+	
+	# Disable unattended-upgrades to avoide automatic updates
+	cd /etc/apt/apt.conf.d
+	sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
+	sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
 }
 mount_nfs()
 {
