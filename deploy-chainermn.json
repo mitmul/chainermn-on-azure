@@ -160,7 +160,7 @@
     },
     "computeApiVersion": "2016-04-30-preview",
     "networkApiVersion": "2016-03-30",
-    "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
+    "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]"
   },
   "resources": [
     {
