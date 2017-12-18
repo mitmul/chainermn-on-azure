@@ -4,12 +4,20 @@
   "parameters": {
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue": "Standard_NC24r",
+      "defaultValue": "Standard_NC24r_v2",
       "allowedValues": [
-        "Standard_NC24r",
         "Standard_NC6",
         "Standard_NC12",
         "Standard_NC24",
+        "Standard_NC24r",
+        "Standard_NC6_v2",
+        "Standard_NC12_v2",
+        "Standard_NC24_v2",
+        "Standard_NC24r_v2",
+        "Standard_ND6",
+        "Standard_ND12",
+        "Standard_ND24",
+        "Standard_ND24r",
         "Standard_NV6",
         "Standard_NV12",
         "Standard_NV24",
@@ -59,10 +67,8 @@
     },
     "vmImage": {
       "type": "string",
-      "defaultValue": "CentOS-HPC_7.3",
+      "defaultValue": "Ubuntu_16.04",
       "allowedValues": [
-        "CentOS_7.3",
-        "CentOS-HPC_7.3",
         "Ubuntu_16.04"
       ],
       "metadata": {
@@ -139,18 +145,6 @@
       "imageReference": "[variables('computeImages')[parameters('vmImage')]]"
     },
     "computeImages": {
-      "CentOS_7.3": {
-        "publisher": "OpenLogic",
-        "offer": "CentOS",
-        "sku": "7.3",
-        "version": "latest"
-      },
-      "CentOS-HPC_7.3": {
-        "publisher": "OpenLogic",
-        "offer": "CentOS-HPC",
-        "sku": "7.3",
-        "version": "latest"
-      },
       "Ubuntu_16.04": {
         "publisher": "Canonical",
         "offer": "UbuntuServer",

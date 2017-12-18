@@ -10,7 +10,6 @@
       "type": "string",
       "defaultValue": "Ubuntu_16.04",
       "allowedValues": [
-        "CentOS_7.3",
         "Ubuntu_16.04"
       ],
       "metadata": {
@@ -93,12 +92,6 @@
       }    
     },
     "computeImages": {
-      "CentOS_7.3": {
-        "publisher": "OpenLogic",
-        "offer": "CentOS",
-        "sku": "7.3",
-        "version": "latest"
-      },
       "Ubuntu_16.04": {
         "publisher": "Canonical",
         "offer": "UbuntuServer",
