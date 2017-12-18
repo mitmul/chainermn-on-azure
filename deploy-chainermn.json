@@ -166,7 +166,7 @@
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]"
     ],
-    "commandToExecute": ""    
+    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"    
   },
   "resources": [
     {
@@ -231,7 +231,7 @@
           "extensionProfile": {
             "extensions": [
               {
-                "name": "installCN",
+                "name": "installChainer",
                 "properties": {
                   "publisher": "Microsoft.Azure.Extensions",
                   "type": "CustomScript",
