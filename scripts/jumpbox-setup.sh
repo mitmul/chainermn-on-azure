@@ -19,6 +19,7 @@ done
 
 # Shares
 SHARE_HOME=/share/home
+SHARE_RESOURCE=/mnt/resource
 
 # User
 HPC_USER=hpcuser
@@ -45,10 +46,11 @@ setup_disks()
 mount_nfs()
 {
 	log "Install NFS on Ubuntu"	
+	sudo mkdir -p $SHARE_RESOURCE
 	sudo apt-get update
 	sudo apt-get -y install nfs-kernel-server
 	sudo echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
-	sudo echo "/mnt/resource  *(rw,async)" >> /etc/exports
+	sudo echo "$SHARE_RESOURCE  *(rw,async)" >> /etc/exports
 	sudo exportfs -a
 	sudo systemctl enable nfs-kernel-server.service
 	sudo systemctl start nfs-kernel-server.service

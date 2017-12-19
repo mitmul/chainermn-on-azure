@@ -2,8 +2,9 @@
 
 # Shares
 SHARE_HOME=/share/home
-NFS_ON_MASTER=/share/home
+NFS_ON_MASTER=/mnt/resource
 NFS_MOUNT=/mnt/resource
+
 # User
 HPC_USER=hpcuser
 HPC_UID=7007
@@ -45,7 +46,7 @@ setup_user()
 	
 	# Automatically mount the user's home
     sudo mkdir -p $SHARE_HOME
-	sudo  echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
+	sudo echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
 	sudo showmount -e ${MASTER_NAME}
 	sudo mount -a
     sudo groupadd -g $HPC_GID $HPC_GROUP
