@@ -112,7 +112,8 @@ setup_cuda9()
 	echo "export PATH=/usr/local/cuda/bin:$PATH" >> /etc/profile.d/cuda.sh
 }
 
-mkdir -p /var/local
+sudo su $HPC_USER
+sudo mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
     echo "We're already configured, exiting..."
@@ -128,7 +129,7 @@ base_pkgs
 setup_cuda9
 
 # Create marker file so we know we're configured
-touch $SETUP_MARKER
+sudo touch $SETUP_MARKER
 
 exit 0
 
