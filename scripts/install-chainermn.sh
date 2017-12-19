@@ -3,6 +3,7 @@
 CUPY_VERSION=2.2.0
 CHAINER_VERSION=3.2.0
 CHAINERMN_VERSION=1.0.0
+USER_HOME=/share/home/hpcuser
 
 check_gpu()
 {
@@ -35,13 +36,14 @@ setup_chainermn()
 		sudo ./install.sh --silent silent.cfg
 		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
-	if grep -q "I_MPI" ~/.bashrc; then :; else
-		echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+	if grep -q "I_MPI" $USER_HOME/.bashrc; then :; else
+		sudo su hpcuser && \
+		echo 'export I_MPI_FABRICS=shm:dapl' >> $USER_HOME/.bashrc && \
+		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> $USER_HOME/.bashrc && \
+		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> $USER_HOME/.bashrc && \
+		echo 'export I_MPI_FALLBACK_DEVICE=0' >> $USER_HOME/.bashrc && \
+		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> $USER_HOME/.bashrc && \
+		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> $USER_HOME/.bashrc
 	fi
 
 	# Install Anaconda3
@@ -53,8 +55,9 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
-	if grep -q "anaconda" ~/.bashrc; then :; else
-		echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
+	if grep -q "anaconda" $USER_HOME/.bashrc; then :; else
+		sudo su hpcuser && \
+		echo 'source /opt/anaconda3/bin/activate' >> $USER_HOME/.bashrc
 	fi
 
 	# Install NCCL2
