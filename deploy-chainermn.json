@@ -4,7 +4,7 @@
   "parameters": {
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue": "Standard_NC24r_v2",
+      "defaultValue": "Standard_NC24r",
       "allowedValues": [
         "Standard_NC6",
         "Standard_NC12",
