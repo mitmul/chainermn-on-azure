@@ -65,12 +65,12 @@ mount_nfs()
 	sudo apt-get -y install nfs-common
 
 	log "install NFS"
-	sudo mkdir -p ${NFS_MOUNT}
+	mkdir -p ${NFS_MOUNT}
 	log "mounting NFS on " ${MASTER_NAME}
 	sudo showmount -e ${MASTER_NAME}
 	sudo mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
 	sudo echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
-	sudo chown -R hpcuser:hpc ${NFS_MOUNT}
+	chown -R hpcuser:hpc ${NFS_MOUNT}
 }
 
 base_pkgs()

@@ -37,13 +37,11 @@ setup_chainermn()
 		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
 	if grep -q "I_MPI" $USER_HOME/.bashrc; then :; else
-		sudo su hpcuser && \
-		echo 'export I_MPI_FABRICS=shm:dapl' >> $USER_HOME/.bashrc && \
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> $USER_HOME/.bashrc && \
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> $USER_HOME/.bashrc && \
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >> $USER_HOME/.bashrc && \
-		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> $USER_HOME/.bashrc && \
-		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> $USER_HOME/.bashrc
+		echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
+		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
+		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
+		echo 'export I_MPI_FALLBACK_DEVICE=0' >> /etc/profile.d/intel_mpi.sh
+		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /etc/profile.d/intel_mpi.sh
 	fi
 
 	# Install Anaconda3
@@ -56,8 +54,7 @@ setup_chainermn()
 		source /opt/anaconda3/bin/activate
 	fi
 	if grep -q "anaconda" $USER_HOME/.bashrc; then :; else
-		sudo su hpcuser && \
-		echo 'source /opt/anaconda3/bin/activate' >> $USER_HOME/.bashrc
+		echo 'source /opt/anaconda3/bin/activate' >> /etc/profile.d/anaconda.sh
 	fi
 
 	# Install NCCL2
