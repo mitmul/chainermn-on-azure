@@ -101,9 +101,6 @@ setup_cuda9()
 	sudo apt-get update
 	sudo apt-get install -y cuda
 
-	sudo nvidia-smi -pm 1
-	sudo nvidia-smi
-
 	if [ ! -d /usr/local/cuda ]; then
 		sudo ln -s /usr/local/cuda-9.1 /usr/local/cuda
 	fi
