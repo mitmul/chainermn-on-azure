@@ -98,7 +98,6 @@ if check_gpu; then
 	#Code to setup ChainerMN on GPU based machine
 	enable_rdma
 	setup_chainermn	
-	sudo nvidia-smi -pm 1
 	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh /share/home
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	create_cron_job
