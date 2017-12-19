@@ -35,13 +35,13 @@ setup_chainermn()
 		sudo ./install.sh --silent silent.cfg
 		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
-	if grep -q "I_MPI" /share/home/.bashrc; then :; else
-		echo 'export I_MPI_FABRICS=shm:dapl' >> /share/home/.bashrc
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /share/home/.bashrc
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /share/home/.bashrc
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >> /share/home/.bashrc
-		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> /share/home/.bashrc
-		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /share/home/.bashrc
+	if grep -q "I_MPI" ~/.bashrc; then :; else
+		echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+		echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 	fi
 
 	# Install Anaconda3
@@ -50,11 +50,11 @@ setup_chainermn()
 		sudo curl -L -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
 		sudo bash Anaconda3-5.0.1-Linux-x86_64.sh -b -p /opt/anaconda3
 		sudo rm -rf Anaconda3-5.0.1-Linux-x86_64.sh
-		sudo chown hpcuser:hpc -R anaconda3
+		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
 	if grep -q "anaconda" ~/.bashrc; then :; else
-		echo 'source /opt/anaconda3/bin/activate' >> /share/home/.bashrc
+		echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
 	fi
 
 	# Install NCCL2
@@ -73,16 +73,17 @@ setup_chainermn()
 		cd /opt
 		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 		sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 		sudo rm -rf libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 	fi
 
 	pip install cupy==${CUPY_VERSION}
 	pip install chainer==${CHAINER_VERSION}
 	pip install mpi4py --no-cache-dir
-	pip install chainermn==${CHAINERMN_VERSION}	               
+	pip install chainermn==${CHAINERMN_VERSION}
+	sudo chown -R hpcuser:hpc /opt/anaconda3
 }
 
 create_cron_job()
@@ -94,11 +95,12 @@ create_cron_job()
 	rm downloadsecretcron
 }
 
+sudo su hpcuser
 if check_gpu; then
 	#Code to setup ChainerMN on GPU based machine
 	enable_rdma
 	setup_chainermn	
-	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh /share/home
+	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
 	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 	create_cron_job
 fi
