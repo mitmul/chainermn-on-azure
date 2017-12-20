@@ -84,7 +84,7 @@ setup_chainermn()
 	pip install cupy==${CUPY_VERSION}
 	pip install chainer==${CHAINER_VERSION}
 	pip install mpi4py --no-cache-dir
-	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==${CHAINERMN_VERSION}
+	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
 	sudo chown -R hpcuser:hpc /opt/anaconda3
 }
 
