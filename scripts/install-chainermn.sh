@@ -80,10 +80,11 @@ setup_chainermn()
 		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 	fi
 
-	sudo su - "pip install cupy==${CUPY_VERSION}" hpcuser
-	sudo su - "pip install chainer==${CHAINER_VERSION}" hpcuser
-	sudo su - "pip install mpi4py --no-cache-dir" hpcuser
-	sudo su - "pip install chainermn==${CHAINERMN_VERSION}" hpcuser
+	sudo su - hpcuser
+	pip install cupy==${CUPY_VERSION}
+	pip install chainer==${CHAINER_VERSION}
+	pip install mpi4py --no-cache-dir
+	pip install chainermn==${CHAINERMN_VERSION}
 	sudo chown -R hpcuser:hpc /opt/anaconda3
 }
 
