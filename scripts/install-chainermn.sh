@@ -4,6 +4,7 @@ CUPY_VERSION=2.2.0
 CHAINER_VERSION=3.2.0
 CHAINERMN_VERSION=1.0.0
 USER_HOME=/share/home/hpcuser
+USER_NAME=hpcuser
 
 check_gpu()
 {
@@ -53,8 +54,8 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
-	if [ ! -f /etc/profile.d/anaconda.sh ]; then
-		echo 'source /opt/anaconda3/bin/activate' >> /etc/profile.d/anaconda.sh
+	if grep -q "anaconda" $USER_HOME/.bashrc; then :; else
+		sudo su -c "echo 'source /opt/anaconda3/bin/activate' >> $USER_HOME/.bashrc" $USER_NAME
 	fi
 
 	# Install NCCL2
@@ -79,11 +80,10 @@ setup_chainermn()
 		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 	fi
 
-	sudo su hpcuser
-	pip install cupy==${CUPY_VERSION}
-	pip install chainer==${CHAINER_VERSION}
-	pip install mpi4py --no-cache-dir
-	pip install chainermn==${CHAINERMN_VERSION}
+	sudo su - "pip install cupy==${CUPY_VERSION}" hpcuser
+	sudo su - "pip install chainer==${CHAINER_VERSION}" hpcuser
+	sudo su - "pip install mpi4py --no-cache-dir" hpcuser
+	sudo su - "pip install chainermn==${CHAINERMN_VERSION}" hpcuser
 	sudo chown -R hpcuser:hpc /opt/anaconda3
 }
 
