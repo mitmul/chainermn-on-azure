@@ -45,19 +45,19 @@ setup_user()
 	sudo apt-get -y install nfs-common	
 	
 	# Automatically mount the user's home
-    sudo mkdir -p $SHARE_HOME
-	sudo echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
-	sudo showmount -e ${MASTER_NAME}
-	sudo mount -a
-    sudo groupadd -g $HPC_GID $HPC_GROUP
+    mkdir -p $SHARE_HOME
+	echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
+	showmount -e ${MASTER_NAME}
+	mount -a
+    groupadd -g $HPC_GID $HPC_GROUP
 
     # Don't require password for HPC user sudo
-    sudo echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
     
     # Disable tty requirement for sudo
-    sudo sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+    sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
 
-	sudo useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
 }
 
 mount_nfs()
@@ -67,10 +67,9 @@ mount_nfs()
 	log "install NFS"
 	mkdir -p ${NFS_MOUNT}
 	log "mounting NFS on " ${MASTER_NAME}
-	sudo showmount -e ${MASTER_NAME}
-	sudo mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+	showmount -e ${MASTER_NAME}
+	mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
 	sudo echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
-	chown -R hpcuser:hpc ${NFS_MOUNT}
 }
 
 base_pkgs()

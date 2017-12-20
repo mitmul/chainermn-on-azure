@@ -36,7 +36,7 @@ setup_chainermn()
 		sudo ./install.sh --silent silent.cfg
 		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
-	if grep -q "I_MPI" $USER_HOME/.bashrc; then :; else
+	if grep -q "I_MPI" /etc/profile.d/intel_mpi.sh; then :; else
 		echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
 		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
 		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
@@ -53,7 +53,7 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
-	if grep -q "anaconda" $USER_HOME/.bashrc; then :; else
+	if grep -q "anaconda" /etc/profile.d/anaconda.sh; then :; else
 		echo 'source /opt/anaconda3/bin/activate' >> /etc/profile.d/anaconda.sh
 	fi
 
@@ -79,12 +79,11 @@ setup_chainermn()
 		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 	fi
 
-	sudo su hpcuser && \
-	source $USER_HOME/.bashrc && \
-	pip install cupy==${CUPY_VERSION} && \
-	pip install chainer==${CHAINER_VERSION} && \
-	pip install mpi4py --no-cache-dir && \
-	pip install chainermn==${CHAINERMN_VERSION} && \
+	sudo su hpcuser
+	pip install cupy==${CUPY_VERSION}
+	pip install chainer==${CHAINER_VERSION}
+	pip install mpi4py --no-cache-dir
+	pip install chainermn==${CHAINERMN_VERSION}
 	sudo chown -R hpcuser:hpc /opt/anaconda3
 }
 
