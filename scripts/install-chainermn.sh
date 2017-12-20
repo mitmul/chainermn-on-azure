@@ -36,7 +36,7 @@ setup_chainermn()
 		sudo ./install.sh --silent silent.cfg
 		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
-	if grep -q "I_MPI" /etc/profile.d/intel_mpi.sh; then :; else
+	if [ ! -f /etc/profile.d/intel_mpi.sh ]; then
 		echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
 		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
 		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
@@ -53,12 +53,12 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
-	if grep -q "anaconda" /etc/profile.d/anaconda.sh; then :; else
+	if [ ! -f /etc/profile.d/anaconda.sh]; then
 		echo 'source /opt/anaconda3/bin/activate' >> /etc/profile.d/anaconda.sh
 	fi
 
 	# Install NCCL2
-	if [ ! -d /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
+	if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
 		cd /opt
 		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl2_2.1.2-1+cuda9.0_amd64.deb
 		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
