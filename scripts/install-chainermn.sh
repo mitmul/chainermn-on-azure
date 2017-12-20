@@ -53,7 +53,7 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
-	if [ ! -f /etc/profile.d/anaconda.sh]; then
+	if [ ! -f /etc/profile.d/anaconda.sh ]; then
 		echo 'source /opt/anaconda3/bin/activate' >> /etc/profile.d/anaconda.sh
 	fi
 
