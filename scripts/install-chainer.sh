@@ -89,20 +89,20 @@ base_pkgs()
 	sudo echo " *               soft    memlock          unlimited" >> limits.conf
 }
 
-setup_cuda9()
+setup_cuda8()
 {
-	log "setup_cuda9"
+	log "setup_cuda8"
 
 	sudo apt-get install linux-headers-$(uname -r)
-	sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	sudo rm -rf cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	sudo rm -rf cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get update
 	sudo apt-get install -y cuda
 
 	if [ ! -d /usr/local/cuda ]; then
-		sudo ln -s /usr/local/cuda-9.1 /usr/local/cuda
+		sudo ln -s /usr/local/cuda-8.0 /usr/local/cuda
 	fi
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
