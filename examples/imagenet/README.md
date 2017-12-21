@@ -24,6 +24,27 @@ $ az vmss nic list -g [resource group name] --vmss-name chainer \
 --query "[*].ipConfigurations[0].privateIpAddress" -o tsv > hosts.txt
 ```
 
+## Copy data
+
+Move to the data directory put in a shared point.
+
+```
+[On jumpbox]
+nc -l 9999 | pigz -d | tar xv
+
+[On client]
+ssh -L 9999:localhost:9999 hpcuser@[Azure Jumpbox IP]
+tar cf - ILSVRC2015 | pigz -c | nc localhost 9999
+```
+
+```
+wget -c http://dl.caffe.berkeleyvision.org/caffe_ilsvrc12.tar.gz
+tar zxvf caffe_ilsvrc12.tar.gz
+rm -rf caffe_ilsvrc12.tar.gz
+sort -R train.txt > train_random.txt
+sort -R val.txt > val_random.txt
+```
+
 ## Run the training
 
 ```
@@ -42,7 +63,7 @@ mpirun -n 128 -ppn 4 -f ~/hosts.txt \
 
 ```
 CHAINER_TYPE_CHECK=0 MPLBACKEND=Agg \
-mpirun -n 4 -ppn 1 -hosts localhost,localhost,localhost,localhost \
--envall python -O train_mnist.py \
---gpu --communicator pure_nccl
+mpirun -n 2 -ppn 1 -hosts 10.0.0.7,10.0.0.10 \
+-envall python train_mnist.py \
+--gpu --communicator non_cuda_aware
 ```
