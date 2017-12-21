@@ -45,6 +45,13 @@ sort -R train.txt > train_random.txt
 sort -R val.txt > val_random.txt
 ```
 
+```
+az storage file upload-batch --source ILSVRC2012 --destination imagenet --account-name chainermnimagenet
+```
+
+```
+
+
 ## Run the training
 
 ```
