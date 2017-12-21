@@ -95,21 +95,19 @@ setup_cuda()
 {
 	log "setup_cuda$CUDA_VERSION"
 	sudo apt-get install linux-headers-$(uname -r)
-
-	if [ $CUDA_VERSION = 8.0 ]; then
-		sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-		sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-		sudo rm -rf cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-	fi
-	if [ $CUDA_VERSION = 9.0 ]; then
-		sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-		sudo dpkg -i cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-		sudo rm -rf cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-	fi
-
+	sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	sudo rm -rf cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get update
 	sudo apt-get install -y cuda
+
+	if [ $CUDA_VERSION = 8.0 ]; then
+		sudo apt-get install -y cuda-8-0
+	fi
+	if [ $CUDA_VERSION = 9.0 ]; then
+		sudo apt-get install -y cuda-9-0
+	fi
 
 	if [ ! -d /usr/local/cuda ]; then
 		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
