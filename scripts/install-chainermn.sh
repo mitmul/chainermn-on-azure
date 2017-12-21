@@ -21,6 +21,55 @@ enable_rdma()
 	sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
+install_nccl()
+{
+	if [ -d /usr/local/cuda-8.0 ]; then
+		if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.1 ]; then
+			cd /opt
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl1_1.2.3-1+cuda8.0_amd64.deb
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_1.2.3-1+cuda8.0_amd64.deb
+			sudo dpkg -i libnccl1_1.2.3-1+cuda8.0_amd64.deb
+			sudo dpkg -i libnccl-dev_1.2.3-1+cuda8.0_amd64.deb
+			sudo rm -rf libnccl1_1.2.3-1+cuda8.0_amd64.deb
+			sudo rm -rf libnccl-dev_1.2.3-1+cuda8.0_amd64.deb
+		fi
+	fi
+	if [ -d /usr/local/cuda-9.0 ]; then
+		if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
+			cd /opt
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+			sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+			sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+			sudo rm -rf libnccl2_2.1.2-1+cuda9.0_amd64.deb
+			sudo rm -rf libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+		fi
+	fi
+}
+
+install_cudnn7()
+{
+	if [ ! -f /usr/lib/x86_64-linux-gnu/libcudnn.so.7 ]; then
+		cd /opt
+		if [ -d /usr/local/cuda-8.0 ]; then
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7-dev_7.0.5.15-1+cuda8.0_amd64.deb
+			sudo dpkg -i libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb
+			sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda8.0_amd64.deb
+			sudo rm -rf libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb
+			sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda8.0_amd64.deb
+		fi
+		if [ -d /usr/local/cuda-9.0 ]; then
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7-dev_7.0.5.15-1+cuda9.0_amd64.deb
+			sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
+			sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.0_amd64.deb
+			sudo rm -rf libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
+			sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.0_amd64.deb
+		fi
+	fi
+}
+
 setup_chainermn()
 {
 	sudo apt-get update
@@ -58,27 +107,9 @@ setup_chainermn()
 		sudo su -c "echo 'source /opt/anaconda3/bin/activate' >> $USER_HOME/.bashrc" $USER_NAME
 	fi
 
-	# Install NCCL2
-	if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
-		cd /opt
-		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl2_2.1.2-1+cuda9.0_amd64.deb
-		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-		sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
-		sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-		sudo rm -rf libnccl2_2.1.2-1+cuda9.0_amd64.deb
-		sudo rm -rf libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-	fi
+	install_nccl
 
-	# Install cuDNN7
-	if [ ! -f /usr/lib/x86_64-linux-gnu/libcudnn.so.7 ]; then
-		cd /opt
-		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo rm -rf libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
-		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
-	fi
+	install_cudnn7
 
 	sudo su - hpcuser
 	pip install cupy==${CUPY_VERSION}

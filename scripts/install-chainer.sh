@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CUDA_VERSION=8.0
+
 # Shares
 SHARE_HOME=/share/home
 NFS_ON_MASTER=/mnt/resource
@@ -89,21 +91,31 @@ base_pkgs()
 	sudo echo " *               soft    memlock          unlimited" >> limits.conf
 }
 
-setup_cuda9()
+setup_cuda()
 {
-	log "setup_cuda9"
-
+	log "setup_cuda8"
 	sudo apt-get install linux-headers-$(uname -r)
-	sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	sudo rm -rf cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+
+	if [ $CUDA_VERSION = 8.1 ]; then
+		sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+		sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+		sudo rm -rf cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+		if [ ! -d /usr/local/cuda ]; then
+			sudo ln -s /usr/local/cuda-8.0 /usr/local/cuda
+		fi
+	fi
+	if [ $CUDA_VERSION = 9.0 ]; then
+		sudo curl -L -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
+		sudo dpkg -i cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
+		sudo rm -rf cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
+		if [ ! -d /usr/local/cuda ]; then
+			sudo ln -s /usr/local/cuda-9.0 /usr/local/cuda
+		fi
+	fi
+
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get update
 	sudo apt-get install -y cuda
-
-	if [ ! -d /usr/local/cuda ]; then
-		sudo ln -s /usr/local/cuda-9.1 /usr/local/cuda
-	fi
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export CPATH=/usr/local/cuda/include:$CPATH" >> /etc/profile.d/cuda.sh
@@ -126,7 +138,7 @@ mount_nfs
 
 base_pkgs
 
-setup_cuda9
+setup_cuda
 
 # Create marker file so we know we're configured
 sudo touch $SETUP_MARKER
