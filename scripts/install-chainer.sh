@@ -100,7 +100,6 @@ setup_cuda()
 	sudo rm -rf cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get update
-	sudo apt-get install -y cuda
 
 	if [ $CUDA_VERSION = 8.0 ]; then
 		sudo apt-get install -y cuda-8-0
@@ -114,10 +113,10 @@ setup_cuda()
 	fi
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
-	echo "export CPATH=/usr/local/cuda/include:$CPATH" >> /etc/profile.d/cuda.sh
-	echo "export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH" >> /etc/profile.d/cuda.sh
-	echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH" >> /etc/profile.d/cuda.sh
-	echo "export PATH=/usr/local/cuda/bin:$PATH" >> /etc/profile.d/cuda.sh
+	echo "export CPATH=/usr/local/cuda/include:\$CPATH" >> /etc/profile.d/cuda.sh
+	echo "export LIBRARY_PATH=/usr/local/cuda/lib64:\$LIBRARY_PATH" >> /etc/profile.d/cuda.sh
+	echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64:\$LD_LIBRARY_PATH" >> /etc/profile.d/cuda.sh
+	echo "export PATH=/usr/local/cuda/bin:\$PATH" >> /etc/profile.d/cuda.sh
 }
 
 sudo su $HPC_USER
