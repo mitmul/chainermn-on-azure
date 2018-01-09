@@ -103,10 +103,13 @@ setup_chainermn()
 		sudo chown -R hpcuser:hpc /opt/anaconda3
 		source /opt/anaconda3/bin/activate
 	fi
+	if [ ! -f $USER_HOME/.bashrc ]; then
+		touch $USER_HOME/.bashrc
+	fi
 	if grep -q "anaconda" $USER_HOME/.bashrc; then :; else
 		sudo su -c "echo 'source /opt/anaconda3/bin/activate' >> $USER_HOME/.bashrc" $USER_NAME
 	fi
-
+	
 	install_nccl
 
 	install_cudnn7
