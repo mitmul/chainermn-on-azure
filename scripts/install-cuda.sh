@@ -191,5 +191,4 @@ fi
 # Create marker file so we know we're configured
 sudo touch $SETUP_MARKER
 
-exit 0
-
+shutdown -r +1
