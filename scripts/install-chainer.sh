@@ -72,4 +72,4 @@ if check_gpu; then
 	create_cron_job
 fi
 
-exit 0
+shutdown -r +1
