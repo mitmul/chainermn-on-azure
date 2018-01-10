@@ -100,12 +100,12 @@ setup_cuda()
 	sudo apt-get install -y cuda-drivers
 	sudo apt-get install -y cuda
 
-	if [ $CUDA_VERSION = 8.0 ]; then
-		sudo apt-get install -y cuda-8-0
-	fi
-	if [ $CUDA_VERSION = 9.0 ]; then
-		sudo apt-get install -y cuda-9-0
-	fi
+	# if [ $CUDA_VERSION = 8.0 ]; then
+	# 	sudo apt-get install -y cuda-8-0
+	# fi
+	# if [ $CUDA_VERSION = 9.0 ]; then
+	# 	sudo apt-get install -y cuda-9-0
+	# fi
 
 	if [ -d /usr/local/cuda ]; then
 		sudo rm -rf /usr/local/cuda
