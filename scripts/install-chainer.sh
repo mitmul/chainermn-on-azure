@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VERSION=8.0
+CUDA_VERSION=9.0
 
 # Shares
 SHARE_HOME=/share/home
@@ -80,6 +80,8 @@ base_pkgs()
 	cd /etc/apt/
 	sudo echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe" >> sources.list
 	sudo apt-get update
+	sudo apt-get -y upgrade
+	sudo apt-get -y dist-upgrade
 	sudo apt-get -y install linux-azure
 	
 	# Install dapl, rdmacm, ibverbs, and mlx4
