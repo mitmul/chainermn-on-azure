@@ -82,7 +82,6 @@ base_pkgs()
 	sudo apt-get update
 	sudo apt-get -y upgrade
 	sudo apt-get -y dist-upgrade
-	sudo apt-get -y install linux-azure
 	
 	# Install dapl, rdmacm, ibverbs, and mlx4
 	sudo apt-get -y install libdapl2 libmlx4-1
@@ -96,29 +95,23 @@ base_pkgs()
 setup_cuda()
 {
 	log "setup_cuda$CUDA_VERSION"
-	sudo apt-get install linux-headers-$(uname -r)
-	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+	CUDA_REPO_PKG=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	wget -O /tmp/${CUDA_REPO_PKG} http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/${CUDA_REPO_PKG} 
+	sudo dpkg -i /tmp/${CUDA_REPO_PKG}
+	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub 
+	rm -f /tmp/${CUDA_REPO_PKG}
 	sudo apt-get update
-	sudo apt-get install -y cuda
+	sudo apt-get install cuda-drivers
 
 	if [ $CUDA_VERSION = 8.0 ]; then
-		sudo curl -L -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-		sudo dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-		sudo rm -rf cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
-		sudo apt-get update
 		sudo apt-get install -y cuda-8-0
 	fi
 	if [ $CUDA_VERSION = 9.0 ]; then
-		sudo curl -L -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-		sudo dpkg -i cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-		sudo rm -rf cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
-		sudo apt-get update
 		sudo apt-get install -y cuda-9-0
 	fi
 
-	if [ ! -d /usr/local/cuda ]; then
-		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
-	fi
+	sudo rm -rf /usr/local/cuda
+	sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export CPATH=/usr/local/cuda/include:\$CPATH" >> /etc/profile.d/cuda.sh
