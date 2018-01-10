@@ -73,7 +73,6 @@ base_pkgs()
 	sudo echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe" >> sources.list
 	sudo apt-get update
 	sudo apt-get -y upgrade
-	sudo apt-get -y dist-upgrade
 	
 	# Install dapl, rdmacm, ibverbs, and mlx4
 	sudo apt-get -y install libdapl2 libmlx4-1 ibverbs-utils
