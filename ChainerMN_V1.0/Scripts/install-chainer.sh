@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
