@@ -1,10 +1,10 @@
 #!/bin/bash
-# Shares
+#Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
 NFS_ON_MASTER=/share/home
 NFS_MOUNT=/data
-# User
+#User
 HPC_USER=hpcuser
 HPC_UID=7007
 HPC_GROUP=hpc
