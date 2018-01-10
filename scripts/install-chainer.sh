@@ -103,15 +103,15 @@ setup_cuda()
 	sudo apt-get update
 	sudo apt-get install -y cuda-drivers
 
-	if [ $CUDA_VERSION = 8.0 ]; then
-		sudo apt-get install -y cuda-8-0
-	fi
-	if [ $CUDA_VERSION = 9.0 ]; then
-		sudo apt-get install -y cuda-9-0
-	fi
+	sudo apt-get install -y cuda
+	# if [ $CUDA_VERSION = 8.0 ]; then
+	# 	sudo apt-get install -y cuda-8-0
+	# fi
+	# if [ $CUDA_VERSION = 9.0 ]; then
+	# 	sudo apt-get install -y cuda-9-0
+	# fi
 
-	sudo rm -rf /usr/local/cuda
-	sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
+	# sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export CPATH=/usr/local/cuda/include:\$CPATH" >> /etc/profile.d/cuda.sh
