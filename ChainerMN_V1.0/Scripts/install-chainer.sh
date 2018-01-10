@@ -30,6 +30,7 @@ while getopts :s: optname; do
 		;;
   esac
 done
+
 is_ubuntu()
 {
 	python -mplatform | grep -qi Ubuntu
@@ -50,15 +51,6 @@ base_pkgs()
 	fi
 }
 
-enable_rdma()
-{
-	   # enable rdma    
-	   cd /etc/
-	   #echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
-	   sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
-}
 base_pkgs_ubuntu()
 {
 	   #Insall Kernal 
@@ -68,24 +60,31 @@ base_pkgs_ubuntu()
 	   sudo apt-get -y install linux-azure
 	   
 	   # Install dapl, rdmacm, ibverbs, and mlx4
-	   sudo apt-get -y install libdapl2 libmlx4-1    
-	   enable_rdma
-	   # WALinux Agent Installation
-	   git clone https://github.com/Azure/WALinuxAgent.git
-	   cd WALinuxAgent
-	   sudo apt-get -y install python3-pip
-	   sudo python3 ./setup.py install --force
+	   sudo apt-get -y install libdapl2 libmlx4-1  
+	   #install z-lib devel
+	   sudo apt-get install zlib1g-dev
+	   sudo apt install ibverbs-utils
+	   #enable_rdma
+	   cd /etc/
+	   #echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	   #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	   sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
+	   sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
 	   
+	   # # WALinux Agent Installation
+	   # git clone https://github.com/Azure/WALinuxAgent.git
+	   # cd WALinuxAgent
+	 
 	   #for cuda
-	   sudo apt-get install build-essential
-	   sudo apt-get install linux-headers-$(uname -r)
+	   sudo apt-get -y install build-essential
+	   sudo apt-get -y install linux-headers-$(uname -r)
 	
 	   #Set memlock unlimited
 	   cd /etc/security/
 	   echo " *               hard    memlock          unlimited">>limits.conf
 	   echo " *               soft    memlock          unlimited">>limits.conf
 	   
-	   # Disable unattended-upgrades to avoide automatic updates
+	   # Disable unattended-upgrades to avoide automatic updates 
 	   cd /etc/apt/apt.conf.d
 	   sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
 	   sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
@@ -96,7 +95,7 @@ base_pkgs_centos()
 	#cd /opt
 	#install updates and necessary utilities
 	yum -y update
-	#yum install yum-utils
+	yum install yum-utils
 	yum -y groupinstall development
 	yum -y install zlib-devel
 	#insta Kernel
@@ -105,6 +104,7 @@ base_pkgs_centos()
 	yum -y install dkms #OK
 	yum -y repolist
 	yum -y install dpkg-devel dpkg-dev
+	yum -y install -y libibverbs-utils
 }
 
 mount_nfs()
@@ -165,8 +165,9 @@ setup_user()
 
 install_python()
 {
-	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tgz
-	tar -xvf Python-3.6.3.tgz
+	cd ~
+	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
+	tar -xvf Python-3.6.3.tar.xz
 	cd Python-3.6.3
 	./configure --enable-optimizations
 	
@@ -174,7 +175,7 @@ install_python()
 		make && make install
 		yum install -y python-pip
 		pip install --upgrade pip
-	elif is_centos; then
+	elif is_ubuntu; then
 		sudo make altinstall
 		sudo apt -y install -y python-pip
 		sudo pip install --upgrade pip
@@ -212,6 +213,7 @@ setup_cuda_ubuntu()
 	sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
 	sudo dpkg -i  ${CUDA_DEB}
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+	# sudo apt-key adv --fetch-keys https://pfnresources.blob.core.windows.net/chainermn-v1-packages/7fa2af80.pub
 	sudo apt-get -y update
 	sudo apt-get -y install cuda
 }

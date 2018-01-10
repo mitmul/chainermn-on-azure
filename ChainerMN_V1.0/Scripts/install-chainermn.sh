@@ -7,19 +7,11 @@ is_ubuntu()
 	python -mplatform | grep -qi Ubuntu
 	return $?
 }
+
 is_centos()
 {
 	python -mplatform | grep -qi CentOS
 	return $?
-}
-enable_rdma()
-{
-	   # enable rdma    
-	   cd /etc/
-	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
 
@@ -243,29 +235,22 @@ setup_chainermn_gpu_infiniband()
 		
 }
 
-
-
-if is_ubuntu; then       
-	   apt install ibverbs-utils	
-fi
-if is_centos; then
-	yum install -y libibverbs-utils
-fi
-
 check_infini()
 {
 	sudo modprobe rdma_ucm
 	ibv_devices | grep mlx4
 	return $?
 }
+
 check_gpu()
 {
 	lspci | grep NVIDIA
 	return $?
 }
+
 if check_gpu;then
 	if check_infini;then
-			#enable_rdma
+		#enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
 		sudo nvidia-smi -pm 1
