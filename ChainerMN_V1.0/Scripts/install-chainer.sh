@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
@@ -10,6 +11,7 @@ HPC_UID=7007
 HPC_GROUP=hpc
 HPC_GID=7007
 #############################################################################
+
 log()
 {
 	echo "$0,$1,$2,$3"
