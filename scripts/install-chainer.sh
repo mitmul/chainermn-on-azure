@@ -104,6 +104,7 @@ setup_cuda()
 		sudo rm -rf cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 		sudo apt-get update
 		sudo apt-get install -y cuda-8-0
+		sudo apt-get install -y nvidia-384 nvidia-384-dev
 	fi
 	if [ $CUDA_VERSION = 9.0 ]; then
 		sudo curl -L -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb
