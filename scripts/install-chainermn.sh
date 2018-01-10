@@ -115,6 +115,8 @@ setup_chainermn()
 	install_cudnn7
 
 	sudo su - hpcuser
+	source /etc/profile.d/cuda.sh
+
 	pip install cupy==${CUPY_VERSION}
 	pip install chainer==${CHAINER_VERSION}
 	pip install mpi4py --no-cache-dir
