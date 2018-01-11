@@ -52,7 +52,7 @@ install_numpy()
 	python3 setup.py install
 }
 
-install_cython_protobuf
+install_cython_protobuf()
 {
 	pip install -U cython
 	sudo curl -L -O https://pypi.python.org/packages/b2/30/ab593c6ae73b45a5ef0b0af24908e8aec27f79efcda2e64a3df7af0b92a2/protobuf-3.1.0-py2.py3-none-any.whl ##md5=f02742e46128f1e0655b44c33d8c9718
