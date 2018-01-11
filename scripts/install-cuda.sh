@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VERSION=9.0
+CUDA_VERSION=9.1
 
 # Shares
 SHARE_HOME=/share/home
@@ -108,8 +108,8 @@ setup_cuda()
 
 	if [ -d /usr/local/cuda ]; then
 		sudo rm -rf /usr/local/cuda
+		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 	fi
-	sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 }
 
 install_nccl()

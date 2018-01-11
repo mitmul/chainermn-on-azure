@@ -46,7 +46,6 @@ setup_chainermn()
 	
 	sudo su - hpcuser
 	source ~/.bashrc
-	source /etc/profile.d/cuda.sh
 
 	pip install cupy==${CUPY_VERSION}
 	pip install chainer==${CHAINER_VERSION}
