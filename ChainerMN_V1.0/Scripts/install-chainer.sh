@@ -60,8 +60,8 @@ base_pkgs_ubuntu()
 	   # Install dapl, rdmacm, ibverbs, and mlx4
 	   sudo apt-get -y install libdapl2 libmlx4-1  
 	   #install z-lib devel
-	   sudo apt-get install zlib1g-dev
-	   sudo apt install ibverbs-utils
+	   sudo apt-get -y install zlib1g-dev
+	   sudo apt-get -y install ibverbs-utils
 	   #enable_rdma
 	   cd /etc/
 	   #echo "OS.EnableRDMA=y">>/etc/waagent.conf
@@ -178,7 +178,7 @@ install_python()
 		sudo apt -y install -y python-pip
 		sudo pip install --upgrade pip
 	fi
-	
+	alias python=python3
 }
 
 setup_cuda() 
@@ -211,7 +211,6 @@ setup_cuda_ubuntu()
 	sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
 	sudo dpkg -i  ${CUDA_DEB}
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-	# sudo apt-key adv --fetch-keys https://pfnresources.blob.core.windows.net/chainermn-v1-packages/7fa2af80.pub
 	sudo apt-get -y update
 	sudo apt-get -y install cuda
 }
@@ -232,7 +231,11 @@ fi
 verify_packages()
 {
 	python3.6 -V
+	if is_centos; then
 	cat /usr/local/cuda-8.0/version.txt
+	elif is_ubuntu; then
+	cat /usr/local/cuda/version.txt
+	fi
 }
 
 setup_user

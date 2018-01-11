@@ -65,15 +65,14 @@ install_Chainer()
 	install_cython_protobuf #required for numpy/six/cupy
 	install_numpy
 	install_six
+	install_cupy
 	#pip install chainer
 	sudo cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/chainer-3.2.0.tar.gz
 	sudo tar zxvf chainer-3.2.0.tar.gz
 	cd chainer-3.2.0
 	python3 setup.py install #install from root works well too
-	#pip install chainer #works_fine_and_installs Chainer 3.2.0
-	# install Cupy library
-	install_cupy
+	#pip install chainer #works_fine_and_installs Chainer 3.2.0	
 }
 
 setup_chainermn_gpu()
@@ -156,13 +155,13 @@ setup_chainermn_gpu_infiniband()
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
-			sudo mv intel intel_old # ubuntu_erro:  No such file or directory
+			sudo mv intel intel_old # OK 
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
-			sudo rm -rf l_mpi_2017.3.196.tgz
-			cd l_mpi_2017.3.196
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
+			sudo tar zxvf l_mpi_2017.3.196.tgz # OK
+			sudo rm -rf l_mpi_2017.3.196.tgz # OK
+			cd l_mpi_2017.3.196 # OK
+			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
+			sudo ./install.sh --silent silent.cfg # OK
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
@@ -177,9 +176,11 @@ setup_chainermn_gpu_infiniband()
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
 			#anaconda_3_5.0.1
-			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Anaconda3-5.0.1-Linux-x86_64.sh			
-			sudo bash Anaconda3-5.0.1-Linux-x86_64.sh -b -p /opt/anaconda3
-			sudo chown hpcuser:hpc -R anaconda3
+			PKG_Name=Anaconda3-5.0.1-Linux.sh.gz
+			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}			
+			sudo bash ${PKG_Name::-3} -b -p /opt/anaconda3
+			sudo chown hpcuser:hpc -R /opt/anaconda3
 			source /opt/anaconda3/bin/activate
 		fi
 
@@ -189,14 +190,12 @@ setup_chainermn_gpu_infiniband()
 		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
 		if [ ! -d /opt/nccl ]; then
 			if is_ubuntu; then				
-				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1%2Bcuda9.0_amd64.deb
-				sudo dpkg -i libnccl2_2.1.2-1%2Bcuda9.0_amd64.deb
-				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1%2Bcuda9.0_amd64.deb
-				sudo dpkg -i libnccl-dev_2.1.2-1%2Bcuda9.0_amd64.deb
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
 			fi
 			if is_centos; then
-				cd ~
-				cd /usr/local
 				#Working using tar file
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
 				tar xvzf nccl-1.3.4-1.tar.gz
@@ -212,12 +211,16 @@ setup_chainermn_gpu_infiniband()
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 			#cd /usr/local
 			if is_centos; then
-			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb
-			sudo dpkg -i libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb
+			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
+			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}
+			sudo dpkg -i ${PKG_Name::-3}
 			fi			
-			if is_ubuntu; then	
-			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
-			sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb
+			if is_ubuntu; then
+			PKG_Name=libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb.gz
+			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}
+			sudo dpkg -i ${PKG_Name::-3}
 			fi
 			#TODO: Copy CUDNN files to required locaiton
 		fi
@@ -230,9 +233,22 @@ setup_chainermn_gpu_infiniband()
 
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		CFLAGS="-I/usr/local/cuda/include" 
-		pip install chainermn=1.1.0
+		install_chainermn
+		
+		
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		
+}
+
+install_chainermn()
+{
+	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
+	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
+	# PKG_Name=chainermn-1.1.0.tar.gz
+	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+	# tar zxf ${PKG_Name}
+	# cd ${PKG_Name::-7}
+	# CFLAGS="-I/usr/local/cuda/include" python setup.py install
 }
 
 check_infini()
