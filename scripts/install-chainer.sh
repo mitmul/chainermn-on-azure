@@ -45,6 +45,7 @@ setup_chainermn()
 	fi
 	
 	sudo su - hpcuser
+	source ~/.bashrc
 	source /etc/profile.d/cuda.sh
 
 	pip install cupy==${CUPY_VERSION}
