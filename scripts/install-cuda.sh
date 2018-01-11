@@ -121,6 +121,8 @@ install_nccl()
 			sudo mv nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb?dl=0 nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
 			sudo dpkg -i nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
 			sudo rm -rf nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
+			sudo apt-get update
+			sudo apt-get install -y libnccl2 libnccl-dev
 		fi
 	fi
 	if [ -d /usr/local/cuda-9.0 ]; then
@@ -130,6 +132,8 @@ install_nccl()
 			sudo mv nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb?dl=0 nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
 			sudo dpkg -i nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
 			sudo rm -rf nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
+			sudo apt-get update
+			sudo apt-get install -y libnccl2 libnccl-dev
 		fi
 	fi
 }
