@@ -242,8 +242,8 @@ setup_chainermn_gpu_infiniband()
 
 install_chainermn()
 {
-	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
-	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
+	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn --version 1.1.0
+	#CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
 	# PKG_Name=chainermn-1.1.0.tar.gz
 	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
 	# tar zxf ${PKG_Name}
