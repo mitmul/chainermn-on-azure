@@ -115,6 +115,7 @@ setup_cuda()
 
 install_nccl()
 {
+	log "Install NCCL $NCCL_VERSION"
 	# if [ -d /usr/local/cuda-8.0 ]; then
 	# 	if [ $NCCL_VERSION = 2.1.2 ]; then
 	# 		cd /opt
