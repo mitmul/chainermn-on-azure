@@ -162,6 +162,14 @@ setup_chainermn_gpu_infiniband()
 			cd l_mpi_2017.3.196 # OK
 			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
 			sudo ./install.sh --silent silent.cfg # OK
+			
+			#required for pingpong test
+			echo "Current max locked memory in host: "
+			ulimit -l
+			echo "Set max locked memory to unlimited in host"
+			ulimit -l unlimited
+			echo "New max locked memory: "
+			ulimit -l
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
@@ -239,6 +247,7 @@ setup_chainermn_gpu_infiniband()
 		install_chainermn
 		alias python=python3		
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		
 		
 }
 
