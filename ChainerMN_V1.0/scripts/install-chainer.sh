@@ -173,7 +173,8 @@ install_python()
 		make && make install
 		yum install -y python-pip
 		pip install --upgrade pip
-	elif is_ubuntu; then
+	fi
+	if is_ubuntu; then
 		sudo make altinstall
 		sudo apt -y install -y python-pip
 		sudo pip install --upgrade pip
