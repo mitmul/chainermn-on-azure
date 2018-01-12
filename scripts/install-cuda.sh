@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VERSION=8.0
+CUDA_VERSION=9.1
 NCCL_VERSION=1.3.4
 
 # Shares
