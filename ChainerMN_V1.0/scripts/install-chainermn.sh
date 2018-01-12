@@ -228,18 +228,16 @@ setup_chainermn_gpu_infiniband()
 			sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
 			chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 		fi
-
 		
 		#install Chainer V3.1.0
 		install_Chainer
 		#install Cupy V2.1.0
 		install_cupy
-
+		
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		CFLAGS="-I/usr/local/cuda/include" 
 		install_chainermn
-		
-		
+		alias python=python3		
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		
 }
