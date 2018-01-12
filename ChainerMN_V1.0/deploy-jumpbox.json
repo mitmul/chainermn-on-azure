@@ -237,7 +237,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]"
+            "[uri(deployment().properties.templateLink.uri, 'Scripts/jumpbox-setup.sh')]"
           ],
           "commandToExecute": "bash jumpbox-setup.sh"
         }
