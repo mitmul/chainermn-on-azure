@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CUDA_VERSION=9.0
+CUDA_VERSION=8.0
+NCCL_VERSION=1.3.4
 
 # Shares
 SHARE_HOME=/share/home
@@ -117,7 +118,7 @@ setup_cuda()
 install_nccl()
 {
 	if [ -d /usr/local/cuda-8.0 ]; then
-		if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.1 ]; then
+		if [ $NCCL_VERSION = 2.1.2 ]; then
 			cd /opt
 			sudo curl -L -O https://www.dropbox.com/s/9qrk97of646rgr6/nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb?dl=0
 			sudo mv nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb?dl=0 nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
@@ -125,6 +126,15 @@ install_nccl()
 			sudo rm -rf nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
 			sudo apt-get update
 			sudo apt-get install -y libnccl2 libnccl-dev
+		fi
+		if [ $NCCL_VERSION = 1.3.4 ]; then
+			cd /opt
+			sudo curl -L -O https://github.com/NVIDIA/nccl/releases/download/v1.3.4-1/libnccl1_1.3.4-1.cuda8.0_amd64.deb
+			sudo curl -L -O https://github.com/NVIDIA/nccl/releases/download/v1.3.4-1/libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
+			sudo dpkg -i libnccl1_1.3.4-1.cuda8.0_amd64.deb
+			sudo dpkg -i libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
+			sudo rm -rf libnccl1_1.3.4-1.cuda8.0_amd64.deb
+			sudo rm -rf libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
 		fi
 	fi
 	if [ -d /usr/local/cuda-9.0 ]; then
