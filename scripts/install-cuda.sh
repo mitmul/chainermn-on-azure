@@ -129,12 +129,11 @@ install_nccl()
 		fi
 		if [ $NCCL_VERSION = 1.3.4 ]; then
 			cd /opt
-			sudo curl -L -O https://github.com/NVIDIA/nccl/releases/download/v1.3.4-1/libnccl1_1.3.4-1.cuda8.0_amd64.deb
-			sudo curl -L -O https://github.com/NVIDIA/nccl/releases/download/v1.3.4-1/libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
-			sudo dpkg -i libnccl1_1.3.4-1.cuda8.0_amd64.deb
-			sudo dpkg -i libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
-			sudo rm -rf libnccl1_1.3.4-1.cuda8.0_amd64.deb
-			sudo rm -rf libnccl-dev_1.3.4-1.cuda8.0_amd64.deb
+			sudo curl -L -O https://github.com/NVIDIA/nccl/archive/v1.3.4-1.tar.gz
+			sudo tar zxvf v1.3.4-1.tar.gz
+			sudo rm -rf v1.3.4-1.tar.gz
+			cd nccl-1.3.4-1
+			sudo make install
 		fi
 	fi
 	if [ -d /usr/local/cuda-9.0 ]; then
