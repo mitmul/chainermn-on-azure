@@ -184,6 +184,7 @@ install_python()
 
 setup_cuda() 
 {
+	cd /usr/local
 	log "setup_cuda8"
 	if is_centos; then
 		setup_cuda_centos

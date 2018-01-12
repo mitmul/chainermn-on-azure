@@ -180,8 +180,8 @@ setup_chainermn_gpu_infiniband()
 			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
 			gzip -d ${PKG_Name}			
 			sudo bash ${PKG_Name::-3} -b -p /opt/anaconda3
-			sudo chown hpcuser:hpc -R /opt/anaconda3
-			source /opt/anaconda3/bin/activate
+			sudo chown hpcuser:hpc -R anaconda3
+			source /opt/anaconda3/bin/activate			
 		fi
 
 		if grep -q "anaconda" ~/.bashrc; then :; else
@@ -209,7 +209,7 @@ setup_chainermn_gpu_infiniband()
 		fi
 		#cudnn 7.0.4
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
-			#cd /usr/local
+			cd /usr/local
 			if is_centos; then
 			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
 			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
@@ -222,7 +222,10 @@ setup_chainermn_gpu_infiniband()
 			gzip -d ${PKG_Name}
 			sudo dpkg -i ${PKG_Name::-3}
 			fi
-			#TODO: Copy CUDNN files to required locaiton
+			#Copy CUDNN files to required locaiton			
+			sudo cp cuda/include/cudnn.h /usr/local/cuda/include 
+			sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+			chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 		fi
 
 		
