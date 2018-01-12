@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CUDA_VERSION=9.1
+CUDA_VERSION=8.0
 NCCL_VERSION=1.3.4
 
 # Shares
@@ -98,13 +98,17 @@ setup_cuda()
 	rm -f /tmp/${CUDA_REPO_PKG}
 	sudo apt-get update
 	sudo apt-get install -y cuda-drivers
-	sudo apt-get install -y cuda
+	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 4.11.0-1016-azure"/g' /etc/default/grub
+	sudo update-grub
 
 	if [ $CUDA_VERSION = 8.0 ]; then
 		sudo apt-get install -y cuda-8-0
 	fi
 	if [ $CUDA_VERSION = 9.0 ]; then
 		sudo apt-get install -y cuda-9-0
+	fi
+	if [ $CUDA_VERSION = 9.1 ]; then
+		sudo apt-get install -y cuda
 	fi
 
 	if [ -d /usr/local/cuda ]; then
@@ -116,56 +120,25 @@ setup_cuda()
 install_nccl()
 {
 	log "Install NCCL $NCCL_VERSION"
-	# if [ -d /usr/local/cuda-8.0 ]; then
-	# 	if [ $NCCL_VERSION = 2.1.2 ]; then
-	# 		cd /opt
-	# 		sudo curl -L -O https://www.dropbox.com/s/9qrk97of646rgr6/nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb?dl=0
-	# 		sudo mv nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb?dl=0 nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
-	# 		sudo dpkg -i nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
-	# 		sudo rm -rf nccl-repo-ubuntu1604-2.1.2-ga-cuda8.0_1-1_amd64.deb
-	# 		sudo apt-get update
-	# 		sudo apt-get install -y libnccl2 libnccl-dev
-	# 	fi
-	# 	if [ $NCCL_VERSION = 1.3.4 ]; then
-	# 		cd /opt
-	# 		sudo curl -L -O https://github.com/NVIDIA/nccl/archive/v1.3.4-1.tar.gz
-	# 		sudo tar zxvf v1.3.4-1.tar.gz
-	# 		sudo rm -rf v1.3.4-1.tar.gz
-	# 		cd nccl-1.3.4-1
-	# 		sudo make install
-	# 	fi
-	# fi
-	# if [ -d /usr/local/cuda-9.0 ]; then
-	# 	if [ ! -f /usr/lib/x86_64-linux-gnu/libnccl.so.2 ]; then
-	# 		cd /opt
-	# 		sudo curl -L -O https://www.dropbox.com/s/ke3278hcotn57cb/nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb?dl=0
-	# 		sudo mv nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb?dl=0 nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
-	# 		sudo dpkg -i nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
-	# 		sudo rm -rf nccl-repo-ubuntu1604-2.1.2-ga-cuda9.0_1-1_amd64.deb
-	# 		sudo apt-get update
-	# 		sudo apt-get install -y libnccl2 libnccl-dev
-	# 	fi
-	# fi
+	if [ $CUDA_VERSION = 8.0 ]; then
+		if [ $NCCL_VERSION = 1.3.4 ]; then
+			cd /opt
+			sudo curl -L -O https://github.com/NVIDIA/nccl/archive/v1.3.4-1.tar.gz
+			sudo tar zxvf v1.3.4-1.tar.gz
+			sudo rm -rf v1.3.4-1.tar.gz
+			cd nccl-1.3.4-1
+			sudo make install
+		fi
+	fi
 }
 
 install_cudnn7()
 {
-	if [ ! -f /usr/lib/x86_64-linux-gnu/libcudnn.so.7 ]; then
-		cd /opt
-		if [ -d /usr/local/cuda-8.0 ]; then
-			cd /usr/local
-			sudo curl -L -O https://www.dropbox.com/s/dufmxvrzj6ougce/cudnn-8.0-linux-x64-v7.tgz?dl=0
-			sudo mv cudnn-8.0-linux-x64-v7.tgz?dl=0 cudnn-8.0-linux-x64-v7.tgz
-			sudo tar zxvf cudnn-8.0-linux-x64-v7.tgz
-			sudo rm -rf cudnn-8.0-linux-x64-v7.tgz
-		fi
-		if [ -d /usr/local/cuda-9.0 ]; then
-			cd /usr/local
-			sudo curl -L -O https://www.dropbox.com/s/i4ak03wn8vsxvs9/cudnn-9.0-linux-x64-v7.tgz?dl=0
-			sudo mv cudnn-9.0-linux-x64-v7.tgz?dl=0 cudnn-9.0-linux-x64-v7.tgz
-			sudo tar zxvf cudnn-9.0-linux-x64-v7.tgz
-			sudo rm -rf cudnn-9.0-linux-x64-v7.tgz
-		fi
+	if [ $CUDA_VERSION = 8.0 ]; then
+		cd /usr/local
+		sudo curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.0.5/cudnn-8.0-linux-x64-v7.tgz
+		sudo tar zxvf cudnn-8.0-linux-x64-v7.tgz
+		sudo rm -rf cudnn-8.0-linux-x64-v7.tgz
 	fi
 }
 
