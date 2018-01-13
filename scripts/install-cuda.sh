@@ -112,7 +112,8 @@ setup_cuda()
 		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 	fi
 
-	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 4.11.0-1016-azure"/g' /etc/default/grub
+	sudo apt-get install -y linux-image-4.11.0-1016-azure
+	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="gnulinux-advanced-ccee1a8d-0785-4b3a-a578-812d59f5d3e1>gnulinux-4.11.0-1016-azure-advanced-ccee1a8d-0785-4b3a-a578-812d59f5d3e1"/g' /etc/default/grub
 	sudo update-grub
 }
 
