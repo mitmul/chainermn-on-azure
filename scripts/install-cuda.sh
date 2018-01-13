@@ -113,7 +113,9 @@ setup_cuda()
 	fi
 
 	sudo apt-get install -y linux-image-4.11.0-1016-azure
-	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="gnulinux-advanced-ccee1a8d-0785-4b3a-a578-812d59f5d3e1>gnulinux-4.11.0-1016-azure-advanced-ccee1a8d-0785-4b3a-a578-812d59f5d3e1"/g' /etc/default/grub
+	prefix=`grep -oh "gnulinux-advanced-[0-9a-z-]*" /boot/grub/grub.cfg` \
+	kernel=`grep -oh "gnulinux-4.11.0-1016-azure-advanced-[0-9a-z-]*" /boot/grub/grub.cfg` \
+	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="'"${prefix}>${kernel}"'"/g' /etc/default/grub
 	sudo update-grub
 }
 
