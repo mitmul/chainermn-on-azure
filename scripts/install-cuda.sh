@@ -98,8 +98,6 @@ setup_cuda()
 	rm -f /tmp/${CUDA_REPO_PKG}
 	sudo apt-get update
 	sudo apt-get install -y cuda-drivers
-	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 4.11.0-1016-azure"/g' /etc/default/grub
-	sudo update-grub
 
 	if [ $CUDA_VERSION = 8.0 ]; then
 		sudo apt-get install -y cuda-8-0
@@ -115,6 +113,9 @@ setup_cuda()
 		sudo rm -rf /usr/local/cuda
 		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 	fi
+
+	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 4.11.0-1016-azure"/g' /etc/default/grub
+	sudo update-grub
 }
 
 install_nccl()
