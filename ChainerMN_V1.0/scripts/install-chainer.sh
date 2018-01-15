@@ -179,7 +179,6 @@ install_python()
 		sudo apt -y install -y python-pip
 		sudo pip install --upgrade pip
 	fi
-	alias python=python3
 }
 
 setup_cuda() 
