@@ -94,6 +94,14 @@ setup_chainermn_gpu()
 			cd l_mpi_2017.3.196
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
 			sudo ./install.sh --silent silent.cfg
+			
+			#required for pingpong test
+			echo "Current max locked memory in host: "
+			ulimit -l
+			echo "Set max locked memory to unlimited in host"
+			ulimit -l unlimited
+			echo "New max locked memory: "
+			ulimit -l
 		fi
 		if grep -q "I_MPI" ~/.bashrc; then :; else
 			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
@@ -106,41 +114,72 @@ setup_chainermn_gpu()
 
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
-			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Anaconda3-5.0.1-Linux-x86_64.sh
-			sudo bash Anaconda3-4.4.0-Linux-x86_64.sh -b -p /opt/anaconda3
+			#anaconda_3_5.0.1
+			PKG_Name=Anaconda3-5.0.1-Linux.sh.gz
+			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}			
+			sudo bash ${PKG_Name::-3} -b -p /opt/anaconda3
 			sudo chown hpcuser:hpc -R anaconda3
-			source /opt/anaconda3/bin/activate
+			source /opt/anaconda3/bin/activate			
 		fi
 
 		if grep -q "anaconda" ~/.bashrc; then :; else
 			echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
 		fi
 
+		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
 		if [ ! -d /opt/nccl ]; then
-			cd /opt && git clone https://github.com/NVIDIA/nccl.git
-			cd nccl && sudo make -j && sudo make install
+			cd /opt/nccl
+			if is_ubuntu; then				
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+			fi
+			if is_centos; then
+				#Working using tar file
+				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
+				tar xvzf nccl-1.3.4-1.tar.gz
+				cd nccl-1.3.4-1
+				sudo make -j && sudo make install
+			fi			
 		fi
 
 		if grep -q "LD_LIBRARY_PATH" ~/.bashrc; then :; else
 			echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 		fi
 
+		#cudnn 7.0.4
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 			cd /usr/local
-			sudo curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v6.0/cudnn-8.0-linux-x64-v6.0.tgz
-			sudo tar zxvf cudnn-8.0-linux-x64-v6.0.tgz
-			sudo rm -rf cudnn-8.0-linux-x64-v6.0.tgz
+			if is_centos; then
+			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
+			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}
+			sudo dpkg -i ${PKG_Name::-3}
+			fi			
+			if is_ubuntu; then
+			PKG_Name=libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb.gz
+			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}
+			sudo dpkg -i ${PKG_Name::-3}
+			fi
+			#Copy CUDNN files to required locaiton			
+			sudo cp cuda/include/cudnn.h /usr/local/cuda/include 
+			sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+			chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 		fi
 					
 		#install Chainer V3.1.0
 		install_Chainer
 		#install Cupy V2.1.0
 		install_cupy
-
+		
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
-		CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
-			   
+		CFLAGS="-I/usr/local/cuda/include" 
+		install_chainermn
+		alias python=python3		
+		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm			   
 }
 
 setup_chainermn_gpu_infiniband()
@@ -247,8 +286,6 @@ setup_chainermn_gpu_infiniband()
 		install_chainermn
 		alias python=python3		
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
-		
-		
 }
 
 install_chainermn()
