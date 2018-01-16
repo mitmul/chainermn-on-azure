@@ -59,7 +59,7 @@
     },
     "vmImage": {
       "type": "string",
-      "defaultValue": "CentOS-HPC_7.3",
+      "defaultValue": "CentOS_7.3",
       "allowedValues": [
         "CentOS_7.3",
         "CentOS-HPC_7.3",
