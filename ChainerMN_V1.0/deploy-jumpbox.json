@@ -11,7 +11,7 @@
       "allowedValues": [
         "CentOS_7.3",
         "Ubuntu_16.04",
-		"CentOS-HPC"
+		"CentOS-HPC_7.3"
       ],
       "metadata": {
         "description": "The VM OS image"
