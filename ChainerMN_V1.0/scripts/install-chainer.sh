@@ -29,6 +29,19 @@ while getopts :s: optname; do
   esac
 done
 
+mkdir -p /var/local
+SETUP_MARKER=/var/local/chainer-setup.marker
+if [ -e "$SETUP_MARKER" ]; then
+	echo "We're already configured, exiting..."
+	exit 0
+fi
+
+if is_centos; then
+	# disable selinux
+	sed -i 's/enforcing/disabled/g' /etc/selinux/config
+	setenforce permissive
+fi
+
 is_ubuntu()
 {
 	python -mplatform | grep -qi Ubuntu
@@ -93,8 +106,9 @@ base_pkgs_centos()
 	#cd /opt
 	#install updates and necessary utilities
 	yum -y update
-	yum install yum-utils
-	yum -y groupinstall development
+	yum -y install yum-utils
+	yum -y groupinstall development	
+	yum -y install gcc
 	yum -y install zlib-devel
 	#insta Kernel
 	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	#OK	#
@@ -103,6 +117,7 @@ base_pkgs_centos()
 	yum -y repolist
 	yum -y install dpkg-devel dpkg-dev
 	yum -y install -y libibverbs-utils
+	yum -y install dapl-devel
 }
 
 mount_nfs()
@@ -127,10 +142,10 @@ mount_nfs()
 setup_user()
 {
 	if is_centos; then
-		yum -y install nfs-utils nfs-utils-lib	
+		yum -y install nfs-utils>/dev/null #no verbose install 
 	fi
 	if is_ubuntu; then
-		sudo apt-get update
+		sudo apt-get -y update
 		sudo apt-get -y install nfs-common	
 		#apt-get -qy install nfs-common
 	fi
@@ -148,15 +163,12 @@ setup_user()
 	mount
    
 	groupadd -g $HPC_GID $HPC_GROUP
-
 	# Don't require password for HPC user sudo
 	echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 	
 	# Disable tty requirement for sudo
 	sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
-
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
-
 	chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
 }
 
@@ -165,7 +177,7 @@ install_python()
 {
 	cd /usr/local
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
-	tar -xvf Python-3.6.3.tar.xz
+	tar -xvf Python-3.6.3.tar.xz>/dev/null
 	cd Python-3.6.3
 	./configure --enable-optimizations
 	
@@ -216,18 +228,7 @@ setup_cuda_ubuntu()
 	sudo apt-get -y install cuda
 }
 
-mkdir -p /var/local
-SETUP_MARKER=/var/local/chainer-setup.marker
-if [ -e "$SETUP_MARKER" ]; then
-	echo "We're already configured, exiting..."
-	exit 0
-fi
 
-if is_centos; then
-	# disable selinux
-	sed -i 's/enforcing/disabled/g' /etc/selinux/config
-	setenforce permissive
-fi
 
 verify_packages()
 {

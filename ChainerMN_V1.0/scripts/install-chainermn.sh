@@ -29,10 +29,6 @@ install_cupy()
 
 install_six()
 {
-	cd ~
-	cd /usr/local #cd python-3.6.3
-#	curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/rh-python36-python-six-1.11.0-1.el7.noarch.rpm	
-#	rpm -i rh-python36-python-six-1.11.0-1.el7.noarch.rpm
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/six-1.11.0.tar.gz
 	sudo tar zxvf six-1.11.0.tar.gz
 	cd six-1.11.0
@@ -43,8 +39,6 @@ install_six()
 
 install_numpy()
 {
-	cd ~
-	cd /usr/local #cd python-3.6.3
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/numpy-1.13.3.tar.gz
 	sudo tar zxvf numpy-1.13.3.tar.gz
 	cd numpy-1.13.3
@@ -142,6 +136,7 @@ setup_chainermn_gpu()
 				tar xvzf nccl-1.3.4-1.tar.gz
 				cd nccl-1.3.4-1
 				sudo make -j && sudo make install
+				mv nccl-1.3.4-1 nccl
 			fi			
 		fi
 
@@ -164,10 +159,6 @@ setup_chainermn_gpu()
 			gzip -d ${PKG_Name}
 			sudo dpkg -i ${PKG_Name::-3}
 			fi
-			#Copy CUDNN files to required locaiton			
-			sudo cp cuda/include/cudnn.h /usr/local/cuda/include 
-			sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
-			chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 		fi
 					
 		#install Chainer V3.1.0
