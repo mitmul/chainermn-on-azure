@@ -14,6 +14,15 @@ is_centos()
 	return $?
 }
 
+enable_rdma()
+{
+	   # enable rdma    
+	   cd /etc/
+	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+}
 
 install_cupy()
 {
@@ -305,7 +314,7 @@ check_gpu()
 
 if check_gpu;then
 	if check_infini;then
-		#enable_rdma
+		enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
 		sudo nvidia-smi -pm 1
