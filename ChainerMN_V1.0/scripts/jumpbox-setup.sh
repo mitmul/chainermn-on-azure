@@ -98,6 +98,11 @@ install_intelmpi()
   cd l_mpi_2017.3.196
   sudo sed -i -e "s/decline/accept/g" silent.cfg
   sudo ./install.sh --silent silent.cfg
+  
+  sudo cd /etc/security
+  sudo echo '*            hard   memlock           unlimited' >> limits.conf
+  sudo echo '*            soft   memlock           unlimited' >> limits.conf
+  sudo cd ~
 }
 
 mount_nfs()

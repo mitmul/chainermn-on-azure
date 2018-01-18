@@ -197,6 +197,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			cd /etc/security
 			echo '*            hard   memlock           unlimited' >> limits.conf
 			echo '*            soft   memlock           unlimited' >> limits.conf
+			cd ~
 			
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi				
