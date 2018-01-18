@@ -96,12 +96,12 @@ setup_chainermn_gpu()
 			sudo ./install.sh --silent silent.cfg			
 			
 			PKG_Name=l_mpi-rt_2017.3.196.tgz
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
-			sudo tar zxvf ${PKG_Name} # OK
-			sudo rm -rf l${PKG_Name} # OK
-			cd ${PKG_Name::-4} # OK
-			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
-			sudo ./install.sh --silent silent.cfg # OK
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
+			sudo tar zxvf ${PKG_Name}
+			sudo rm -rf l${PKG_Name}
+			cd ${PKG_Name::-4}
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
 			
 			cd /etc/security
 			echo '*            hard   memlock           unlimited' >> limits.conf
@@ -216,12 +216,12 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			sudo ./install.sh --silent silent.cfg # OK		
 
 			PKG_Name=l_mpi-rt_2017.3.196.tgz
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
-			sudo tar zxvf ${PKG_Name} # OK
-			sudo rm -rf l${PKG_Name} # OK
-			cd ${PKG_Name::-4} # OK
-			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
-			sudo ./install.sh --silent silent.cfg # OK
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
+			sudo tar zxvf ${PKG_Name}
+			sudo rm -rf l${PKG_Name}
+			cd ${PKG_Name::-4}
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
 			
 		fi
 
