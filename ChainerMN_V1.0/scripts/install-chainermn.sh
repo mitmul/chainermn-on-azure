@@ -184,6 +184,7 @@ setup_chainermn_gpu()
 
 setup_chainermn_gpu_infiniband()
 {
+echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		if is_ubuntu; then
 			echo"command for ubuntu"
 		fi
@@ -280,6 +281,8 @@ setup_chainermn_gpu_infiniband()
 		install_chainermn
 		alias python=python3		
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+
+echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
 install_chainermn()
