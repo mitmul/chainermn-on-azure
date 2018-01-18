@@ -190,8 +190,14 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		fi
 		if is_centos; then
 			echo "\n\nInstalling Hyper-V-RDMA \n\n"
-			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm #OK
-			yum -y install git-all #OK
+			#yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
+			yum -y install /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
+			yum -y install git-all
+			
+			cd /etc/security
+			echo '*            hard   memlock           unlimited' >> limits.conf
+			echo '*            soft   memlock           unlimited' >> limits.conf
+			
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi				
 
