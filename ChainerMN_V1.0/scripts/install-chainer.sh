@@ -142,7 +142,7 @@ mount_nfs()
 setup_user()
 {
 	if is_centos; then
-		yum -y install nfs-utils #>/dev/null #no verbose install 
+		yum -y install nfs-utils
 	fi
 	if is_ubuntu; then
 		sudo apt-get -y update
