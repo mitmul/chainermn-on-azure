@@ -27,9 +27,6 @@ enable_rdma()
 install_cupy()
 {
 	#may require NCCL first
-	#PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy
-	cd ~ //install in chainer-3.2.0
-	cd /usr/local #cd python-3.6.3
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
 	sudo tar zxvf cupy-2.2.0.tar.gz
 	cd cupy-2.2.0
@@ -96,15 +93,21 @@ setup_chainermn_gpu()
 			sudo rm -rf l_mpi_2017.3.196.tgz
 			cd l_mpi_2017.3.196
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
+			sudo ./install.sh --silent silent.cfg			
 			
-			#required for pingpong test
-			echo "Current max locked memory in host: "
-			ulimit -l
-			echo "Set max locked memory to unlimited in host"
-			ulimit -l unlimited
-			echo "New max locked memory: "
-			ulimit -l
+			PKG_Name=l_mpi-rt_2017.3.196.tgz
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
+			sudo tar zxvf ${PKG_Name} # OK
+			sudo rm -rf l${PKG_Name} # OK
+			cd ${PKG_Name::-4} # OK
+			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
+			sudo ./install.sh --silent silent.cfg # OK
+			
+			cd /etc/security
+			echo '*            hard   memlock           unlimited' >> limits.conf
+			echo '*            soft   memlock           unlimited' >> limits.conf
+			cd ~
+			
 		fi
 		if grep -q "I_MPI" ~/.bashrc; then :; else
 			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
@@ -210,7 +213,16 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			sudo rm -rf l_mpi_2017.3.196.tgz # OK
 			cd l_mpi_2017.3.196 # OK
 			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
-			sudo ./install.sh --silent silent.cfg # OK					
+			sudo ./install.sh --silent silent.cfg # OK		
+
+			PKG_Name=l_mpi-rt_2017.3.196.tgz
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
+			sudo tar zxvf ${PKG_Name} # OK
+			sudo rm -rf l${PKG_Name} # OK
+			cd ${PKG_Name::-4} # OK
+			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
+			sudo ./install.sh --silent silent.cfg # OK
+			
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
