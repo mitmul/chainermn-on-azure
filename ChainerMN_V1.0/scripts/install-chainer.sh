@@ -105,29 +105,29 @@ base_pkgs_ubuntu()
 }
 
 base_pkgs_centos()
-{	
+{
+echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
+
 	#cd /opt
 	#install updates and necessary utilities
 	yum -y update
 	yum -y install yum-utils
-	yum -y groupinstall development	
+	yum -y groupinstall development
 	yum -y install gcc
 	yum -y install zlib-devel
-	#insta Kernel
-	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	#OK	#
-	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm #OK
-	yum -y install dkms #OK
+	#install Kernel
+	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
+	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm
+	yum -y install dkms
 	yum -y repolist
 	yum -y install dpkg-devel dpkg-dev
 	yum -y install -y libibverbs-utils
-	yum -y install dapl-devel
+	
+echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
 
 mount_nfs()
 {
-	if is_centos; then
-		yum -y install nfs-utils nfs-utils-lib	
-	fi
 	if is_ubuntu; then	
 		sudo apt-get -y install nfs-common	
 		#apt-get -qy install nfs-common
@@ -144,8 +144,11 @@ mount_nfs()
 
 setup_user()
 {
+	echo "\n\nEntering setup_user\n\n=========================\n\n"
 	if is_centos; then
-		yum -y install nfs-utils
+		echo "\n\nInstalling NFS-UTILS "
+		yum -y install nfs-utils >> /dev/null
+		echo "\n\n Installed "
 	fi
 	if is_ubuntu; then
 		sudo apt-get -y update
@@ -173,31 +176,38 @@ setup_user()
 	sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
 	chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
+	echo "\n\nsetup_user completed \n\n=========================\n\n"
 }
 
 
 install_python()
 {
+echo "\n\nEntering install_python\n\n=========================\n\n"
+
 	cd /usr/local
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
-	tar -xvf Python-3.6.3.tar.xz>/dev/null
+	tar -xvf Python-3.6.3.tar.xz >> /dev/null
 	cd Python-3.6.3
-	./configure --enable-optimizations
+	./configure --enable-optimizations >> /dev/null
 	
 	if is_centos; then
-		make && make install
-		yum install -y python-pip
+		make >> /dev/null && make install >> /dev/null
+		yum install -y python-pip >> /dev/null
 		pip install --upgrade pip
 	fi
 	if is_ubuntu; then
-		sudo make altinstall
+		sudo make altinstall >> /dev/null
 		sudo apt -y install -y python-pip
 		sudo pip install --upgrade pip
 	fi
+
+echo "\n\n install_python completed \n\n=========================\n\n"
 }
 
 setup_cuda() 
 {
+echo "\n\nEntering setup_cuda\n\n=========================\n\n"
+
 	cd /usr/local
 	log "setup_cuda8"
 	if is_centos; then
@@ -209,6 +219,8 @@ setup_cuda()
 
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh
+	
+echo "\n\n setup_cuda completed \n\n=========================\n\n"
 }
 
 setup_cuda_centos()
@@ -217,7 +229,7 @@ setup_cuda_centos()
 	sudo curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
 	sudo rpm -i ${CUDA_RPM}
 	sudo yum clean expire-cache
-	sudo yum -y install cuda-8-0
+	sudo yum -y install cuda-8-0 >> /dev/null
 }
 
 setup_cuda_ubuntu()
@@ -235,12 +247,16 @@ setup_cuda_ubuntu()
 
 verify_packages()
 {
+echo "\n\nEntering verify_packages\n\n=========================\n\n"
+
 	python3.6 -V
 	if is_centos; then
 	cat /usr/local/cuda-8.0/version.txt
 	elif is_ubuntu; then
 	cat /usr/local/cuda/version.txt
 	fi
+
+echo "\n\n verify_packages completed \n\n=========================\n\n"	
 }
 
 echo -e "setup_user \n\n=============================================================================================="

@@ -188,8 +188,10 @@ setup_chainermn_gpu_infiniband()
 			echo"command for ubuntu"
 		fi
 		if is_centos; then
+			echo "\n\nInstalling Hyper-V-RDMA \n\n"
 			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm #OK
 			yum -y install git-all #OK
+			echo "\n\n Hyper-V-RDMA installed !!"
 		fi				
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
@@ -200,15 +202,7 @@ setup_chainermn_gpu_infiniband()
 			sudo rm -rf l_mpi_2017.3.196.tgz # OK
 			cd l_mpi_2017.3.196 # OK
 			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
-			sudo ./install.sh --silent silent.cfg # OK
-			
-			#required for pingpong test
-			echo "Current max locked memory in host: "
-			ulimit -l
-			echo "Set max locked memory to unlimited in host"
-			ulimit -l unlimited
-			echo "New max locked memory: "
-			ulimit -l
+			sudo ./install.sh --silent silent.cfg # OK					
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
