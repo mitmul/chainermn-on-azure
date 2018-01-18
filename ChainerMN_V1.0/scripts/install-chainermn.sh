@@ -298,14 +298,18 @@ install_chainermn()
 
 check_infini()
 {
+echo "\n\n check_infini \n\n"
 	sudo modprobe rdma_ucm
 	ibv_devices | grep mlx4
+echo "\n\n check_infini completed \n\n=========================\n\n"	
 	return $?
 }
 
 check_gpu()
 {
+echo "\n\n check_gpu \n\n"
 	lspci | grep NVIDIA
+echo "\n\n check_gpu completed \n\n=========================\n\n"	
 	return $?
 }
 
