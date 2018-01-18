@@ -29,6 +29,17 @@ while getopts :s: optname; do
   esac
 done
 
+is_ubuntu()
+{
+	python -mplatform | grep -qi Ubuntu
+	return $?
+}
+is_centos()
+{
+	python -mplatform | grep -qi CentOS
+	return $?
+}
+
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
@@ -42,16 +53,8 @@ if is_centos; then
 	setenforce permissive
 fi
 
-is_ubuntu()
-{
-	python -mplatform | grep -qi Ubuntu
-	return $?
-}
-is_centos()
-{
-	python -mplatform | grep -qi CentOS
-	return $?
-}
+
+
 base_pkgs()
 {
 	log "base_pkgs"
