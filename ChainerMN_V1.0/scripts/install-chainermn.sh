@@ -214,15 +214,6 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			cd l_mpi_2017.3.196 # OK
 			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
 			sudo ./install.sh --silent silent.cfg # OK		
-
-			PKG_Name=l_mpi-rt_2017.3.196.tgz
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
-			sudo tar zxvf ${PKG_Name}
-			sudo rm -rf l${PKG_Name}
-			cd ${PKG_Name::-4}
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
-			
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
