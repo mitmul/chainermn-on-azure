@@ -93,20 +93,11 @@ install_intelmpi()
   cd /opt
   sudo mv intel intel_old
   sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-  sudo tar zxvf l_mpi_2017.3.196.tgz
+  sudo tar -zxf l_mpi_2017.3.196.tgz
   sudo rm -rf l_mpi_2017.3.196.tgz
   cd l_mpi_2017.3.196
   sudo sed -i -e "s/decline/accept/g" silent.cfg
   sudo ./install.sh --silent silent.cfg
-  
-  #MPI runtime
-			PKG_Name=l_mpi-rt_2017.3.196.tgz
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
-			sudo tar zxvf ${PKG_Name}
-			sudo rm -rf l${PKG_Name}
-			cd ${PKG_Name::-4}
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
   
   sudo cd /etc/security
   sudo echo '*            hard   memlock           unlimited' >> limits.conf

@@ -28,7 +28,7 @@ install_cupy()
 {
 	#may require NCCL first
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
-	sudo tar zxvf cupy-2.2.0.tar.gz
+	sudo tar -zxf cupy-2.2.0.tar.gz
 	cd cupy-2.2.0
 	python3 setup.py install 
 }
@@ -36,7 +36,7 @@ install_cupy()
 install_six()
 {
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/six-1.11.0.tar.gz
-	sudo tar zxvf six-1.11.0.tar.gz
+	sudo tar -zxf six-1.11.0.tar.gz
 	cd six-1.11.0
 	python3 setup.py install
 	#if none of above commands work it will update six to 1.11.0
@@ -46,7 +46,7 @@ install_six()
 install_numpy()
 {
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/numpy-1.13.3.tar.gz
-	sudo tar zxvf numpy-1.13.3.tar.gz
+	sudo tar -zxf numpy-1.13.3.tar.gz
 	cd numpy-1.13.3
 	#sudo python setup.py install
 	python3 setup.py install
@@ -69,7 +69,7 @@ install_Chainer()
 	#pip install chainer
 	sudo cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/chainer-3.2.0.tar.gz
-	sudo tar zxvf chainer-3.2.0.tar.gz
+	sudo tar -zxf chainer-3.2.0.tar.gz
 	cd chainer-3.2.0
 	python3 setup.py install #install from root works well too
 	#pip install chainer #works_fine_and_installs Chainer 3.2.0	
@@ -89,7 +89,7 @@ setup_chainermn_gpu()
 			cd /opt
 			sudo mv intel intel_old
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo tar -zxf l_mpi_2017.3.196.tgz
 			sudo rm -rf l_mpi_2017.3.196.tgz
 			cd l_mpi_2017.3.196
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
@@ -97,7 +97,7 @@ setup_chainermn_gpu()
 			
 			PKG_Name=l_mpi-rt_2017.3.196.tgz
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
-			sudo tar zxvf ${PKG_Name}
+			sudo tar -zxf ${PKG_Name}
 			sudo rm -rf l${PKG_Name}
 			cd ${PKG_Name::-4}
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
@@ -145,7 +145,7 @@ setup_chainermn_gpu()
 			if is_centos; then
 				#Working using tar file
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
-				tar xvzf nccl-1.3.4-1.tar.gz
+				tar -zxf nccl-1.3.4-1.tar.gz
 				cd nccl-1.3.4-1
 				sudo make -j && sudo make install
 				mv nccl-1.3.4-1 nccl
@@ -208,7 +208,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			cd /opt
 			sudo mv intel intel_old # OK 
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz # OK
+			sudo tar -zxf l_mpi_2017.3.196.tgz # OK
 			sudo rm -rf l_mpi_2017.3.196.tgz # OK
 			cd l_mpi_2017.3.196 # OK
 			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
@@ -250,7 +250,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			if is_centos; then
 				#Working using tar file
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
-				tar xvzf nccl-1.3.4-1.tar.gz
+				tar -xzf nccl-1.3.4-1.tar.gz
 				cd nccl-1.3.4-1
 				sudo make -j && sudo make install
 			fi			
@@ -297,7 +297,7 @@ install_chainermn()
 	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
 	# PKG_Name=chainermn-1.1.0.tar.gz
 	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-	# tar zxf ${PKG_Name}
+	# tar -zxf ${PKG_Name}
 	# cd ${PKG_Name::-7}
 	# CFLAGS="-I/usr/local/cuda/include" python setup.py install
 }

@@ -186,7 +186,7 @@ echo "\n\nEntering install_python\n\n=========================\n\n"
 
 	cd /usr/local
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
-	tar -xvf Python-3.6.3.tar.xz >> /dev/null
+	tar -xf Python-3.6.3.tar.xz >> /dev/null
 	cd Python-3.6.3
 	./configure --enable-optimizations >> /dev/null
 	
