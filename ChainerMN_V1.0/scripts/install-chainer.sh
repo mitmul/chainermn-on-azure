@@ -116,6 +116,7 @@ echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 
 	#cd /opt
 	#install updates and necessary utilities
+	yum -y update
 	yum -y install yum-utils
 	yum -y install gcc
 	yum -y install zlib-devel
@@ -128,10 +129,6 @@ echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 	yum -y install -y libibverbs-utils
 	yum -y install dapl
 	
-	#Set memlock unlimited
-	cd /etc/security/
-	echo " *               hard    memlock          unlimited">>limits.conf
-	echo " *               soft    memlock          unlimited">>limits.conf
 	
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
