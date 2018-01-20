@@ -53,8 +53,6 @@ if is_centos; then
 	setenforce permissive
 fi
 
-
-
 base_pkgs()
 {
 	log "base_pkgs"
@@ -63,6 +61,16 @@ base_pkgs()
 	elif is_centos; then
 		base_pkgs_centos
 	fi
+}
+
+enable_rdma()
+{
+       # enable rdma    
+       cd /etc/
+       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
+       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
+       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
 }
 
 base_pkgs_ubuntu()
@@ -78,16 +86,14 @@ base_pkgs_ubuntu()
 	   #install z-lib devel
 	   sudo apt-get -y install zlib1g-dev
 	   sudo apt-get -y install ibverbs-utils
-	   #enable_rdma
-	   cd /etc/
-	   #echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
-	   sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
+	   sudo apt-get -y dapl
 	   
-	   # # WALinux Agent Installation
-	   # git clone https://github.com/Azure/WALinuxAgent.git
-	   # cd WALinuxAgent
+	   #enable RDAM
+	   enable_rdma
+	  
+	   # WALinux Agent Installation
+	   git clone https://github.com/Azure/WALinuxAgent.git
+	   cd WALinuxAgent
 	 
 	   #for cuda
 	   sudo apt-get -y install build-essential
@@ -110,9 +116,7 @@ echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 
 	#cd /opt
 	#install updates and necessary utilities
-	yum -y update
 	yum -y install yum-utils
-	yum -y groupinstall development
 	yum -y install gcc
 	yum -y install zlib-devel
 	#install Kernel
@@ -122,6 +126,12 @@ echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 	yum -y repolist
 	yum -y install dpkg-devel dpkg-dev
 	yum -y install -y libibverbs-utils
+	yum -y install dapl
+	
+	#Set memlock unlimited
+	cd /etc/security/
+	echo " *               hard    memlock          unlimited">>limits.conf
+	echo " *               soft    memlock          unlimited">>limits.conf
 	
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }

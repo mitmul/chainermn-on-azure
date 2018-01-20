@@ -30,7 +30,7 @@ install_cupy()
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
 	sudo tar -zxf cupy-2.2.0.tar.gz
 	cd cupy-2.2.0
-	python3 setup.py install 
+	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
 }
 
 install_six()
@@ -192,8 +192,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		fi
 		if is_centos; then
 			echo "\n\nInstalling Hyper-V-RDMA \n\n"
-			#yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
-			yum -y install /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
+			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
 			yum -y install git-all
 			
 			cd /etc/security
@@ -206,13 +205,13 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
-			sudo mv intel intel_old # OK 
+			sudo mv intel intel_old
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar -zxf l_mpi_2017.3.196.tgz # OK
-			sudo rm -rf l_mpi_2017.3.196.tgz # OK
-			cd l_mpi_2017.3.196 # OK
-			sudo sed -i -e "s/decline/accept/g" silent.cfg # OK
-			sudo ./install.sh --silent silent.cfg # OK		
+			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo rm -rf l_mpi_2017.3.196.tgz
+			cd l_mpi_2017.3.196
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
 		fi
 
 		if grep -q "I_MPI" ~/.bashrc; then :; else
@@ -285,8 +284,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		install_chainermn
-		alias python=python3		
-		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		alias python=python3
 
 echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
