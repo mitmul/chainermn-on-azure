@@ -73,6 +73,14 @@ enable_rdma()
        sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
 }
 
+install_waagent()
+{
+		# WALinux Agent Installation
+	   git clone https://github.com/Azure/WALinuxAgent.git
+	   cd WALinuxAgent
+	   sudo python setup.py install --register-service
+}
+
 base_pkgs_ubuntu()
 {
 	   #Insall Kernal 
@@ -88,12 +96,15 @@ base_pkgs_ubuntu()
 	   sudo apt-get -y install ibverbs-utils
 	   sudo apt-get -y dapl
 	   
+	   #install_waagent
+	   install_waagent
 	   #enable RDAM
 	   enable_rdma
 	  
 	   # WALinux Agent Installation
 	   git clone https://github.com/Azure/WALinuxAgent.git
 	   cd WALinuxAgent
+	   sudo python setup.py install --register-service
 	 
 	   #for cuda
 	   sudo apt-get -y install build-essential
@@ -123,12 +134,12 @@ echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 	#install Kernel
 	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
 	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm
-	yum -y install dkms
-	yum -y repolist
+	yum -y install dkms repolist createrepo
 	yum -y install dpkg-devel dpkg-dev
 	yum -y install -y libibverbs-utils
-	yum -y install dapl
 	
+	#install_waagent
+	install_waagent
 	
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
