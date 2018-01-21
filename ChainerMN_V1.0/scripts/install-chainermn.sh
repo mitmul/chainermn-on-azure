@@ -14,16 +14,6 @@ is_centos()
 	return $?
 }
 
-enable_rdma()
-{
-	   # enable rdma    
-	   cd /etc/
-	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
-}
-
 install_cupy()
 {
 	#may require NCCL first
@@ -94,14 +84,6 @@ setup_chainermn_gpu()
 			cd l_mpi_2017.3.196
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
 			sudo ./install.sh --silent silent.cfg			
-			
-			PKG_Name=l_mpi-rt_2017.3.196.tgz
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11575/${PKG_Name}
-			sudo tar -zxf ${PKG_Name}
-			sudo rm -rf l${PKG_Name}
-			cd ${PKG_Name::-4}
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
 			
 			cd /etc/security
 			echo '*            hard   memlock           unlimited' >> limits.conf
@@ -315,6 +297,17 @@ echo "\n\n check_gpu \n\n"
 	lspci | grep NVIDIA
 echo "\n\n check_gpu completed \n\n=========================\n\n"	
 	return $?
+}
+
+
+enable_rdma()
+{
+	   # enable rdma    
+	   cd /etc/
+	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
 if check_gpu;then
