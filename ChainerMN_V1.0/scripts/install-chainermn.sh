@@ -141,8 +141,8 @@ setup_chainermn_gpu()
 			CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
 			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
 			gzip -d ${CUDNN_PKG_NAME}
-			sudo tar zxvf ${PKG_Name::-3}
-			sudo rm -rf ${PKG_Name::-3}
+			sudo tar zxvf ${CUDNN_PKG_NAME::-3}
+			sudo rm -rf ${CUDNN_PKG_NAME::-3}
 			
 			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
 			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
@@ -251,8 +251,8 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
 			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
 			gzip -d ${CUDNN_PKG_NAME}
-			sudo tar zxvf ${PKG_Name::-3}
-			sudo rm -rf ${PKG_Name::-3}
+			sudo tar zxvf ${CUDNN_PKG_NAME::-3}
+			sudo rm -rf ${CUDNN_PKG_NAME::-3}
 			
 			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
 			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
