@@ -14,48 +14,36 @@ is_centos()
 	return $?
 }
 
-install_cupy()
-{
-	#may require NCCL first
-	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
-	sudo tar -zxf cupy-2.2.0.tar.gz
-	cd cupy-2.2.0
-	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
-}
-
-install_six()
-{
-	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/six-1.11.0.tar.gz
-	sudo tar -zxf six-1.11.0.tar.gz
-	cd six-1.11.0
-	python3 setup.py install
-	#if none of above commands work it will update six to 1.11.0
-	easy_install --upgrade six
-}
-
-install_numpy()
-{
+install_Chainer()
+{	
+	#install numpy and six required version as chainer is dependent on numpy
+	#install_cython_protobuf #required for numpy/six/cupy
+	pip install -U cython
+	sudo curl -L -O https://pypi.python.org/packages/b2/30/ab593c6ae73b45a5ef0b0af24908e8aec27f79efcda2e64a3df7af0b92a2/protobuf-3.1.0-py2.py3-none-any.whl ##md5=f02742e46128f1e0655b44c33d8c9718
+	pip install protobuf-3.1.0-py2.py3-none-any.whl
+	
+	#install_numpy
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/numpy-1.13.3.tar.gz
 	sudo tar -zxf numpy-1.13.3.tar.gz
 	cd numpy-1.13.3
 	#sudo python setup.py install
 	python3 setup.py install
-}
-
-install_cython_protobuf()
-{
-	pip install -U cython
-	sudo curl -L -O https://pypi.python.org/packages/b2/30/ab593c6ae73b45a5ef0b0af24908e8aec27f79efcda2e64a3df7af0b92a2/protobuf-3.1.0-py2.py3-none-any.whl ##md5=f02742e46128f1e0655b44c33d8c9718
-	pip install protobuf-3.1.0-py2.py3-none-any.whl
-}
-
-install_Chainer()
-{	
-	#install numpy and six required version as chainer is dependent on numpy
-	install_cython_protobuf #required for numpy/six/cupy
-	install_numpy
-	install_six
-	install_cupy
+	
+	#install_six
+	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/six-1.11.0.tar.gz
+	sudo tar -zxf six-1.11.0.tar.gz
+	cd six-1.11.0
+	python3 setup.py install	
+	#if none of above commands work it will update six to 1.11.0
+	easy_install --upgrade six
+	
+	#install_cupy
+	#may require NCCL first
+	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
+	sudo tar -zxf cupy-2.2.0.tar.gz
+	cd cupy-2.2.0
+	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
+	
 	#pip install chainer
 	sudo cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/chainer-3.2.0.tar.gz
@@ -63,6 +51,17 @@ install_Chainer()
 	cd chainer-3.2.0
 	python3 setup.py install #install from root works well too
 	#pip install chainer #works_fine_and_installs Chainer 3.2.0	
+}
+
+install_chainermn()
+{
+	#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn --version 1.1.0
+	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
+	# PKG_Name=chainermn-1.1.0.tar.gz
+	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+	# tar -zxf ${PKG_Name}
+	# cd ${PKG_Name::-7}
+	# CFLAGS="-I/usr/local/cuda/include" python setup.py install
 }
 
 setup_chainermn_gpu()
@@ -73,29 +72,25 @@ setup_chainermn_gpu()
 		fi
 		if is_centos; then
 		yum -y install git-all
+		sudo nvidia-smi -pm 1	
 		fi
 			
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
 			sudo mv intel intel_old
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar -zxf l_mpi_2017.3.196.tgz
+			sudo tar zxvf l_mpi_2017.3.196.tgz
 			sudo rm -rf l_mpi_2017.3.196.tgz
 			cd l_mpi_2017.3.196
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg			
-			
-			cd /etc/security
-			echo '*            hard   memlock           unlimited' >> limits.conf
-			echo '*            soft   memlock           unlimited' >> limits.conf
-			cd ~
-			
+			sudo ./install.sh --silent silent.cfg
 		fi
 		if grep -q "I_MPI" ~/.bashrc; then :; else
 			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
@@ -128,9 +123,9 @@ setup_chainermn_gpu()
 				#Working using tar file
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
 				tar -zxf nccl-1.3.4-1.tar.gz
-				cd nccl-1.3.4-1
-				sudo make -j && sudo make install
 				mv nccl-1.3.4-1 nccl
+				cd nccl && sudo make -j && sudo make install
+				
 			fi			
 		fi
 
@@ -138,10 +133,17 @@ setup_chainermn_gpu()
 			echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 		fi
 
-		#cudnn 7.0.4
+
+		#cudnn 
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 			cd /usr/local
-			if is_centos; then
+			if is_centos; then			
+			CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
+			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
+			gzip -d ${CUDNN_PKG_NAME}
+			sudo tar zxvf ${PKG_Name::-3}
+			sudo rm -rf ${PKG_Name::-3}
+			
 			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
 			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
 			gzip -d ${PKG_Name}
@@ -158,11 +160,13 @@ setup_chainermn_gpu()
 		#install Chainer V3.1.0
 		install_Chainer
 		
-		MPICC=/opt/intel/compilers_and_libraries_2017.3.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		CFLAGS="-I/usr/local/cuda/include" 
+		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
+		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
+		
 		install_chainermn
 		alias python=python3		
-		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm			   
+		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm	
+		sudo nvidia-smi -pm 1		
 }
 
 setup_chainermn_gpu_infiniband()
@@ -176,12 +180,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			echo "\n\nInstalling Hyper-V-RDMA \n\n"
 			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
 			yum -y install git-all
-			
-			cd /etc/security
-			echo '*            hard   memlock           unlimited' >> limits.conf
-			echo '*            soft   memlock           unlimited' >> limits.conf
-			cd ~
-			
+			sudo nvidia-smi -pm 1
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi				
 
@@ -201,7 +200,8 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
+			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc			
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
 
@@ -219,6 +219,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		if grep -q "anaconda" ~/.bashrc; then :; else
 			echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
 		fi
+		
 		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
 		if [ ! -d /opt/nccl ]; then
 			cd /opt/nccl
@@ -231,19 +232,28 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			if is_centos; then
 				#Working using tar file
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
-				tar -xzf nccl-1.3.4-1.tar.gz
-				cd nccl-1.3.4-1
-				sudo make -j && sudo make install
+				tar -zxf nccl-1.3.4-1.tar.gz
+				mv nccl-1.3.4-1 nccl
+				cd nccl && sudo make -j && sudo make install
+				
 			fi			
 		fi
 
 		if grep -q "LD_LIBRARY_PATH" ~/.bashrc; then :; else
 			echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 		fi
+		
 		#cudnn 7.0.4
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 			cd /usr/local
 			if is_centos; then
+			
+			CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
+			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
+			gzip -d ${CUDNN_PKG_NAME}
+			sudo tar zxvf ${PKG_Name::-3}
+			sudo rm -rf ${PKG_Name::-3}
+			
 			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
 			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
 			gzip -d ${PKG_Name}
@@ -271,23 +281,13 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
-install_chainermn()
-{
-	#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn --version 1.1.0
-	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
-	# PKG_Name=chainermn-1.1.0.tar.gz
-	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-	# tar -zxf ${PKG_Name}
-	# cd ${PKG_Name::-7}
-	# CFLAGS="-I/usr/local/cuda/include" python setup.py install
-}
-
 check_infini()
 {
 echo "\n\n check_infini \n\n"
+if is_ubuntu; then 
 	sudo modprobe rdma_ucm
+fi
 	ibv_devices | grep mlx4
-echo "\n\n check_infini completed \n\n=========================\n\n"	
 	return $?
 }
 
@@ -295,7 +295,6 @@ check_gpu()
 {
 echo "\n\n check_gpu \n\n"
 	lspci | grep NVIDIA
-echo "\n\n check_gpu completed \n\n=========================\n\n"	
 	return $?
 }
 
@@ -324,6 +323,7 @@ if check_gpu;then
 		sudo chkconfig opensm on
 		sudo service rdma start
 		sudo service opensm start
+		sudo nvidia-smi -pm 1
 		fi
 		if is_centos; then
 		create_cron_job()

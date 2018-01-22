@@ -20,7 +20,7 @@ while getopts :s: optname; do
   log "Option $optname set with value ${OPTARG}"
   
   case $optname in
-	   s)  # master name
+       s)  # master name
 		export MASTER_NAME=${OPTARG}
 		;;
 	   *)
@@ -39,19 +39,6 @@ is_centos()
 	python -mplatform | grep -qi CentOS
 	return $?
 }
-
-mkdir -p /var/local
-SETUP_MARKER=/var/local/chainer-setup.marker
-if [ -e "$SETUP_MARKER" ]; then
-	echo "We're already configured, exiting..."
-	exit 0
-fi
-
-if is_centos; then
-	# disable selinux
-	sed -i 's/enforcing/disabled/g' /etc/selinux/config
-	setenforce permissive
-fi
 
 base_pkgs()
 {
@@ -125,21 +112,11 @@ base_pkgs_centos()
 {
 echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
 
-	#cd /opt
-	#install updates and necessary utilities
-	yum -y update
-	yum -y install yum-utils
-	yum -y install gcc
-	yum -y install zlib-devel
-	#install Kernel
-	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
-	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm
-	yum -y install dkms repolist createrepo
+	 
+	yum -y install repolist createrepo
 	yum -y install dpkg-devel dpkg-dev
 	yum -y install -y libibverbs-utils
-	
-	#install_waagent
-	install_waagent
+
 	
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
@@ -164,9 +141,7 @@ setup_user()
 {
 	echo "\n\nEntering setup_user\n\n=========================\n\n"
 	if is_centos; then
-		echo "\n\nInstalling NFS-UTILS "
-		yum -y install nfs-utils >> /dev/null
-		echo "\n\n Installed "
+		yum -y install nfs-utils nfs-utils-lib	
 	fi
 	if is_ubuntu; then
 		sudo apt-get -y update
@@ -176,7 +151,7 @@ setup_user()
 
 	mkdir -p $SHARE_HOME
 	mkdir -p $SHARE_SCRATCH
-		if is_centos; then
+	if is_centos; then
 		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
 	fi	
 	if is_ubuntu; then
@@ -191,9 +166,9 @@ setup_user()
 	echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 	
 	# Disable tty requirement for sudo
-	sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+    sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
-	chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH	
+    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH		
 	echo "\n\nsetup_user completed \n\n=========================\n\n"
 }
 
@@ -201,8 +176,6 @@ setup_user()
 install_python()
 {
 echo "\n\nEntering install_python\n\n=========================\n\n"
-
-	cd /usr/local
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
 	tar -xf Python-3.6.3.tar.xz >> /dev/null
 	cd Python-3.6.3
@@ -225,8 +198,6 @@ echo "\n\n install_python completed \n\n=========================\n\n"
 setup_cuda() 
 {
 echo "\n\nEntering setup_cuda\n\n=========================\n\n"
-
-	cd /usr/local
 	log "setup_cuda8"
 	if is_centos; then
 		setup_cuda_centos
@@ -243,11 +214,18 @@ echo "\n\n setup_cuda completed \n\n=========================\n\n"
 
 setup_cuda_centos()
 {
+	#install Kernel
+	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
+	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm
+	yum -y install dkms
+	
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
-	sudo curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
-	sudo rpm -i ${CUDA_RPM}
-	sudo yum clean expire-cache
-	sudo yum -y install cuda-8-0 >> /dev/null
+	curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
+	rpm -i ${CUDA_RPM}
+	yum clean expire-cache
+	yum -y install cuda
+	
+	nvidia-smi
 }
 
 setup_cuda_ubuntu()
@@ -260,8 +238,6 @@ setup_cuda_ubuntu()
 	sudo apt-get -y update
 	sudo apt-get -y install cuda
 }
-
-
 
 verify_packages()
 {
@@ -276,6 +252,19 @@ echo "\n\nEntering verify_packages\n\n=========================\n\n"
 
 echo "\n\n verify_packages completed \n\n=========================\n\n"	
 }
+
+mkdir -p /var/local
+SETUP_MARKER=/var/local/chainer-setup.marker
+if [ -e "$SETUP_MARKER" ]; then
+    echo "We're already configured, exiting..."
+    exit 0
+fi
+
+if is_centos; then
+	# disable selinux
+	sed -i 's/enforcing/disabled/g' /etc/selinux/config
+	setenforce permissive
+fi
 
 echo -e "setup_user \n\n=============================================================================================="
 setup_user
