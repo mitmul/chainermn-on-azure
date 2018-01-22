@@ -34,7 +34,6 @@ is_ubuntu()
 	python -mplatform | grep -qi Ubuntu
 	return $?
 }
-
 is_centos()
 {
 	python -mplatform | grep -qi CentOS
@@ -111,8 +110,14 @@ base_pkgs_ubuntu()
 
 base_pkgs_centos()
 {
-echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
-yum -y install epel-release
+echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"
+
+	 
+	yum -y install repolist createrepo
+	yum -y install dpkg-devel dpkg-dev
+	yum -y install -y libibverbs-utils
+
+	
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
 
@@ -209,17 +214,17 @@ echo "\n\n setup_cuda completed \n\n=========================\n\n"
 
 setup_cuda_centos()
 {
-	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	
-	#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
-	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+	#install Kernel
+	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all
+	rpm -Uvh  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/epel-release-7-11.noarch.rpm
 	yum -y install dkms
+	
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
-	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
+	curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
 	rpm -i ${CUDA_RPM}
 	yum clean expire-cache
 	yum -y install cuda
-
+	
 	nvidia-smi
 }
 
