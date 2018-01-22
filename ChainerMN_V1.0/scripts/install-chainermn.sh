@@ -14,7 +14,8 @@ is_centos()
 }
 
 install_Chainer()
-{	
+{
+	cd /usr/local
 	#install numpy and six required version as chainer is dependent on numpy
 	#install_cython_protobuf #required for numpy/six/cupy
 	pip install -U cython
@@ -22,13 +23,15 @@ install_Chainer()
 	pip install protobuf-3.1.0-py2.py3-none-any.whl
 	
 	#install_numpy
+	cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/numpy-1.13.3.tar.gz
 	sudo tar -zxf numpy-1.13.3.tar.gz
 	cd numpy-1.13.3
 	#sudo python setup.py install
-	python3 setup.py install
+	python setup.py install
 	
 	#install_six
+	cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/six-1.11.0.tar.gz
 	sudo tar -zxf six-1.11.0.tar.gz
 	cd six-1.11.0
@@ -37,6 +40,7 @@ install_Chainer()
 	easy_install --upgrade six
 	
 	#install_cupy
+	cd /usr/local
 	#may require NCCL first
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
 	sudo tar -zxf cupy-2.2.0.tar.gz
@@ -44,7 +48,7 @@ install_Chainer()
 	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
 	
 	#pip install chainer
-	sudo cd /usr/local
+	cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/chainer-3.2.0.tar.gz
 	sudo tar -zxf chainer-3.2.0.tar.gz
 	cd chainer-3.2.0
@@ -55,12 +59,13 @@ install_Chainer()
 install_chainermn()
 {
 	#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn --version 1.1.0
-	CFLAGS="-I/usr/local/cuda/include" pip install chainermn==1.1.0
-	# PKG_Name=chainermn-1.1.0.tar.gz
-	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-	# tar -zxf ${PKG_Name}
-	# cd ${PKG_Name::-7}
-	# CFLAGS="-I/usr/local/cuda/include" python setup.py install
+	cd /usr/local
+	CFLAGS="-I /usr/local/cuda/include" pip install chainermn==1.1.0
+	PKG_Name=chainermn-1.1.0.tar.gz
+	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+	tar -zxf ${PKG_Name}
+	cd ${PKG_Name::-7}
+	CFLAGS="-I/usr/local/cuda/include" python setup.py install
 }
 
 setup_chainermn_gpu()

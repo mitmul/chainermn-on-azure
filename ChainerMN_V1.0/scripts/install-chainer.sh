@@ -113,6 +113,8 @@ base_pkgs_centos()
 {
 echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
 yum -y install epel-release
+yum -y install gcc
+yum -y install zlib -y zlib-devel
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
 
@@ -177,13 +179,17 @@ echo "\n\nEntering install_python\n\n=========================\n\n"
 	./configure --enable-optimizations >> /dev/null
 	
 	if is_centos; then
-		make >> /dev/null && make install >> /dev/null
-		yum install -y python-pip >> /dev/null
+		make && make install
+		yum -y install python-pip
 		pip install --upgrade pip
+		yum -y install python-devel 
+		yum -y install python-wheel
 	fi
 	if is_ubuntu; then
-		sudo make altinstall >> /dev/null
-		sudo apt -y install -y python-pip
+		sudo make altinstall
+		sudo apt -y install python-pip
+		sudo apt -y install python-devel
+		sudo apt -y install python-wheel
 		sudo pip install --upgrade pip
 	fi
 
