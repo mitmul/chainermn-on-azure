@@ -13,6 +13,31 @@ is_centos()
 	return $?
 }
 
+install_intel_mpi()
+{
+
+		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
+			cd /opt
+			sudo mv intel intel_old
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo rm -rf l_mpi_2017.3.196.tgz
+			cd l_mpi_2017.3.196
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
+		fi
+
+		if grep -q "I_MPI" ~/.bashrc; then :; else
+			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
+			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc			
+			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+		fi
+}
+
 install_Chainer()
 {
 	cd /usr/local
@@ -59,13 +84,17 @@ install_Chainer()
 install_chainermn()
 {
 	#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn --version 1.1.0
+	if is_centos; then
+	sudo cp /opt/nccl/build/include/nccl.h /usr/local/cuda/include
+	fi
+	
 	cd /usr/local
 	CFLAGS="-I /usr/local/cuda/include" pip install chainermn==1.1.0
-	PKG_Name=chainermn-1.1.0.tar.gz
-	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-	tar -zxf ${PKG_Name}
-	cd ${PKG_Name::-7}
-	CFLAGS="-I /usr/local/cuda/include" python setup.py install
+	# PKG_Name=chainermn-1.1.0.tar.gz
+	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+	# tar -zxf ${PKG_Name}
+	# cd ${PKG_Name::-7}
+	#CFLAGS="-I /usr/local/cuda/include" python setup.py install
 }
 
 setup_chainermn_gpu()
@@ -186,29 +215,8 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			yum -y install git-all
 			sudo nvidia-smi -pm 1
 			echo "\n\n Hyper-V-RDMA installed !!"
-		fi				
-
-		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
-			cd /opt
-			sudo mv intel intel_old
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
-			sudo rm -rf l_mpi_2017.3.196.tgz
-			cd l_mpi_2017.3.196
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
-		fi
-
-		if grep -q "I_MPI" ~/.bashrc; then :; else
-			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc			
-			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi
-
+		fi	
+		
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
 			#anaconda_3_5.0.1
@@ -239,7 +247,6 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 				tar -zxf nccl-1.3.4-1.tar.gz
 				mv nccl-1.3.4-1 nccl
 				cd nccl && sudo make -j && sudo make install
-				cp /opt/nccl/build/include/nccl.h /usr/local/cuda/include
 				export "PATH=/opt/nccl/build/include:$PATH"				
 			fi			
 		fi
@@ -322,14 +329,19 @@ if check_gpu;then
 		sudo nvidia-smi -pm 1
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 		if is_centos; then
+		#"Install Infiniband and related packages"
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
 		sudo service rdma start
-		sudo service opensm start
+		sudo service opensm start		
 		sudo nvidia-smi -pm 1
 		fi
+		
+		#install_Intel _MPI
+		install_intel_mpi
+		
 		if is_centos; then
 		create_cron_job()
 		{
@@ -346,7 +358,9 @@ if check_gpu;then
 	else 
 		#Code to setup ChainerMN on GPU based machine
 		#enable_rdma
-		setup_chainermn_gpu		
+		setup_chainermn_gpu	
+		#install_Intel _MPI
+		install_intel_mpi		
 		sudo nvidia-smi -pm 1
 		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
 		create_cron_job()
