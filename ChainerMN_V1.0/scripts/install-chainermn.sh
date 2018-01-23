@@ -13,6 +13,37 @@ is_centos()
 	return $?
 }
 
+check_infini()
+{
+echo "\n\n check_infini \n\n"
+if is_ubuntu; then 
+	sudo modprobe rdma_ucm
+	return $?
+fi
+if is_centos; then
+	ibv_devices | grep mlx4
+	return $?
+fi
+}
+
+check_gpu()
+{
+	echo "\n\n check_gpu \n\n"
+	lspci | grep NVIDIA
+	return $?
+}
+
+
+enable_rdma()
+{
+	   # enable rdma    
+	   cd /etc/
+	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+}
+
 install_intel_mpi()
 {
 
@@ -99,6 +130,7 @@ install_chainermn()
 
 setup_chainermn_gpu()
 { 
+echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 		if is_ubuntu; then
 		sudo apt-get update
 		sudo apt-get install git
@@ -106,26 +138,6 @@ setup_chainermn_gpu()
 		if is_centos; then
 		yum -y install git-all
 		sudo nvidia-smi -pm 1	
-		fi
-			
-		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
-			cd /opt
-			sudo mv intel intel_old
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
-			sudo rm -rf l_mpi_2017.3.196.tgz
-			cd l_mpi_2017.3.196
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
-		fi
-		if grep -q "I_MPI" ~/.bashrc; then :; else
-			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
 
 		if [ ! -d /opt/anaconda3 ]; then
@@ -204,7 +216,7 @@ setup_chainermn_gpu()
 
 setup_chainermn_gpu_infiniband()
 {
-echo "\n\n setup_chainermn_gpu_infiniband \n\n"
+echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 		if is_ubuntu; then
 			sudo apt-get update
 			sudo apt-get install git
@@ -243,6 +255,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 			fi
 			if is_centos; then
 				#Working using tar file
+				cd /opt
 				sudo wget   https://pfnresources.blob.core.windows.net/chainermn-v1-packages/nccl-1.3.4-1.tar.gz
 				tar -zxf nccl-1.3.4-1.tar.gz
 				mv nccl-1.3.4-1 nccl
@@ -292,34 +305,6 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 		alias python=python3
 
 echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
-}
-
-check_infini()
-{
-echo "\n\n check_infini \n\n"
-if is_ubuntu; then 
-	sudo modprobe rdma_ucm
-fi
-	ibv_devices | grep mlx4
-	return $?
-}
-
-check_gpu()
-{
-echo "\n\n check_gpu \n\n"
-	lspci | grep NVIDIA
-	return $?
-}
-
-
-enable_rdma()
-{
-	   # enable rdma    
-	   cd /etc/
-	   echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
 if check_gpu;then
