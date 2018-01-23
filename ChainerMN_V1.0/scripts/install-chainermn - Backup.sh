@@ -65,7 +65,7 @@ install_chainermn()
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
 	tar -zxf ${PKG_Name}
 	cd ${PKG_Name::-7}
-	CFLAGS="-I /usr/local/cuda/include" python setup.py install
+	CFLAGS="-I/usr/local/cuda/include" python setup.py install
 }
 
 setup_chainermn_gpu()
@@ -239,8 +239,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 				tar -zxf nccl-1.3.4-1.tar.gz
 				mv nccl-1.3.4-1 nccl
 				cd nccl && sudo make -j && sudo make install
-				cp /opt/nccl/build/include/nccl.h /usr/local/cuda/include
-				export "PATH=/opt/nccl/build/include:$PATH"				
+				
 			fi			
 		fi
 
