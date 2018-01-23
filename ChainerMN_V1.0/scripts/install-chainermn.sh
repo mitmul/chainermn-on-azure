@@ -247,6 +247,7 @@ echo "\n\n setup_chainermn_gpu_infiniband \n\n"
 				tar -zxf nccl-1.3.4-1.tar.gz
 				mv nccl-1.3.4-1 nccl
 				cd nccl && sudo make -j && sudo make install
+				cp /opt/nccl/build/include/nccl.h /usr/local/cuda/include
 				export "PATH=/opt/nccl/build/include:$PATH"				
 			fi			
 		fi
