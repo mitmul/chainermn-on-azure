@@ -21,8 +21,10 @@ if is_ubuntu; then
 	return $?
 fi
 if is_centos; then
-	ibv_devices | grep mlx4
-	return $?
+return 0;
+#temporary
+	#ibv_devices | grep mlx4
+	#return $?
 fi
 }
 
@@ -307,8 +309,8 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
-if check_gpu;then
-	if check_infini;then
+if check_gpu; then
+	if check_infini; then
 		enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
