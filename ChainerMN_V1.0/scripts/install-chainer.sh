@@ -51,16 +51,6 @@ base_pkgs()
 	fi
 }
 
-enable_rdma()
-{
-       # enable rdma    
-       cd /etc/
-       #echo "OS.EnableRDMA=y">>/etc/waagent.conf
-       #echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-       sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" waagent.conf
-       sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" waagent.conf
-}
-
 install_waagent()
 {
 		# WALinux Agent Installation
@@ -100,9 +90,9 @@ base_pkgs_centos()
 {
 	echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
 	yum -y update
+	#next two lines are already in cuda
 	yum -y install epel-release
 	yum -y install dkms
-	yum -y groupinstall "GNOME Desktop" "Development Tools"
 	yum -y install kernel-devel
 	yum -y install gcc
 	yum -y install zlib -y zlib-devel
@@ -195,7 +185,7 @@ echo "\n\nEntering install_python\n\n=========================\n\n"
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
 	tar -xf Python-3.6.3.tar.xz >> /dev/null
 	cd Python-3.6.3
-	./configure --enable-optimizations >> /dev/null
+	./configure --enable-optimizations
 	
 	if is_centos; then
 		make && make install
@@ -240,10 +230,10 @@ setup_cuda_centos()
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 	yum -y install dkms
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
-	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
-	rpm -i ${CUDA_RPM}
-	yum clean expire-cache
-	yum -y install cuda
+	sudo curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
+	sudo rpm -i ${CUDA_RPM}
+	sudo yum clean expire-cache
+	sudo yum -y install cuda-8-0
 	nvidia-smi
 }
 
