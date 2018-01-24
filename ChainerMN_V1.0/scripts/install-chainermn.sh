@@ -82,17 +82,9 @@ install_chainermn()
 	#CFLAGS="-I /usr/local/cuda/include" python setup.py install
 }
 
-setup_chainermn_gpu()
-{ 
-echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
-		if is_ubuntu; then
-		sudo apt-get update
-		sudo apt-get install git
-		fi
-		if is_centos; then
-		yum -y install git-all
-		fi
-		
+install_intel_mpi
+{
+#install_Intel _MPI
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
 			sudo mv intel intel_old
@@ -103,6 +95,7 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
 			sudo ./install.sh --silent silent.cfg
 		fi
+
 		if grep -q "I_MPI" ~/.bashrc; then :; else
 			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
 			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
@@ -110,6 +103,23 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+		fi
+		
+		#Set memlock unlimited
+		cd /etc/security/
+		echo " *               hard    memlock          unlimited">>limits.conf
+		echo " *               soft    memlock          unlimited">>limits.conf
+}
+
+setup_chainermn_gpu()
+{ 
+echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
+		if is_ubuntu; then
+		sudo apt-get update
+		sudo apt-get install git
+		fi
+		if is_centos; then
+		yum -y install git-all
 		fi
 
 		if [ ! -d /opt/anaconda3 ]; then
@@ -199,27 +209,6 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 			yum -y install git-all
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi	
-		
-		#install_Intel _MPI
-		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
-			cd /opt
-			sudo mv intel intel_old
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
-			sudo rm -rf l_mpi_2017.3.196.tgz
-			cd l_mpi_2017.3.196
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
-		fi
-
-		if grep -q "I_MPI" ~/.bashrc; then :; else
-			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi
 		
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
@@ -339,10 +328,7 @@ if check_gpu; then
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel dapl
 		
-		#Set memlock unlimited
-		cd /etc/security/
-		echo " *               hard    memlock          unlimited">>limits.conf
-		echo " *               soft    memlock          unlimited">>limits.conf
+		install_intel_mpi
 		
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
