@@ -337,7 +337,13 @@ if check_gpu; then
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 		if is_centos; then
 		sudo yum groupinstall -y "Infiniband Support"
-		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
+		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel dapl
+		
+		#Set memlock unlimited
+		cd /etc/security/
+		echo " *               hard    memlock          unlimited">>limits.conf
+		echo " *               soft    memlock          unlimited">>limits.conf
+		
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
 		sudo service rdma start
