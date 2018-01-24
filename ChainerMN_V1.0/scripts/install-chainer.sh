@@ -80,10 +80,10 @@ base_pkgs_ubuntu()
        sudo apt-get -y install libdapl2 libmlx4-1    
        enable_rdma
        # WALinux Agent Installation
-	git clone https://github.com/Azure/WALinuxAgent.git
-	cd WALinuxAgent
-	sudo apt-get -y install python3-pip
-	sudo python3 ./setup.py install --force      
+		git clone https://github.com/Azure/WALinuxAgent.git
+		cd WALinuxAgent
+		sudo apt-get -y install python3-pip
+		sudo python3 ./setup.py install --force      
 	
        #Set memlock unlimited
        cd /etc/security/
@@ -98,35 +98,39 @@ base_pkgs_ubuntu()
 
 base_pkgs_centos()
 {
-echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
-yum -y update
-yum -y install epel-release
-yum -y install dkms
-yum -y groupinstall "GNOME Desktop" "Development Tools"
-yum -y install kernel-devel
-yum -y install gcc
-yum -y install zlib -y zlib-devel
-echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
+	echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
+	yum -y update
+	yum -y install epel-release
+	yum -y install dkms
+	yum -y groupinstall "GNOME Desktop" "Development Tools"
+	yum -y install kernel-devel
+	yum -y install gcc
+	yum -y install zlib -y zlib-devel
+	echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 }
 
 mount_nfs()
 {
 	if is_centos; then
-		yum -y install nfs-utils nfs-utils-lib	
+		yum -y install nfs-utils nfs-utils-lib
+		log "install NFS"
+		mkdir -p ${NFS_MOUNT}
+		log "mounting NFS on " ${MASTER_NAME}
+		showmount -e ${MASTER_NAME}
+		mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+		
+		echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
 	fi
-	if is_ubuntu; then
-	
+	if is_ubuntu; then	
 		sudo apt-get -y install nfs-common	
-		#apt-get -qy install nfs-common
+		log "install NFS"
+		mkdir -p ${NFS_MOUNT}
+		log "mounting NFS on " ${MASTER_NAME}
+		showmount -e ${MASTER_NAME}
+		mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+		
+		echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
 	fi
-
-	log "install NFS"
-	mkdir -p ${NFS_MOUNT}
-	log "mounting NFS on " ${MASTER_NAME}
-	showmount -e ${MASTER_NAME}
-	mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
-	
-	echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
 }
 
 setup_user()
@@ -134,37 +138,53 @@ setup_user()
 	echo "\n\nEntering setup_user\n\n=========================\n\n"
 	if is_centos; then
 		yum -y install nfs-utils nfs-utils-lib	
+		mkdir -p $SHARE_HOME
+		mkdir -p $SHARE_SCRATCH
+
+			echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab
+			mount -a
+			mount
+   
+		groupadd -g $HPC_GID $HPC_GROUP
+
+		# Don't require password for HPC user sudo
+		echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+		
+		# Disable tty requirement for sudo
+		sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+
+		useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+
+		chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
 	fi
 	if is_ubuntu; then
 		sudo apt-get update
-		sudo apt-get -y install nfs-common	
-		#apt-get -qy install nfs-common
+		sudo apt-get -y install nfs-common
+
+		mkdir -p $SHARE_HOME
+		mkdir -p $SHARE_SCRATCH
+			if is_centos; then
+			echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
+		fi	
+		if is_ubuntu; then
+			echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
+			showmount -e ${MASTER_NAME}
+		fi
+		mount -a
+		mount
+	   
+		groupadd -g $HPC_GID $HPC_GROUP
+
+		# Don't require password for HPC user sudo
+		echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+		
+		# Disable tty requirement for sudo
+		sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+
+		useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+
+		chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
 	fi
-	
-
-    mkdir -p $SHARE_HOME
-    mkdir -p $SHARE_SCRATCH
-        if is_centos; then
-		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
-	fi	
-	if is_ubuntu; then
-		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" >> /etc/fstab
-		showmount -e ${MASTER_NAME}
-	fi
-	mount -a
-	mount
-   
-    groupadd -g $HPC_GID $HPC_GROUP
-
-    # Don't require password for HPC user sudo
-    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-    
-    # Disable tty requirement for sudo
-    sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
-
-	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
-
-    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
 	echo "\n\nsetup_user completed \n\n=========================\n\n"
 }
 
@@ -219,18 +239,11 @@ setup_cuda_centos()
 	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 	yum -y install dkms
-	
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
 	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
 	rpm -i ${CUDA_RPM}
 	yum clean expire-cache
 	yum -y install cuda
-	
-	#sync cuda-9.1 with cuda
-	rsync -a /usr/local/cuda-9.1 /usr/local/cuda
-	$ export PATH=/usr/local/cuda-9.1/bin${PATH:+:${PATH}}
-	$ export LD_LIBRARY_PATH=/usr/local/cuda-9.1/lib64\
-                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 	nvidia-smi
 }
 
