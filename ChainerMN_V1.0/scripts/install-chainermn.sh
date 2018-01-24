@@ -13,29 +13,6 @@ is_centos()
 	return $?
 }
 
-check_infini()
-{
-echo "\n\n check_infini \n\n"
-if is_ubuntu; then 
-	sudo modprobe rdma_ucm
-	return $?
-fi
-if is_centos; then
-return 0;
-#temporary
-	#ibv_devices | grep mlx4
-	#return $?
-fi
-}
-
-check_gpu()
-{
-	echo "\n\n check_gpu \n\n"
-	lspci | grep NVIDIA
-	return $?
-}
-
-
 enable_rdma()
 {
 	   # enable rdma    
@@ -44,31 +21,6 @@ enable_rdma()
 	   echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
 	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
 	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
-}
-
-install_intel_mpi()
-{
-
-		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
-			cd /opt
-			sudo mv intel intel_old
-			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-			sudo tar zxvf l_mpi_2017.3.196.tgz
-			sudo rm -rf l_mpi_2017.3.196.tgz
-			cd l_mpi_2017.3.196
-			sudo sed -i -e "s/decline/accept/g" silent.cfg
-			sudo ./install.sh --silent silent.cfg
-		fi
-
-		if grep -q "I_MPI" ~/.bashrc; then :; else
-			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
-			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
-			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
-			echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ~/.bashrc
-			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc			
-			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi
 }
 
 install_Chainer()
@@ -139,7 +91,25 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 		fi
 		if is_centos; then
 		yum -y install git-all
-		sudo nvidia-smi -pm 1	
+		fi
+		
+		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
+			cd /opt
+			sudo mv intel intel_old
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo rm -rf l_mpi_2017.3.196.tgz
+			cd l_mpi_2017.3.196
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
+		fi
+		if grep -q "I_MPI" ~/.bashrc; then :; else
+			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 		fi
 
 		if [ ! -d /opt/anaconda3 ]; then
@@ -227,9 +197,29 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 			echo "\n\nInstalling Hyper-V-RDMA \n\n"
 			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
 			yum -y install git-all
-			sudo nvidia-smi -pm 1
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi	
+		
+		#install_Intel _MPI
+		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
+			cd /opt
+			sudo mv intel intel_old
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+			sudo tar zxvf l_mpi_2017.3.196.tgz
+			sudo rm -rf l_mpi_2017.3.196.tgz
+			cd l_mpi_2017.3.196
+			sudo sed -i -e "s/decline/accept/g" silent.cfg
+			sudo ./install.sh --silent silent.cfg
+		fi
+
+		if grep -q "I_MPI" ~/.bashrc; then :; else
+			echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+			echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+		fi
 		
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
@@ -274,29 +264,29 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 		#cudnn 7.0.4
 		if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 			cd /usr/local
-			if is_centos; then
+			if is_centos; then			
+				CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
+				sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
+				gzip -d ${CUDNN_PKG_NAME}
+				sudo tar zxvf ${CUDNN_PKG_NAME::-3}
+				sudo rm -rf ${CUDNN_PKG_NAME::-3}
+				
+				PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+				gzip -d ${PKG_Name}
+				sudo dpkg -i ${PKG_Name::-3}
+			fi	
 			
-			CUDNN_PKG_NAME=cudnn-8.0-linux-x64-v6.0.tgz.gz
-			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDNN_PKG_NAME}
-			gzip -d ${CUDNN_PKG_NAME}
-			sudo tar zxvf ${CUDNN_PKG_NAME::-3}
-			sudo rm -rf ${CUDNN_PKG_NAME::-3}
-			
-			PKG_Name=libcudnn7_7.0.5.15-1+cuda8.0_amd64.deb.gz
-			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-			gzip -d ${PKG_Name}
-			sudo dpkg -i ${PKG_Name::-3}
-			fi			
 			if is_ubuntu; then
-			PKG_Name=libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb.gz
-			sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-			gzip -d ${PKG_Name}
-			sudo dpkg -i ${PKG_Name::-3}
-			fi
-			#Copy CUDNN files to required locaiton			
-			sudo cp cuda/include/cudnn.h /usr/local/cuda/include 
-			sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
-			chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+				PKG_Name=libcudnn7_7.0.5.15-1+cuda9.0_amd64.deb.gz
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+				gzip -d ${PKG_Name}
+				sudo dpkg -i ${PKG_Name::-3}
+				fi
+				#Copy CUDNN files to required locaiton			
+				sudo cp cuda/include/cudnn.h /usr/local/cuda/include 
+				sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+				chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 		fi
 		
 		#install Chainer V3.1.0
@@ -309,27 +299,50 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
+if is_ubuntu; then       
+       apt install ibverbs-utils	
+fi
+if is_centos; then
+	yum install -y libibverbs-utils
+fi
+
+check_infini()
+{
+echo "\n\n check_infini \n\n"
+if is_ubuntu; then 
+	sudo modprobe rdma_ucm
+	return $?
+fi
+if is_centos; then
+return 0;
+#temporary
+	#ibv_devices | grep mlx4
+	#return $?
+fi
+}
+
+check_gpu()
+{
+	echo "\n\n check_gpu \n\n"
+	lspci | grep NVIDIA
+	return $?
+}
+
 if check_gpu; then
 	if check_infini; then
-		enable_rdma
+		#enable_rdma
 		#Code to setup ChainerMN on GPU based machine with infinband
 		setup_chainermn_gpu_infiniband
 		sudo nvidia-smi -pm 1
 		echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 		if is_centos; then
-		#"Install Infiniband and related packages"
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel 
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
 		sudo service rdma start
-		sudo service opensm start		
-		sudo nvidia-smi -pm 1
+		sudo service opensm start
 		fi
-		
-		#install_Intel _MPI
-		install_intel_mpi
-		
 		if is_centos; then
 		create_cron_job()
 		{
