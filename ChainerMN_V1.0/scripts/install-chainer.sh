@@ -219,12 +219,18 @@ setup_cuda_centos()
 	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 	yum -y install dkms
+	
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
 	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
 	rpm -i ${CUDA_RPM}
 	yum clean expire-cache
-	yum -y install cuda-8.0
-
+	yum -y install cuda
+	
+	#sync cuda-9.1 with cuda
+	rsync -a /usr/local/cuda-9.1 /usr/local/cuda
+	$ export PATH=/usr/local/cuda-9.1/bin${PATH:+:${PATH}}
+	$ export LD_LIBRARY_PATH=/usr/local/cuda-9.1/lib64\
+                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 	nvidia-smi
 }
 
