@@ -70,49 +70,40 @@ install_waagent()
 }
 
 base_pkgs_ubuntu()
-{
-	   #Insall Kernal 
-	   cd /etc/apt/
-	   echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
-	   sudo apt-get update
-	   sudo apt-get -y install linux-azure
-	   
-	   # Install dapl, rdmacm, ibverbs, and mlx4
-	   sudo apt-get -y install libdapl2 libmlx4-1  
-	   #install z-lib devel
-	   sudo apt-get -y install zlib1g-dev
-	   sudo apt-get -y install ibverbs-utils
-	   sudo apt-get -y dapl
-	   
-	   #install_waagent
-	   install_waagent
-	   #enable RDAM
-	   enable_rdma
-	  
-	   # WALinux Agent Installation
-	   git clone https://github.com/Azure/WALinuxAgent.git
-	   cd WALinuxAgent
-	   sudo python setup.py install --register-service
-	 
-	   #for cuda
-	   sudo apt-get -y install build-essential
-	   sudo apt-get -y install linux-headers-$(uname -r)
+{	  
+       cd /etc/apt/
+       echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
+       sudo apt-get update
+       sudo apt-get -y install linux-azure
+       
+       # Install dapl, rdmacm, ibverbs, and mlx4
+       sudo apt-get -y install libdapl2 libmlx4-1    
+       enable_rdma
+       # WALinux Agent Installation
+	git clone https://github.com/Azure/WALinuxAgent.git
+	cd WALinuxAgent
+	sudo apt-get -y install python3-pip
+	sudo python3 ./setup.py install --force      
 	
-	   #Set memlock unlimited
-	   cd /etc/security/
-	   echo " *               hard    memlock          unlimited">>limits.conf
-	   echo " *               soft    memlock          unlimited">>limits.conf
-	   
-	   # Disable unattended-upgrades to avoide automatic updates 
-	   cd /etc/apt/apt.conf.d
-	   sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
-	   sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
+       #Set memlock unlimited
+       cd /etc/security/
+       echo " *               hard    memlock          unlimited">>limits.conf
+       echo " *               soft    memlock          unlimited">>limits.conf
+       
+       # Disable unattended-upgrades to avoide automatic updates
+       cd /etc/apt/apt.conf.d
+       sed -i  's#"${distro_id}:${distro_codename}"#//       "${distro_id}:${distro_codename}"#g;' 50unattended-upgrades
+       sed -i  's#"${distro_id}:${distro_codename}-security"#//       "${distro_id}:${distro_codename}-security"#g;' 50unattended-upgrades
 }
 
 base_pkgs_centos()
 {
 echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
+yum -y update
 yum -y install epel-release
+yum -y install dkms
+yum -y groupinstall "GNOME Desktop" "Development Tools"
+yum -y install kernel-devel
 yum -y install gcc
 yum -y install zlib -y zlib-devel
 echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
@@ -120,7 +111,11 @@ echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
 
 mount_nfs()
 {
-	if is_ubuntu; then	
+	if is_centos; then
+		yum -y install nfs-utils nfs-utils-lib	
+	fi
+	if is_ubuntu; then
+	
 		sudo apt-get -y install nfs-common	
 		#apt-get -qy install nfs-common
 	fi
@@ -141,14 +136,15 @@ setup_user()
 		yum -y install nfs-utils nfs-utils-lib	
 	fi
 	if is_ubuntu; then
-		sudo apt-get -y update
+		sudo apt-get update
 		sudo apt-get -y install nfs-common	
 		#apt-get -qy install nfs-common
 	fi
+	
 
-	mkdir -p $SHARE_HOME
-	mkdir -p $SHARE_SCRATCH
-	if is_centos; then
+    mkdir -p $SHARE_HOME
+    mkdir -p $SHARE_SCRATCH
+        if is_centos; then
 		echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs4    rw,auto,_netdev 0 0" >> /etc/fstab	
 	fi	
 	if is_ubuntu; then
@@ -158,14 +154,17 @@ setup_user()
 	mount -a
 	mount
    
-	groupadd -g $HPC_GID $HPC_GROUP
-	# Don't require password for HPC user sudo
-	echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-	
-	# Disable tty requirement for sudo
+    groupadd -g $HPC_GID $HPC_GROUP
+
+    # Don't require password for HPC user sudo
+    echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+    
+    # Disable tty requirement for sudo
     sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+
 	useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
-    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH		
+
+    chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
 	echo "\n\nsetup_user completed \n\n=========================\n\n"
 }
 
@@ -224,13 +223,15 @@ setup_cuda_centos()
 	curl -O http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/${CUDA_RPM}
 	rpm -i ${CUDA_RPM}
 	yum clean expire-cache
-	yum -y install cuda
+	yum -y install cuda-8.0
 
 	nvidia-smi
 }
 
 setup_cuda_ubuntu()
 {
+	#Insall Kernal 
+	sudo apt-get install -y linux-headers-$(uname -r)
 	#using CUDA_local_DEB_Package_around_1.2GB
 	CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
 	sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
@@ -238,6 +239,7 @@ setup_cuda_ubuntu()
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get -y update
 	sudo apt-get -y install cuda
+	nvidia-smi
 }
 
 verify_packages()
