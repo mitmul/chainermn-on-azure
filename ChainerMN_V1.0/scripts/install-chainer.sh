@@ -89,7 +89,7 @@ base_pkgs_ubuntu()
 base_pkgs_centos()
 {
 	#echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
-	yum -y update
+	#yum -y update
 	#next two lines are already in cuda
 	yum -y install epel-release
 	yum -y install dkms
