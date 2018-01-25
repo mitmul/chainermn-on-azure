@@ -87,16 +87,14 @@ base_pkgs_ubuntu()
 }
 
 base_pkgs_centos()
-{
-	#echo "\n\nEntering base_pkgs_centos \n\n=========================\n\n"	
-	#yum -y update
-	#next two lines are already in cuda
+{	
+	#yum -y update	
 	yum -y install epel-release
 	yum -y install dkms
 	yum -y install kernel-devel
 	yum -y install gcc
 	yum -y install zlib -y zlib-devel
-	#echo "\n\n base_pkgs_centos completed \n\n=========================\n\n"
+	
 }
 
 mount_nfs()
@@ -125,7 +123,7 @@ mount_nfs()
 
 setup_user()
 {
-	#echo "\n\nEntering setup_user\n\n=========================\n\n"
+	
 	if is_centos; then
 		yum -y install nfs-utils nfs-utils-lib	
 		mkdir -p $SHARE_HOME
@@ -175,13 +173,13 @@ setup_user()
 
 		chown $HPC_USER:$HPC_GROUP $SHARE_SCRATCH
 	fi
-	#echo "\n\nsetup_user completed \n\n=========================\n\n"
+	
 }
 
 
 install_python()
 {
-#echo "\n\nEntering install_python\n\n=========================\n\n"
+
 	wget  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/Python-3.6.3.tar.xz
 	tar -xf Python-3.6.3.tar.xz >> /dev/null
 	cd Python-3.6.3
@@ -202,12 +200,12 @@ install_python()
 		sudo pip install --upgrade pip
 	fi
 
-#echo "\n\n install_python completed \n\n=========================\n\n"
+
 }
 
 setup_cuda() 
 {
-#echo "\n\nEntering setup_cuda\n\n=========================\n\n"
+
 	log "setup_cuda8"
 	if is_centos; then
 		setup_cuda_centos
@@ -217,16 +215,13 @@ setup_cuda()
 	fi
 	rsync -a /usr/local/cuda-9.1/targets/x86_64-linux/include /usr/local/cuda/include/
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
-	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh
-	
-#echo "\n\n setup_cuda completed \n\n=========================\n\n"
+	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh	
+
 }
 
 setup_cuda_centos()
 {
 	yum -y install kernel-devel-$(uname -r) kernel-headers-$(uname -r) --disableexcludes=all	
-	#rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	#rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
 	yum -y install dkms
 	CUDA_RPM=cuda-repo-rhel7-8.0.61-1.x86_64.rpm
@@ -250,21 +245,6 @@ setup_cuda_ubuntu()
 	sudo apt-get -y install cuda
 	nvidia-smi
 }
-
-verify_packages()
-{
-#echo "\n\nEntering verify_packages\n\n=========================\n\n"
-
-	python3.6 -V
-	if is_centos; then
-	cat /usr/local/cuda-8.0/version.txt
-	elif is_ubuntu; then
-	cat /usr/local/cuda/version.txt
-	fi
-
-#echo "\n\n verify_packages completed \n\n=========================\n\n"	
-}
-
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
@@ -278,21 +258,12 @@ if is_centos; then
 	setenforce permissive
 fi
 
-#echo -e "setup_user \n\n=============================================================================================="
+
 setup_user
-#echo -e "\n\n============================================================================================== mount_nfs \n\n "
 mount_nfs
-#echo -e "\n\n============================================================================================== base_pkgs \n\n "
 base_pkgs
-#echo -e "\n\n============================================================================================== install_python \n\n "
 install_python
-#echo -e "\n\n============================================================================================== setup_cuda \n\n "
 setup_cuda
-#echo -e "\n\n============================================================================================== create_marker \n\n "
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
-#shutdown -r +1 &
-#echo -e "\n\n============================================================================================== verify_packages \n\n "
-#verify_packages
-#echo -e "\n\n============================================================================================== end of install_chainer.sh script \n\n "
 exit 0
