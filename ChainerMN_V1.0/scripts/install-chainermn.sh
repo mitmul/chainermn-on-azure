@@ -16,11 +16,11 @@ is_centos()
 enable_rdma()
 {
 	   # enable rdma    
-	   cd /etc/
-	   sudo echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   sudo echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
-	   #sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
-	   #sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+	   #cd /etc/
+	   #sudo echo "OS.EnableRDMA=y">>/etc/waagent.conf
+	   #sudo echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
+	   sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
+	   sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
 
 install_Chainer()
@@ -103,17 +103,12 @@ install_intel_mpi
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
 			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi
-		
-		#Set memlock unlimited
-		#cd /etc/security/
-		#echo " *               hard    memlock          unlimited">>limits.conf
-		#echo " *               soft    memlock          unlimited">>limits.conf
+		fi		
 }
 
 setup_chainermn_gpu()
 { 
-echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
+
 		if is_ubuntu; then
 		sudo apt-get update
 		sudo apt-get install git
@@ -121,7 +116,7 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 		if is_centos; then
 		yum -y install git-all
 		fi
-
+		install_intel_mpi
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
 			#anaconda_3_5.0.1
@@ -198,7 +193,7 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 
 setup_chainermn_gpu_infiniband()
 {
-#echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
+
 		if is_ubuntu; then
 			sudo apt-get update
 			sudo apt-get install git
@@ -284,7 +279,6 @@ setup_chainermn_gpu_infiniband()
 		install_chainermn
 		alias python=python3
 
-#echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
 if is_ubuntu; then       
@@ -296,7 +290,7 @@ fi
 
 check_infini()
 {
-# echo "\n\n check_infini \n\n"
+
 if is_ubuntu; then 
 	sudo modprobe rdma_ucm
 	return $?
@@ -324,9 +318,7 @@ if check_gpu; then
 		if is_centos; then
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel dapl
-		
-		#install_intel_mpi
-		
+				
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
 		sudo service rdma start
@@ -348,9 +340,7 @@ if check_gpu; then
 	else 
 		#Code to setup ChainerMN on GPU based machine
 		enable_rdma
-		setup_chainermn_gpu	
-		#install_Intel _MPI
-		install_intel_mpi		
+		setup_chainermn_gpu					
 		sudo nvidia-smi -pm 1
 		mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
 		create_cron_job()
