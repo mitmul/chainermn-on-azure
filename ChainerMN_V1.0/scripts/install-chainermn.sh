@@ -106,9 +106,9 @@ install_intel_mpi
 		fi
 		
 		#Set memlock unlimited
-		cd /etc/security/
-		echo " *               hard    memlock          unlimited">>limits.conf
-		echo " *               soft    memlock          unlimited">>limits.conf
+		#cd /etc/security/
+		#echo " *               hard    memlock          unlimited">>limits.conf
+		#echo " *               soft    memlock          unlimited">>limits.conf
 }
 
 setup_chainermn_gpu()
@@ -198,7 +198,7 @@ echo "\n\n\n\n\n\n\n\n\n\n setup_chainermn_gpu_ NON INFINIBAND \n\n\n\n\n\n\n\n"
 
 setup_chainermn_gpu_infiniband()
 {
-echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
+#echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 		if is_ubuntu; then
 			sudo apt-get update
 			sudo apt-get install git
@@ -209,7 +209,7 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 			yum -y install git-all
 			echo "\n\n Hyper-V-RDMA installed !!"
 		fi	
-		
+		install_intel_mpi
 		if [ ! -d /opt/anaconda3 ]; then
 			cd /opt
 			#anaconda_3_5.0.1
@@ -279,13 +279,12 @@ echo "\n\n\n\n\n\n\n\n setup_chainermn_gpu_infiniband \n\n\n\n\n\n\n\n"
 		fi
 		
 		#install Chainer V3.1.0
-		install_Chainer
-		
+		install_Chainer		
 		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		install_chainermn
 		alias python=python3
 
-echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
+#echo "\n\n setup_chainermn_gpu_infiniband completed \n\n=========================\n\n"	
 }
 
 if is_ubuntu; then       
@@ -297,7 +296,7 @@ fi
 
 check_infini()
 {
-echo "\n\n check_infini \n\n"
+# echo "\n\n check_infini \n\n"
 if is_ubuntu; then 
 	sudo modprobe rdma_ucm
 	return $?
@@ -310,7 +309,7 @@ fi
 
 check_gpu()
 {
-	echo "\n\n check_gpu \n\n"
+	# echo "\n\n check_gpu \n\n"
 	lspci | grep NVIDIA
 	return $?
 }
@@ -326,7 +325,7 @@ if check_gpu; then
 		sudo yum groupinstall -y "Infiniband Support"
 		sudo yum install -y infiniband-diags perftest qperf opensm git libverbs-devel dapl
 		
-		install_intel_mpi
+		#install_intel_mpi
 		
 		sudo chkconfig rdma on
 		sudo chkconfig opensm on
