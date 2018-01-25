@@ -67,8 +67,7 @@ base_pkgs_ubuntu()
        sudo apt-get -y install linux-azure
        
        # Install dapl, rdmacm, ibverbs, and mlx4
-       sudo apt-get -y install libdapl2 libmlx4-1    
-       enable_rdma
+       sudo apt-get -y install libdapl2 libmlx4-1      
        # WALinux Agent Installation
 		git clone https://github.com/Azure/WALinuxAgent.git
 		cd WALinuxAgent
