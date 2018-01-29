@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CUDA_VERSION=8.0
-NCCL_VERSION=1.3.4
+CUDA_VERSION=9.1
+NCCL_VERSION=2.1
 
 # Shares
 SHARE_HOME=/share/home
@@ -110,18 +110,11 @@ setup_cuda()
 	# Install drivers
 	sudo apt-get install -y cuda-drivers
 
-	if [ $CUDA_VERSION = 8.0 ]; then
-		sudo apt-get install -y cuda-8-0
-	fi
-	if [ $CUDA_VERSION = 9.0 ]; then
-		sudo apt-get install -y cuda-9-0
-	fi
 	if [ $CUDA_VERSION = 9.1 ]; then
 		sudo apt-get install -y cuda
 	fi
 
-	if [ -d /usr/local/cuda ]; then
-		sudo rm -rf /usr/local/cuda
+	if [ ! -d /usr/local/cuda ]; then
 		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 	fi
 }
@@ -129,25 +122,29 @@ setup_cuda()
 install_nccl()
 {
 	log "Install NCCL $NCCL_VERSION"
-	if [ $CUDA_VERSION = 8.0 ]; then
-		if [ $NCCL_VERSION = 1.3.4 ]; then
+	if [ $CUDA_VERSION = 9.1 ]; then
+		if [ $NCCL_VERSION = 2.1 ]; then
 			cd /opt
-			sudo curl -L -O https://github.com/NVIDIA/nccl/archive/v1.3.4-1.tar.gz
-			sudo tar zxvf v1.3.4-1.tar.gz
-			sudo rm -rf v1.3.4-1.tar.gz
-			cd nccl-1.3.4-1
-			sudo make install
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl2_2.1.4-1+cuda9.1_amd64.deb
+			sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libnccl-dev_2.1.4-1+cuda9.1_amd64.deb
+			sudo dpkg -i libnccl2_2.1.4-1+cuda9.1_amd64.deb
+			sudo rm -rf libnccl2_2.1.4-1+cuda9.1_amd64.deb
+			sudo dpkg -i libnccl-dev_2.1.4-1+cuda9.1_amd64.deb
+			sudo rm -rf libnccl-dev_2.1.4-1+cuda9.1_amd64.deb
 		fi
 	fi
 }
 
 install_cudnn7()
 {
-	if [ $CUDA_VERSION = 8.0 ]; then
-		cd /usr/local
-		sudo curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.0.5/cudnn-8.0-linux-x64-v7.tgz
-		sudo tar zxvf cudnn-8.0-linux-x64-v7.tgz
-		sudo rm -rf cudnn-8.0-linux-x64-v7.tgz
+	if [ $CUDA_VERSION = 9.1 ]; then
+		cd /opt
+		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo dpkg -i libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo rm -rf libcudnn7_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo dpkg -i libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
+		sudo rm -rf libcudnn7-dev_7.0.5.15-1+cuda9.1_amd64.deb
 	fi
 }
 
