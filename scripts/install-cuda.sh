@@ -98,17 +98,20 @@ setup_cuda()
 	rm -f /tmp/${CUDA_REPO_PKG}
 	sudo apt-get update
 	sudo apt-get install -y cuda-drivers
-	sudo apt-get install -y linux-image-4.11.0-1016-azure
-	prefix=`grep -oh "gnulinux-advanced-[0-9a-z-]*" /boot/grub/grub.cfg`
-	kernel=`grep -oh "gnulinux-4.11.0-1016-azure-advanced-[0-9a-z-]*" /boot/grub/grub.cfg`
-	sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="'"${prefix}>${kernel}"'"/g' /etc/default/grub
-	sudo update-grub
+	# sudo apt-get install -y linux-image-4.11.0-1016-azure
+	# prefix=`grep -oh "gnulinux-advanced-[0-9a-z-]*" /boot/grub/grub.cfg`
+	# kernel=`grep -oh "gnulinux-4.11.0-1016-azure-advanced-[0-9a-z-]*" /boot/grub/grub.cfg`
+	# sudo sed -i -e 's/GRUB_DEFAULT=0/GRUB_DEFAULT="'"${prefix}>${kernel}"'"/g' /etc/default/grub
+	# sudo update-grub
 
 	if [ $CUDA_VERSION = 8.0 ]; then
 		sudo apt-get install -y cuda-8-0
 	fi
 	if [ $CUDA_VERSION = 9.0 ]; then
 		sudo apt-get install -y cuda-9-0
+	fi
+	if [ $CUDA_VERSION = 9.1 ]; then
+		sudo apt-get install -y cuda
 	fi
 
 	if [ -d /usr/local/cuda ]; then
