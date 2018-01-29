@@ -117,6 +117,10 @@ setup_cuda()
 	if [ ! -d /usr/local/cuda ]; then
 		sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 	fi
+
+	cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+	sudo make
+	./deviceQuery
 }
 
 install_nccl()
