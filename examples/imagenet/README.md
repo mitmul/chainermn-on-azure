@@ -74,3 +74,14 @@ mpirun -n 2 -ppn 1 -hosts 10.0.0.7,10.0.0.10 \
 -envall python train_mnist.py \
 --gpu --communicator non_cuda_aware
 ```
+
+```
+mpirun -hosts localhost,localhost -ppn 1 -n 2 -envall IMB-MPI1 pingpong
+```
+
+```
+CHAINER_TYPE_CHECK=0 MPLBACKEND=Agg \
+mpirun -n 2 -ppn 1 -hosts localhost,localhost \
+-envall python train_mnist.py \
+--gpu --communicator non_cuda_aware
+```
