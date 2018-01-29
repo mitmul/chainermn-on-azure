@@ -168,9 +168,9 @@ base_pkgs
 
 setup_cuda
 
-install_nccl
+# install_nccl
 
-install_cudnn7
+# install_cudnn7
 
 if [ ! -f $SHARE_HOME/$HPC_USER/.bashrc ]; then
 	touch $SHARE_HOME/$HPC_USER/.bashrc
