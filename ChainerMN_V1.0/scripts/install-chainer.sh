@@ -63,7 +63,7 @@ base_pkgs_ubuntu()
 {	  
        cd /etc/apt/
        echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe">>sources.list       
-       sudo apt-get update
+       sudo apt-get -y update
        sudo apt-get -y install linux-azure
        
        # Install dapl, rdmacm, ibverbs, and mlx4
@@ -227,7 +227,7 @@ setup_cuda_centos()
 	sudo curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
 	sudo rpm -i ${CUDA_RPM}
 	sudo yum clean expire-cache
-	sudo yum -y install cuda-8-0
+	#sudo yum -y install cuda-8-0
 	nvidia-smi
 }
 
