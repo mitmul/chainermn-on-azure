@@ -172,8 +172,11 @@ if grep -q "anaconda" $SHARE_HOME/$HPC_USER/.bashrc; then :; else
 	sudo su -c "echo 'source /opt/anaconda3/bin/activate' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo su -c "echo 'export CUDA_PATH=/usr/local/cuda' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo su -c "echo 'export CPATH=/usr/local/cuda/include:\$CPATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
+	sudo su -c "echo 'export CPATH=/usr/local/include:\$CPATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo su -c "echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:\$LIBRARY_PATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
+	sudo su -c "echo 'export LIBRARY_PATH=/usr/local/lib:\$LIBRARY_PATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo su -c "echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:\$LD_LIBRARY_PATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
+	sudo su -c "echo 'export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo su -c "echo 'export PATH=/usr/local/cuda/bin:\$PATH' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 	sudo sh -c "echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> $SHARE_HOME/$HPC_USER/.bashrc" $HPC_USER
 fi
