@@ -195,6 +195,7 @@ setup_opencv()
 		-DCMAKE_BUILD_TYPE=Release \
 		../ && \
 		make -j32 && make install
+	fi
 }
 
 setup_chainermn()
