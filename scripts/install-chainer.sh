@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CUPY_VERSION=2.2.0
-CHAINER_VERSION=3.2.0
-CHAINERMN_VERSION=1.0.0
+CUPY_VERSION=2.3.0
+CHAINER_VERSION=3.3.0
+CHAINERMN_VERSION=1.1.0
 
 check_gpu()
 {
@@ -10,12 +10,51 @@ check_gpu()
 	return $?
 }
 
-setup_chainermn()
+setup_mkl()
 {
-	sudo apt-get update
-	sudo apt-get install -y git
+	if [ ! -d l_mkl_2018.1.163 ]; then
+		cd /opt
+		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mkl_2018.1.163.tgz
+		sudo tar zxvf l_mkl_2018.1.163.tgz
+		sudo rm -rf l_mkl_2018.1.163.tgz
+		cd l_mkl_2018.1.163
+		sudo sed -i -e "s/decline/accept/g" silent.cfg
+		sudo ./install.sh --silent silent.cfg
+		source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+	fi
+	if [ ! -f /etc/profile.d/intel_mkl.sh ]; then
+		echo 'source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
+	fi
+}
 
-	# Install Intel MPI
+setup_python()
+{
+	sudo apt-get update -y && \
+	sudo apt-get install -y \
+	python3-dev \
+	python3-dbg \
+	python3-pip \
+	python3-wheel \
+	python3-setuptools \
+	cmake \
+	cmake-curses-gui \
+	git
+
+	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+	sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
+	sudo pip install --upgrade pip
+
+	sudo su hpcuser && \
+	echo '[mkl]' >> ~/.numpy-site.cfg && \
+	echo 'library_dirs = /opt/intel/mkl/lib/intel64' >> ~/.numpy-site.cfg && \
+	echo 'include_dirs = /opt/intel/mkl/include' >> ~/.numpy-site.cfg && \
+	echo 'mkl_libs = mkl_rt' >> ~/.numpy-site.cfg && \
+	echo 'lapack_libs =' >> ~/.numpy-site.cfg && \
+	pip install --no-binary :all: numpy
+}
+
+setup_intel_mpi()
+{
 	if [ ! -d /opt/l_mpi_2018.1.163 ]; then
 		cd /opt
 		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mpi_2018.1.163.tgz
@@ -34,25 +73,16 @@ setup_chainermn()
 		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /etc/profile.d/intel_mpi.sh
 		echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> /etc/profile.d/intel_mpi.sh
 	fi
+}
 
-	# Install Anaconda3
-	if [ ! -d /opt/anaconda3 ]; then
-		cd /opt
-		sudo curl -L -O https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
-		sudo bash Anaconda3-5.0.1-Linux-x86_64.sh -b -p /opt/anaconda3
-		sudo rm -rf Anaconda3-5.0.1-Linux-x86_64.sh
-		sudo chown -R hpcuser:hpc /opt/anaconda3
-		source /opt/anaconda3/bin/activate
-	fi
-	
-	sudo su - hpcuser
-	source ~/.bashrc
-
-	pip install cupy==${CUPY_VERSION}
-	pip install chainer==${CHAINER_VERSION}
-	pip install mpi4py --no-cache-dir
+setup_chainermn()
+{	
+	sudo su - hpcuser && \
+	source ~/.bashrc && \
+	pip install cupy==${CUPY_VERSION} && \
+	pip install chainer==${CHAINER_VERSION} && \
+	pip install mpi4py && \
 	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
-	sudo su -
 }
 
 create_cron_job()
@@ -64,13 +94,13 @@ create_cron_job()
 	rm downloadsecretcron
 }
 
-if check_gpu; then
-	
-	setup_chainermn	
-	
-	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
-	echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-	create_cron_job
-fi
+setup_mkl
+setup_python
+setup_intel_mpi
+setup_chainermn	
+
+mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
+echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+create_cron_job
 
 shutdown -r +1
