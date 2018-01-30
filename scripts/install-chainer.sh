@@ -19,17 +19,17 @@ setup_mkl()
 {
 	if [ ! -d /opt/l_mkl_2018.1.163 ]; then
 		cd /opt
-		curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mkl_2018.1.163.tgz
-		tar zxvf l_mkl_2018.1.163.tgz
-		rm -rf l_mkl_2018.1.163.tgz
+		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mkl_2018.1.163.tgz
+		sudo tar zxvf l_mkl_2018.1.163.tgz
+		sudo rm -rf l_mkl_2018.1.163.tgz
 		cd l_mkl_2018.1.163
-		sed -i -e "s/decline/accept/g" silent.cfg
-		./install.sh --silent silent.cfg
-		source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+		sudo sed -i -e "s/decline/accept/g" silent.cfg
+		sudo ./install.sh --silent silent.cfg
+		sudo source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_mkl.sh ]; then
-		echo 'source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
-		echo 'export LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:$LD_LIBRARY_PATH' >> /etc/profile.d/intel_mkl.sh
+		sudo echo 'source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
+		sudo echo 'export LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:$LD_LIBRARY_PATH' >> /etc/profile.d/intel_mkl.sh
 	fi
 }
 
@@ -37,17 +37,17 @@ setup_tbb()
 {
 	if [ ! -d /opt/l_tbb_2018.1.163 ]; then
 		cd /opt
-		curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_tbb_2018.1.163.tgz
-		tar zxvf l_tbb_2018.1.163.tgz
-		rm -rf l_tbb_2018.1.163.tgz
+		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_tbb_2018.1.163.tgz
+		sudo tar zxvf l_tbb_2018.1.163.tgz
+		sudo rm -rf l_tbb_2018.1.163.tgz
 		cd l_tbb_2018.1.163
-		sed -i -e "s/decline/accept/g" silent.cfg
-		./install.sh --silent silent.cfg
-		source /opt/intel/tbb/bin/tbbvars.sh intel64
+		sudo sed -i -e "s/decline/accept/g" silent.cfg
+		sudo ./install.sh --silent silent.cfg
+		sudo source /opt/intel/tbb/bin/tbbvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_tbb.sh ]; then
-		echo 'source /opt/intel/tbb/bin/tbbvars.sh intel64' >> /etc/profile.d/intel_tbb.sh
-		echo 'export CPATH=/opt/intel/tbb/include:$CPATH' >> /etc/profile.d/intel_tbb.sh
+		sudo echo 'source /opt/intel/tbb/bin/tbbvars.sh intel64' >> /etc/profile.d/intel_tbb.sh
+		sudo echo 'export CPATH=/opt/intel/tbb/include:$CPATH' >> /etc/profile.d/intel_tbb.sh
 	fi
 }
 
@@ -55,28 +55,28 @@ setup_intel_mpi()
 {
 	if [ ! -d /opt/l_mpi_2018.1.163 ]; then
 		cd /opt
-		curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mpi_2018.1.163.tgz
-		tar zxvf l_mpi_2018.1.163.tgz
-		rm -rf l_mpi_2018.1.163.tgz
+		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mpi_2018.1.163.tgz
+		sudo tar zxvf l_mpi_2018.1.163.tgz
+		sudo rm -rf l_mpi_2018.1.163.tgz
 		cd l_mpi_2018.1.163
-		sed -i -e "s/decline/accept/g" silent.cfg
-		./install.sh --silent silent.cfg
-		source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
+		sudo sed -i -e "s/decline/accept/g" silent.cfg
+		sudo ./install.sh --silent silent.cfg
+		sudo source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
 	if [ ! -f /etc/profile.d/intel_mpi.sh ]; then
-		echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >> /etc/profile.d/intel_mpi.sh
-		echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /etc/profile.d/intel_mpi.sh
-		echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'export I_MPI_FALLBACK_DEVICE=0' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> /etc/profile.d/intel_mpi.sh
 	fi
 }
 
 setup_python()
 {
-	apt-get update -y && \
-	apt-get install -y \
+	sudo apt-get update -y && \
+	sudo apt-get install -y \
 	python3-dev \
 	python3-dbg \
 	python3-pip \
@@ -87,37 +87,37 @@ setup_python()
 	git \
 	gfortran
 
-	update-alternatives --install /usr/bin/python python /usr/bin/python3 10
-	update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
-	pip install --upgrade pip
+	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
+	sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
+	sudo pip install --upgrade pip
 
-	echo '[mkl]' >> ~/.numpy-site.cfg
-	echo 'library_dirs = /opt/intel/mkl/lib/intel64' >> ~/.numpy-site.cfg
-	echo 'include_dirs = /opt/intel/mkl/include' >> ~/.numpy-site.cfg
-	echo 'mkl_libs = mkl_rt' >> ~/.numpy-site.cfg
-	echo 'lapack_libs =' >> ~/.numpy-site.cfg
-	pip install --no-binary :all: numpy
-	pip install --no-binary :all: scipy
+	sudo echo '[mkl]' >> ~/.numpy-site.cfg
+	sudo echo 'library_dirs = /opt/intel/mkl/lib/intel64' >> ~/.numpy-site.cfg
+	sudo echo 'include_dirs = /opt/intel/mkl/include' >> ~/.numpy-site.cfg
+	sudo echo 'mkl_libs = mkl_rt' >> ~/.numpy-site.cfg
+	sudo echo 'lapack_libs =' >> ~/.numpy-site.cfg
+	sudo pip install --no-binary :all: numpy
+	sudo pip install --no-binary :all: scipy
 }
 
 setup_jpeg_turbo()
 {
 	if [ ! -d /opt/libjpeg-turbo-1.5.3 ]; then
-		apt-get install -y nasm
-		curl -L -O https://sourceforge.net/projects/libjpeg-turbo/files/1.5.3/libjpeg-turbo-1.5.3.tar.gz
-		tar zxvf libjpeg-turbo-1.5.3.tar.gz
-		rm -rf libjpeg-turbo-1.5.3.tar.gz
+		sudo apt-get install -y nasm
+		sudo curl -L -O https://sourceforge.net/projects/libjpeg-turbo/files/1.5.3/libjpeg-turbo-1.5.3.tar.gz
+		sudo tar zxvf libjpeg-turbo-1.5.3.tar.gz
+		sudo rm -rf libjpeg-turbo-1.5.3.tar.gz
 		cd libjpeg-turbo-1.5.3
-		CFLAGS='-O3' ./configure --prefix=/usr/local
-		make -j32 install
+		sudo sh -c "CFLAGS='-O3' ./configure --prefix=/usr/local"
+		sudo make -j32 install
 	fi
 }
 
 setup_ffmpeg()
 {
-	add-apt-repository ppa:jonathonf/ffmpeg-3
-	apt-get update -y
-	apt-get install -y yasm x264 libav-tools x265 ffmpeg libavcodec-dev libavformat-dev libswscale-dev
+	sudo add-apt-repository ppa:jonathonf/ffmpeg-3
+	sudo apt-get update -y
+	sudo apt-get install -y yasm x264 libav-tools x265 ffmpeg libavcodec-dev libavformat-dev libswscale-dev
 }
 
 setup_opencv()
@@ -125,14 +125,14 @@ setup_opencv()
 	if [ ! -d /opt/opencv-3.4.0 ]; then
 		cd /opt
 		
-		curl -L -O https://github.com/opencv/opencv/archive/3.4.0.tar.gz
-		tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
+		sudo curl -L -O https://github.com/opencv/opencv/archive/3.4.0.tar.gz
+		sudo tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
 
-		curl -L -O https://github.com/opencv/opencv_contrib/archive/3.4.0.tar.gz
-		tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
+		sudo curl -L -O https://github.com/opencv/opencv_contrib/archive/3.4.0.tar.gz
+		sudo tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
 
-		cd opencv-3.4.0 && mkdir build && cd build
-		cmake \
+		cd opencv-3.4.0 && sudo mkdir build && cd build
+		sudo cmake \
 		-DBUILD_TESTS=OFF \
 		-DBUILD_JPEG=OFF \
 		-DENABLE_AVX=ON \
@@ -194,27 +194,27 @@ setup_opencv()
 		-DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.4.0/modules \
 		-DCMAKE_BUILD_TYPE=Release \
 		../ && \
-		make -j32 && make install
+		sudo make -j32 && sudo make install
 	fi
 }
 
 setup_chainermn()
 {	
-	pip install cupy==${CUPY_VERSION}
-	pip install chainer==${CHAINER_VERSION}
-	pip install mpi4py
-	pip install cython
-	CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn
+	sudo pip install cupy==${CUPY_VERSION}
+	sudo pip install chainer==${CHAINER_VERSION}
+	sudo pip install mpi4py
+	sudo pip install cython
+	sudo su -c "CFLAGS=-I/usr/local/cuda/include pip install git+https://github.com/chainer/chainermn"
 }
 
 create_cron_job()
 {
 	# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
-	mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
-	crontab -l > downloadsecretcron
-	echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
-	crontab downloadsecretcron
-	rm downloadsecretcron
+	sudo mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
+	sudo crontab -l > downloadsecretcron
+	sudo echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
+	sudo crontab downloadsecretcron
+	sudo rm downloadsecretcron
 }
 
 setup_mkl
@@ -227,4 +227,4 @@ setup_opencv
 setup_chainermn	
 create_cron_job
 
-shutdown -r +1
+sudo shutdown -r +1
