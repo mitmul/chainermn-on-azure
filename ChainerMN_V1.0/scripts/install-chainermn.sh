@@ -72,7 +72,13 @@ install_chainermn()
 	if is_centos; then
 	sudo cp /opt/nccl/build/include/nccl.h /usr/local/cuda/include
 	fi
-	
+	cd /opt
+	if is_ubuntu; then				
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+			fi
 	cd /usr/local
 	CFLAGS="-I /usr/local/cuda/include" pip install chainermn==1.1.0
 	# PKG_Name=chainermn-1.1.0.tar.gz
@@ -222,13 +228,7 @@ setup_chainermn_gpu_infiniband()
 		
 		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
 		if [ ! -d /opt/nccl ]; then
-			cd /opt
-			if is_ubuntu; then				
-				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
-				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
-				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-				sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-			fi
+			cd /opt			
 			if is_centos; then
 				#Working using tar file
 				cd /opt
