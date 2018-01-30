@@ -37,7 +37,11 @@ done
 
 setup_user()
 {
-	apt-get update
+	log "setup_user"
+	echo $USER
+	printenv
+	
+	apt-get update -y
 	apt-get -y install nfs-common
 	
 	# Automatically mount the user's home
@@ -68,10 +72,11 @@ mount_nfs()
 
 base_pkgs()
 {
+	log "setup base_pkgs"
 	#Install Kernel 
 	cd /etc/apt/
 	echo "deb http://archive.ubuntu.com/ubuntu/ xenial-proposed restricted main multiverse universe" >> sources.list
-	apt-get update
+	apt-get update -y
 	apt-get -y upgrade
 	
 	# Install dapl, rdmacm, ibverbs, and mlx4
@@ -131,6 +136,7 @@ install_nccl()
 
 install_cudnn7()
 {
+	log "Install cuDNN $CUDNN_VERSION"
 	if [ $CUDA_VERSION = 9.1 ]; then
 		if [ $CUDNN_VERSION = 7.0.5 ]; then
 			apt-get install -y libcudnn7 libcudnn7-dev
