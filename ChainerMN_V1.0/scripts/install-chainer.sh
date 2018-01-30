@@ -227,7 +227,7 @@ setup_cuda_centos()
 	sudo curl -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_RPM}
 	sudo rpm -i ${CUDA_RPM}
 	sudo yum clean expire-cache
-	#sudo yum -y install cuda-8-0
+	sudo yum -y install cuda-8-0
 	nvidia-smi
 }
 
