@@ -222,7 +222,7 @@ setup_chainermn_gpu_infiniband()
 		
 		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
 		if [ ! -d /opt/nccl ]; then
-			cd /opt/nccl
+			cd /opt
 			if is_ubuntu; then				
 				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
 				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
