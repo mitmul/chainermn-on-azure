@@ -40,7 +40,9 @@ setup_user()
 	log "setup_user"
 	echo $USER
 	printenv
-	
+
+	touch /opt/tmp
+
 	apt-get update -y
 	apt-get -y install nfs-common
 	
