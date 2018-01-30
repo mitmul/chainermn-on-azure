@@ -114,11 +114,11 @@ setup_cuda()
 	sudo make
 	./deviceQuery
 
-	cd /opt
-	sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
-	sudo dpkg -i nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
-	sudo rm -rf nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
-	sudo apt-get update
+	# cd /opt
+	# sudo curl -L -O http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
+	# sudo dpkg -i nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
+	# sudo rm -rf nvidia-machine-learning-repo-ubuntu1604_1.0.0-1_amd64.deb
+	# sudo apt-get update
 }
 
 install_nccl()
@@ -126,7 +126,12 @@ install_nccl()
 	log "Install NCCL $NCCL_VERSION"
 	if [ $CUDA_VERSION = 9.1 ]; then
 		if [ $NCCL_VERSION = 2.1 ]; then
-			sudo apt-get install -y libnccl2 libnccl-dev
+			# sudo apt-get install -y libnccl2 libnccl-dev
+			cd /opt
+			sudo curl -L -O https://www.dropbox.com/s/9xz1m7kr4lyjo9m/nccl-repo-ubuntu1604-2.1.4-ga-cuda9.1_1-1_amd64.deb
+			sudo dpkg -i nccl-repo-ubuntu1604-2.1.4-ga-cuda9.1_1-1_amd64.deb
+			sudo apt install libnccl2 libnccl-dev
+			sudo rm -rf nccl-repo-ubuntu1604-2.1.4-ga-cuda9.1_1-1_amd64.deb
 		fi
 	fi
 }
@@ -136,7 +141,11 @@ install_cudnn7()
 	log "Install cuDNN $CUDNN_VERSION"
 	if [ $CUDA_VERSION = 9.1 ]; then
 		if [ $CUDNN_VERSION = 7.0.5 ]; then
-			sudo apt-get install -y libcudnn7 libcudnn7-dev
+			# sudo apt-get install -y libcudnn7 libcudnn7-dev
+			cd /usr/local
+			sudo curl -L -O https://www.dropbox.com/s/55ak48061dsgtde/cudnn-9.1-linux-x64-v7.tgz
+			sudo tar zxvf cudnn-9.1-linux-x64-v7.tgz
+			sudo rm -rf cudnn-9.1-linux-x64-v7.tgz
 		fi
 	fi
 }
@@ -153,8 +162,8 @@ setup_user
 mount_nfs
 base_pkgs
 setup_cuda
-install_nccl
 install_cudnn7
+install_nccl
 
 # Add environment variables
 if [ ! -f $SHARE_HOME/$HPC_USER/.bashrc ]; then

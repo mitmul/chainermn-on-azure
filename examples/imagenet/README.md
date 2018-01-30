@@ -85,3 +85,7 @@ mpirun -n 2 -ppn 1 -hosts localhost,localhost \
 -envall python train_mnist.py \
 --gpu --communicator non_cuda_aware
 ```
+
+mpiexec -n 1 -ppn 1 -hosts localhost python -c "from mpi4py import MPI; import chainermn"
+
+NCCL_DEBUG=DEBUG NCCL_IB_CUDA_SUPPORT=0 MPLBACKEND=Agg mpiexec -n 1 -ppn 1 -hosts localhost python train_mnist.py --gpu --communicator non_cuda_aware

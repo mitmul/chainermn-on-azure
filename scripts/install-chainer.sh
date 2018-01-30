@@ -25,10 +25,10 @@ setup_mkl()
 		cd l_mkl_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
+		sudo sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_mkl.sh ]; then
-		sudo echo 'source /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
+		sudo echo 'sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
 		sudo echo 'export LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:$LD_LIBRARY_PATH' >> /etc/profile.d/intel_mkl.sh
 	fi
 }
@@ -43,10 +43,10 @@ setup_tbb()
 		cd l_tbb_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo source /opt/intel/tbb/bin/tbbvars.sh intel64
+		sudo sh /opt/intel/tbb/bin/tbbvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_tbb.sh ]; then
-		sudo echo 'source /opt/intel/tbb/bin/tbbvars.sh intel64' >> /etc/profile.d/intel_tbb.sh
+		sudo echo 'sh /opt/intel/tbb/bin/tbbvars.sh intel64' >> /etc/profile.d/intel_tbb.sh
 		sudo echo 'export CPATH=/opt/intel/tbb/include:$CPATH' >> /etc/profile.d/intel_tbb.sh
 	fi
 }
@@ -61,7 +61,7 @@ setup_intel_mpi()
 		cd l_mpi_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
+		sudo sh /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
 	if [ ! -f /etc/profile.d/intel_mpi.sh ]; then
 		sudo echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
@@ -96,8 +96,12 @@ setup_python()
 	sudo echo 'include_dirs = /opt/intel/mkl/include' >> ~/.numpy-site.cfg
 	sudo echo 'mkl_libs = mkl_rt' >> ~/.numpy-site.cfg
 	sudo echo 'lapack_libs =' >> ~/.numpy-site.cfg
-	sudo pip install --no-binary :all: numpy
-	sudo pip install --no-binary :all: scipy
+	sudo su -
+	pip install --no-binary :all: numpy
+	pip install --no-binary :all: scipy
+	pip install --no-binary :all: scikit-learn
+	pip install matplotlib
+	pip install pandas
 }
 
 setup_jpeg_turbo()
@@ -153,6 +157,7 @@ setup_opencv()
 		-DPYTHON3_PACKAGES_PATH=/usr/lib/python3/dist-packages \
 		-DPYTHON3_INCLUDE_DIR=/usr/include/python3.5m \
 		-DPYTHON3_INCLUDE_DIR2=/usr/include/x86_64-linux-gnu/python3.5m \
+		-DPYTHON3_NUMPY_INCLUDE_DIRS=$(python -c "import numpy; print(numpy.get_include())") \
 		-DWITH_OPENMP=ON \
 		-DWITH_OPENCL=OFF \
 		-DWITH_OPENCLAMDBLAS=OFF \
@@ -202,9 +207,10 @@ setup_chainermn()
 {	
 	sudo pip install cupy==${CUPY_VERSION}
 	sudo pip install chainer==${CHAINER_VERSION}
-	sudo pip install mpi4py
+	sudo source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh && \
+	sudo pip install mpi4py --no-cache-dir
 	sudo pip install cython
-	sudo su -c "CFLAGS=-I/usr/local/cuda/include pip install git+https://github.com/chainer/chainermn"
+	sudo pip install git+https://github.com/chainer/chainermn
 }
 
 create_cron_job()
