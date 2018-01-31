@@ -13,12 +13,14 @@ is_centos()
 	return $?
 }
 
+is_Ubuntu()
+{
+	cat /etc/issue | grep Ubuntu
+	return $?
+}
 enable_rdma()
 {
 	   # enable rdma    
-	   #cd /etc/
-	   #sudo echo "OS.EnableRDMA=y">>/etc/waagent.conf
-	   #sudo echo "OS.UpdateRdmaDriver=y">>/etc/waagent.conf
 	   sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
 	   sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
 }
@@ -36,8 +38,7 @@ install_Chainer()
 	cd /usr/local
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/numpy-1.13.3.tar.gz
 	sudo tar -zxf numpy-1.13.3.tar.gz
-	cd numpy-1.13.3
-	#sudo python setup.py install
+	cd numpy-1.13.3	
 	python setup.py install
 	
 	#install_six
@@ -74,11 +75,6 @@ install_chainermn()
 	fi	
 	cd /usr/local
 	CFLAGS="-I /usr/local/cuda/include" pip install chainermn==1.1.0
-	# PKG_Name=chainermn-1.1.0.tar.gz
-	# sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-	# tar -zxf ${PKG_Name}
-	# cd ${PKG_Name::-7}
-	#CFLAGS="-I /usr/local/cuda/include" python setup.py install
 }
 
 install_intel_mpi
@@ -197,11 +193,10 @@ setup_chainermn_gpu_infiniband()
 			sudo apt-get update
 			sudo apt-get install git
 		fi
-		if is_centos; then
-			echo "\n\nInstalling Hyper-V-RDMA \n\n"
+		if is_centos; then			
 			yum reinstall -y /opt/microsoft/rdma/rhel73/kmod-microsoft-hyper-v-rdma-4.2.2.144-20170706.x86_64.rpm
 			yum -y install git-all
-			echo "\n\n Hyper-V-RDMA installed !!"
+			
 		fi	
 		install_intel_mpi
 		if [ ! -d /opt/anaconda3 ]; then
@@ -219,13 +214,8 @@ setup_chainermn_gpu_infiniband()
 			echo 'source /opt/anaconda3/bin/activate' >> ~/.bashrc
 		fi
 		
-		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4
-		if [ ! -d /opt/nccl ]; then
-		is_Ubuntu()
-		{
-			cat /etc/issue | grep Ubuntu
-        		return $?
-		}
+		#NCCL package # for ubuntu : 2.1 # for centos 1.3.4		
+		if [ ! -d /opt/nccl ]; then		
 			cd /opt				
 			if is_Ubuntu; then				
 				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
@@ -285,7 +275,7 @@ setup_chainermn_gpu_infiniband()
 
 }
 
-if is_ubuntu; then       
+if is_Ubuntu; then       
        apt install ibverbs-utils	
 fi
 if is_centos; then
@@ -295,7 +285,7 @@ fi
 check_infini()
 {
 
-if is_ubuntu; then 
+if is_Ubuntu; then 
 	sudo modprobe rdma_ucm
 	return $?
 fi
