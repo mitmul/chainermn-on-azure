@@ -44,7 +44,6 @@ You have to provide these parameters to the template :
 * _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) recommended CentOS-HPC_7.3.
 * _VM prefix Name_ : It is vm prefix.
 * _Instance Count_ : it is the no. of instances inside a VMSS.
-* _Vnet RG_ : The name of the Resource Group used to deploy the Master VM and the VNET.
 * _Master Name_ : The short name of the Master VM
 * _Admin User Name_ : This is the name of the administrator account to create on the VM.
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
