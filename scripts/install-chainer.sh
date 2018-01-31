@@ -25,7 +25,6 @@ setup_mkl()
 		cd l_mkl_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_mkl.sh ]; then
 		sudo echo 'sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64' >> /etc/profile.d/intel_mkl.sh
@@ -43,7 +42,6 @@ setup_tbb()
 		cd l_tbb_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo sh /opt/intel/tbb/bin/tbbvars.sh intel64
 	fi
 	if [ ! -f /etc/profile.d/intel_tbb.sh ]; then
 		sudo echo 'sh /opt/intel/tbb/bin/tbbvars.sh intel64' >> /etc/profile.d/intel_tbb.sh
@@ -61,7 +59,6 @@ setup_intel_mpi()
 		cd l_mpi_2018.1.163
 		sudo sed -i -e "s/decline/accept/g" silent.cfg
 		sudo ./install.sh --silent silent.cfg
-		sudo sh /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 	fi
 	if [ ! -f /etc/profile.d/intel_mpi.sh ]; then
 		sudo echo 'export I_MPI_FABRICS=shm:dapl' >> /etc/profile.d/intel_mpi.sh
@@ -127,6 +124,7 @@ setup_ffmpeg()
 
 setup_opencv()
 {
+	echo "setup_opencv"
 	if [ ! -d /opt/opencv-3.4.0 ]; then
 		cd /opt
 		
@@ -137,6 +135,9 @@ setup_opencv()
 		sudo tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
 
 		cd opencv-3.4.0 && sudo mkdir build && cd build
+		sh /opt/intel/tbb/bin/tbbvars.sh intel64 && \
+		sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64 && \
+		printenv && \
 		sudo cmake \
 		-DBUILD_TESTS=OFF \
 		-DBUILD_JPEG=OFF \
@@ -206,11 +207,14 @@ setup_opencv()
 
 setup_chainermn()
 {	
+	echo "setup_chainermn"
 	sudo su -
-	pip install cupy==${CUPY_VERSION}
-	pip install chainer==${CHAINER_VERSION}
-	pip install mpi4py --no-cache-dir
-	pip install cython
+	sh /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh && \
+	printenv && \
+	pip install cupy==${CUPY_VERSION} && \
+	pip install chainer==${CHAINER_VERSION} && \
+	pip install mpi4py --no-cache-dir && \
+	pip install cython && \
 	pip install git+https://github.com/chainer/chainermn
 }
 
