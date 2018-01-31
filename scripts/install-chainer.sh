@@ -94,12 +94,11 @@ setup_python()
 	sudo echo 'include_dirs = /opt/intel/mkl/include' >> ~/.numpy-site.cfg
 	sudo echo 'mkl_libs = mkl_rt' >> ~/.numpy-site.cfg
 	sudo echo 'lapack_libs =' >> ~/.numpy-site.cfg
-	sudo su -
-	pip install --no-binary :all: numpy
-	pip install --no-binary :all: scipy
-	pip install --no-binary :all: scikit-learn
-	pip install matplotlib
-	pip install pandas
+	sudo -i pip install --no-binary :all: numpy
+	sudo -i pip install --no-binary :all: scipy
+	sudo -i pip install --no-binary :all: scikit-learn
+	sudo -i pip install matplotlib
+	sudo -i pip install pandas
 }
 
 setup_jpeg_turbo()
@@ -119,7 +118,15 @@ setup_ffmpeg()
 {
 	sudo add-apt-repository ppa:jonathonf/ffmpeg-3
 	sudo apt-get update -y
-	sudo apt-get install -y yasm x264 libav-tools x265 ffmpeg libavcodec-dev libavformat-dev libswscale-dev
+	sudo apt-get install -y \
+	yasm \
+	x264 \
+	x265 \
+	libav-tools \
+	ffmpeg \
+	libavcodec-dev \
+	libavformat-dev \
+	libswscale-dev
 }
 
 setup_opencv()
@@ -135,10 +142,7 @@ setup_opencv()
 		sudo tar zxvf 3.4.0.tar.gz && rm -rf 3.4.0.tar.gz
 
 		cd opencv-3.4.0 && sudo mkdir build && cd build
-		sh /opt/intel/tbb/bin/tbbvars.sh intel64 && \
-		sh /opt/intel/compilers_and_libraries/linux/mkl/bin/mklvars.sh intel64 && \
-		printenv && \
-		sudo cmake \
+		sudo -i cmake \
 		-DBUILD_TESTS=OFF \
 		-DBUILD_JPEG=OFF \
 		-DENABLE_AVX=ON \
@@ -213,11 +217,16 @@ setup_chainermn()
 {	
 	echo "setup_chainermn"
 	sudo su -
-	pip_with_mpivars cupy==${CUPY_VERSION}
-	pip_with_mpivars chainer==${CHAINER_VERSION}
-	pip_with_mpivars mpi4py
-	pip_with_mpivars cython && \
-	pip_with_mpivars git+https://github.com/chainer/chainermn
+	# pip_with_mpivars cupy==${CUPY_VERSION}
+	# pip_with_mpivars chainer==${CHAINER_VERSION}
+	# pip_with_mpivars mpi4py
+	# pip_with_mpivars cython && \
+	# pip_with_mpivars git+https://github.com/chainer/chainermn
+	sudo -i pip install cupy==${CUPY_VERSION}
+	sudo -i pip install chainer==${CHAINER_VERSION}
+	sudo -i pip install mpi4py
+	sudo -i pip install cython
+	sudo -i pip install git+https://github.com/chainer/chainermn
 }
 
 create_cron_job()
