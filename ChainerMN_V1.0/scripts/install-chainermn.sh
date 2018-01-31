@@ -318,7 +318,7 @@ if check_gpu; then
 		sudo service rdma start
 		sudo service opensm start
 		fi
-		if is_centos; then
+		if is_Ubuntu; then
 		create_cron_job()
 		{
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
