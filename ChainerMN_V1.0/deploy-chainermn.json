@@ -84,12 +84,6 @@
       "defaultValue": 1,
       "maxValue": 100
     },
-    "vnetRG": {
-      "type": "string",
-      "metadata": {
-        "description": "Resource group of Vnet of jumpbox"
-      }
-    },
     "masterName": {
       "type": "string",
       "metadata": {
@@ -117,7 +111,7 @@
     "virtualNetworkName": "chainer-vnet",
     "subnetName": "chainer-subnet",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "vnetRG": "[parameters('vnetRG')]",
+    "vnetRG": "[resourceGroup().location]",
     "networkSettings": {
       "addressPrefix": "10.0.0.0/20",
       "chainerSubnetPrefix": "10.0.0.0/21",
