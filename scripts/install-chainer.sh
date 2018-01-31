@@ -205,17 +205,19 @@ setup_opencv()
 	fi
 }
 
+pip_with_mpivars(){
+	LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/lib64:$LD_LIBRARY_PATH LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/lib64:$LIBRARY_PATH CPATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/include64:$CPATH pip install $1
+}
+
 setup_chainermn()
 {	
 	echo "setup_chainermn"
 	sudo su -
-	sh /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh && \
-	printenv && \
-	pip install cupy==${CUPY_VERSION} && \
-	pip install chainer==${CHAINER_VERSION} && \
-	pip install mpi4py --no-cache-dir && \
-	pip install cython && \
-	pip install git+https://github.com/chainer/chainermn
+	pip_with_mpivars cupy==${CUPY_VERSION}
+	pip_with_mpivars chainer==${CHAINER_VERSION}
+	pip_with_mpivars mpi4py
+	pip_with_mpivars cython && \
+	pip_with_mpivars git+https://github.com/chainer/chainermn
 }
 
 create_cron_job()
