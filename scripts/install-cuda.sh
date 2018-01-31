@@ -87,6 +87,8 @@ base_pkgs()
 	# enable rdma
 	sudo sed -i  "s/# OS.EnableRDMA=y/OS.EnableRDMA=y/g" /etc/waagent.conf
 	sudo sed -i  "s/# OS.UpdateRdmaDriver=y/OS.UpdateRdmaDriver=y/g" /etc/waagent.conf
+
+	ibv_devinfo
 }
 
 setup_cuda()

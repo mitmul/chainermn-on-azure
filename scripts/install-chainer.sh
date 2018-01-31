@@ -68,6 +68,7 @@ setup_intel_mpi()
 		sudo echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> /etc/profile.d/intel_mpi.sh
 		sudo echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> /etc/profile.d/intel_mpi.sh
 		sudo echo 'export I_MPI_FALLBACK_DEVICE=0' >> /etc/profile.d/intel_mpi.sh
+		sudo echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> /etc/profile.d/intel_mpi.sh
 		sudo echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> /etc/profile.d/intel_mpi.sh
 		sudo echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> /etc/profile.d/intel_mpi.sh
 	fi
@@ -205,12 +206,12 @@ setup_opencv()
 
 setup_chainermn()
 {	
-	sudo pip install cupy==${CUPY_VERSION}
-	sudo pip install chainer==${CHAINER_VERSION}
-	sudo source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh && \
-	sudo pip install mpi4py --no-cache-dir
-	sudo pip install cython
-	sudo pip install git+https://github.com/chainer/chainermn
+	sudo su -
+	pip install cupy==${CUPY_VERSION}
+	pip install chainer==${CHAINER_VERSION}
+	pip install mpi4py --no-cache-dir
+	pip install cython
+	pip install git+https://github.com/chainer/chainermn
 }
 
 create_cron_job()
