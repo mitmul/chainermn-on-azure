@@ -207,12 +207,12 @@ setup_chainermn_gpu_infiniband()
 			cd /opt				
 			if is_Ubuntu; then
 			
-				cd /opt && git clone https://github.com/azmigproject/NCCL.git 
-				cd NCCL && sudo make -j && sudo make install
-				#sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
-				#sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
-				#sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
-				#sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+				#cd /opt && git clone https://github.com/azmigproject/NCCL.git 
+				#cd NCCL && sudo make -j && sudo make install
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl2_2.1.2-1+cuda9.0_amd64.deb
+				sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
+				sudo dpkg -i libnccl-dev_2.1.2-1+cuda9.0_amd64.deb
 			fi
 			if is_centos; then
 				#Working using tar file
