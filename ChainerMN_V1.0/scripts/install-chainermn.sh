@@ -54,10 +54,11 @@ install_Chainer()
 	#install_cupy
 	cd /usr/local
 	#may require NCCL first
-	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
-	sudo tar -zxf cupy-2.2.0.tar.gz
-	cd cupy-2.2.0
-	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
+	#sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cupy-2.2.0.tar.gz
+	#sudo tar -zxf cupy-2.2.0.tar.gz
+	#cd cupy-2.2.0
+	#PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda python3 setup.py install 
+	PATH=/usr/local/cuda/bin:$PATH CUDA_PATH=/usr/local/cuda pip install cupy #It install latest CuPy version
 	
 	#pip install chainer
 	cd /usr/local
