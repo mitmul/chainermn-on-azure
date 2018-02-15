@@ -64,8 +64,8 @@ install_Chainer()
 	sudo curl -L -O  https://pfnresources.blob.core.windows.net/chainermn-v1-packages/chainer-3.2.0.tar.gz
 	sudo tar -zxf chainer-3.2.0.tar.gz
 	cd chainer-3.2.0
-	python3 setup.py install #install from root works well too
-	#pip install chainer --no-cache #It install latest chainer	
+	#python3 setup.py install #install from root works well too
+	pip install chainer --no-cache #It install latest chainer	
 }
 
 install_chainermn()
