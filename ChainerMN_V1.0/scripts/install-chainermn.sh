@@ -85,15 +85,19 @@ install_intel_mpi
 		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
 			cd /opt
 			sudo mv intel intel_old
+			#PKG_Name=l_mpi_2017.3.196.tgz
+			#PKG_Name=l_mpi_2018.1.163.tgz
+			PKG_Name=l_mpi-rt_p_5.1.3.223.tgz.gz
 			#sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
 			#sudo tar zxvf l_mpi_2017.3.196.tgz
 			#sudo rm -rf l_mpi_2017.3.196.tgz
 			#cd l_mpi_2017.3.196
-			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/l_mpi-rt_p_5.1.3.223.tgz.gz
-			gzip -d l_mpi-rt_p_5.1.3.223.tgz.gz
+			#sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
+			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
+			gzip -d ${PKG_Name}
 			sudo tar zxvf l_mpi-rt_p_5.1.3.223.tgz
 			sudo rm -rf l_mpi-rt_p_5.1.3.223.tgz
-			cd l_mpi-rt_p_5.1.3.223.tgz
+			cd l_mpi-rt_p_5.1.3.223
 			sudo sed -i -e "s/decline/accept/g" silent.cfg
 			sudo ./install.sh --silent silent.cfg
 		fi
