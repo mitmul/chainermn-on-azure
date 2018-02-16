@@ -90,6 +90,7 @@ install_intel_mpi
 			#sudo rm -rf l_mpi_2017.3.196.tgz
 			#cd l_mpi_2017.3.196
 			sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/l_mpi-rt_p_5.1.3.223.tgz.gz
+			gzip -d l_mpi-rt_p_5.1.3.223.tgz.gz
 			sudo tar zxvf l_mpi-rt_p_5.1.3.223.tgz
 			sudo rm -rf l_mpi-rt_p_5.1.3.223.tgz
 			cd l_mpi-rt_p_5.1.3.223.tgz
