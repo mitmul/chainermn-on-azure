@@ -108,8 +108,9 @@ install_intel_mpi
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+			echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc	
 			#echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi	echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc	
+		fi	
 }
 
 setup_chainermn_gpu()
