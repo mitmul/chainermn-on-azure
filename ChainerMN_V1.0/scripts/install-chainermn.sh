@@ -264,7 +264,7 @@ setup_chainermn_gpu_infiniband()
 		#install Chainer V3.1.0
 		install_Chainer		
 		#MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
-		MPICC=/opt/intel//compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
+		MPICC=/opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		install_chainermn
 		alias python=python3
 
