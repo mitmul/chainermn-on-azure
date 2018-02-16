@@ -108,8 +108,8 @@ install_intel_mpi
 			echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
 			echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
 			echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
-			echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
-		fi		
+			#echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+		fi	echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc	
 }
 
 setup_chainermn_gpu()
@@ -174,7 +174,7 @@ setup_chainermn_gpu()
 		#install Chainer V3.1.0
 		install_Chainer
 		
-		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
+		#MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		#CFLAGS="-I/usr/local/cuda/include" pip install git+https://github.com/chainer/chainermn@non-cuda-aware-comm
 		
 		install_chainermn
@@ -262,7 +262,8 @@ setup_chainermn_gpu_infiniband()
 		
 		#install Chainer V3.1.0
 		install_Chainer		
-		MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
+		#MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
+		MPICC=/opt/intel//compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		install_chainermn
 		alias python=python3
 
