@@ -94,7 +94,7 @@ install_intel_mpi
 			#cd l_mpi_2017.3.196
 			#sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/${PKG_Name}
 			#sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${PKG_Name}
-			http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
+			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
 			#gzip -d ${PKG_Name}
 			sudo tar zxvf l_mpi_p_5.1.3.223.tgz
 			sudo rm -rf l_mpi_p_5.1.3.223.tgz
