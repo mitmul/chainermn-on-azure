@@ -99,14 +99,14 @@ def vmss_deploy(resource_group, vmss_template, vm_size, count, public_key, scrip
     template = json.load(open(vmss_template))
     public_key = open(public_key).read().strip()
     parameters = {
-        "virtualMachineSize": vm_size,
-        "vmImage": "Ubuntu_16.04",
-        "vmPrefixName": "chainermn",
-        "instanceCount": count,
-        "vnetRG": "chainer-vnet",
-        "masterName": "jumpbox",
-        "adminUserName": "ubuntu",
-        "adminPublicKey": public_key,
+        'virtualMachineSize': vm_size,
+        'vmImage': 'Ubuntu_16.04',
+        'vmPrefixName': 'chainermn',
+        'instanceCount': count,
+        'vnetRG': resource_group,
+        'masterName': 'jumpbox',
+        'adminUserName': 'ubuntu',
+        'adminPublicKey': public_key,
         'scriptURLs': script_urls,
         'executeCommand': command
     }
