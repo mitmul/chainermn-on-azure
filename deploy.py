@@ -60,7 +60,6 @@ def upload_script_files(location, resource_group, account_name, share_name, cont
         bs.create_blob_from_path(container_name, os.path.basename(fn), fn)
         url = bs.make_blob_url(container_name, os.path.basename(fn))
         urls.append(url)
-    print(urls)
 
     return urls
 
@@ -99,16 +98,17 @@ def vmss_deploy(resource_group, vmss_template, vm_size, count, public_key, scrip
     client = ResourceManagementClient(CREDENTIALS, SUBSCRIPTION_ID)
     template = json.load(open(vmss_template))
     public_key = open(public_key).read().strip()
-
     parameters = {
         "virtualMachineSize": vm_size,
         "vmImage": "Ubuntu_16.04",
         "vmPrefixName": "chainermn",
-        "instanceCount": "{}".format(count),
+        "instanceCount": count,
         "vnetRG": "chainer-vnet",
         "masterName": "jumpbox",
         "adminUserName": "ubuntu",
-        "sshKeyData": public_key
+        "adminPublicKey": public_key,
+        'scriptURLs': script_urls,
+        'executeCommand': command
     }
     parameters = {k: {'value': v} for k, v in parameters.items()}
 

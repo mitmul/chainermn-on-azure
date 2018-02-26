@@ -136,14 +136,8 @@
     "computeApiVersion": "2016-04-30-preview",
     "networkApiVersion": "2016-03-30",
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
-    "scriptsToDownload": [
-      "[uri(deployment().properties.templateLink.uri, 'scripts/0_install_cuda.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/1_install_cuda.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/2_install_cuda.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/3_install_cuda.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/4_install_cuda.sh')]"
-    ],
-    "commandToExecute": "[concat('bash install-cuda.sh -s ',variables('masterName'),';','bash install-chainer.sh')]"
+    "scriptsToDownload": "[parameters('scriptURLs')]",
+    "commandToExecute": "[parameters('executeCommand')]"
   },
   "resources": [
     {
