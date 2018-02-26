@@ -80,7 +80,7 @@
       "maxValue": 100
     },
     "vnetRG": {
-      "type": "string",
+      "type": "string"
     },
     "masterName": {
       "type": "string",
