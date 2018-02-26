@@ -114,14 +114,12 @@
       "chainerSubnetPrefix": "10.0.0.0/21",
       "chainersubnetRef": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',variables('vnetRG'), '/providers/Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'), '/subnets/', variables('subnetName'))]"
     },
-
     "vmSettings": {
       "name": "[variables('namingInfix')]",
       "publicIPDomainName": "[variables('namingInfix')]",
       "nicName": "[concat(parameters('vmPrefixName'), 'nic')]",
       "ipConfigName": "[concat(parameters('vmPrefixName'), 'ipconfig')]"
     },
-
     "vmOSSettings": {
       "adminUserName": "[parameters('adminUserName')]",
       "sshKeyData": "[parameters('adminPublicKey')]",
@@ -145,7 +143,7 @@
       "[uri(deployment().properties.templateLink.uri, 'scripts/3_install_cuda.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/4_install_cuda.sh')]"
     ],
-    "commandToExecute": "[concat('bash install-cuda.sh -s ',variables('masterName'),';','bash install-chainer.sh')]"    
+    "commandToExecute": "[concat('bash install-cuda.sh -s ',variables('masterName'),';','bash install-chainer.sh')]"
   },
   "resources": [
     {
@@ -217,8 +215,8 @@
                   "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": true,
                   "settings": {
-                    "fileUris": "[variables('scriptsToDownload')]",
-                    "commandToExecute": "[variables('commandToExecute')]"
+                    "fileUris": "[parameters('scriptURLs')]",
+                    "commandToExecute": "[parameters('executeCommand')]"
                   }
                 }
               }

@@ -92,6 +92,33 @@ def jumpbox_deploy(resource_group, jumpbox_template, public_key, script_urls, co
     result.wait()
 
 
+def vmss_deploy(resource_group, vmss_template, vm_size, count, public_key, script_urls, command):
+    client = ResourceManagementClient(CREDENTIALS, SUBSCRIPTION_ID)
+    template = json.load(open(vmss_template))
+    public_key = open(public_key).read().strip()
+
+    parameters = {
+        "virtualMachineSize": size,
+        "vmImage": "Ubuntu_16.04",
+        "vmPrefixName": "chainermn",
+        "instanceCount": "{}".format(count),
+        "vnetRG": "chainer-vnet",
+        "masterName": "jumpbox",
+        "adminUserName": "ubuntu",
+        "sshKeyData": public_key
+    }
+    parameters = {k: {'value': v} for k, v in parameters.items()}
+
+    deployment_properties = {
+        'mode': DeploymentMode.incremental,
+        'template': template,
+        'parameters': parameters
+    }
+    result = client.deployments.create_or_update(resource_group, 'vmss', deployment_properties)
+    print('Deploying VMSS...')
+    result.wait()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--resource-group', '-g', type=str, default='chainermn')
@@ -103,13 +130,19 @@ def main():
     parser.add_argument('--jumpbox-template', '-j', type=str, default='templates/jumpbox.json')
     parser.add_argument('--jumpbox-command', type=str, default='sh setup_jumpbox.sh')
     parser.add_argument('--vmss-template', '-v', type=str, default='templates/vmss.json')
+    parser.add_argument('--vmss-command', type=str, default='sh setup_vmss.sh')
+    parser.add_argument('--vmss-size', '-z', type=str, default='Standard_NC24r')
+    parser.add_argument('--vmss-instance-count', '-n', type=int, default=1)
     args = parser.parse_args()
 
-    create_resource_group(args.location, args.resource_group)
+    # create_resource_group(args.location, args.resource_group)
     script_urls = upload_script_files(
         args.location, args.resource_group, args.storage_account_name, args.storage_blob_name,
         args.blob_container_name)
-    jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
+    # jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
+    vmss_deploy(
+        args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key,
+        script_urls, args.vmss_command)
 
 
 if __name__ == '__main__':
