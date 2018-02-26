@@ -1,0 +1,28 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "virtualMachineSize": {
+        "value": "Standard_NC24r"
+    },
+    "vmImage": {
+        "value": "Ubuntu_16.04"
+    },
+    "vmPrefixName": {
+        "value": "chainermn"
+    },
+    "instanceCount": {
+        "value": "2"
+    },
+    "vnetRG": {
+        "value": "chainer-vnet"
+    },
+    "masterName": {
+        "value": "jumpbox"
+    },
+    "adminUserName": {
+        "value": "ubuntu"
+    },
+    "sshKeyData": {
+        "value": "GEN-SSH-PUB-KEY"
+    }
+}

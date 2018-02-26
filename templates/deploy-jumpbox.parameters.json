@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineName": {
+            "value": "jumpbox"
+        },
+        "vmImage": {
+            "value": "Ubuntu_16.04"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_L8s"
+        },
+        "adminUsername": {
+            "value": "ubuntu"
+        },
+        "adminPublicKey": {
+            "value": "GEN-SSH-PUB-KEY"
+        }
+    }
+}

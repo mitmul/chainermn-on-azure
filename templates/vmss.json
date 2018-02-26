@@ -60,61 +60,44 @@
         "Standard_L8s",
         "Standard_L16s",
         "Standard_L32s"
-      ],
-      "metadata": {
-        "description": "GPU VM sku to use for the VM"
-      }
+      ]
     },
     "vmImage": {
       "type": "string",
       "defaultValue": "Ubuntu_16.04",
       "allowedValues": [
         "Ubuntu_16.04"
-      ],
-      "metadata": {
-        "description": "The VM OS image"
-      }
+      ]
     },
     "vmPrefixName": {
       "type": "string",
-      "metadata": {
-        "description": "Prefix name of the VM"
-      },
+      "defaultValue": "chainermn",
       "maxLength": 12
     },
     "instanceCount": {
       "type": "int",
-      "metadata": {
-        "description": "Number of VM instances (100 or less)."
-      },
       "defaultValue": 1,
       "maxValue": 100
     },
     "vnetRG": {
       "type": "string",
-      "metadata": {
-        "description": "Resource group of Vnet of jumpbox"
-      }
     },
     "masterName": {
       "type": "string",
-      "defaultValue": "jumpbox",
-      "metadata": {
-        "description": "Name of jumpbox"
-      }
+      "defaultValue": "jumpbox"
     },
     "adminUserName": {
       "type": "string",
-      "defaultValue": "ubuntu",
-      "metadata": {
-        "description": "User name for the Virtual Machine."
-      }
+      "defaultValue": "ubuntu"
     },
-    "sshKeyData": {
-      "type": "string",
-      "metadata": {
-        "description": "SSH rsa public key file as a string."
-      }
+    "adminPublicKey": {
+      "type": "string"
+    },
+    "scriptURLs": {
+      "type": "array"
+    },
+    "executeCommand": {
+      "type": "string"
     }
   },
   "variables": {
@@ -141,7 +124,7 @@
 
     "vmOSSettings": {
       "adminUserName": "[parameters('adminUserName')]",
-      "sshKeyData": "[parameters('sshKeyData')]",
+      "sshKeyData": "[parameters('adminPublicKey')]",
       "imageReference": "[variables('computeImages')[parameters('vmImage')]]"
     },
     "computeImages": {
@@ -156,9 +139,11 @@
     "networkApiVersion": "2016-03-30",
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
     "scriptsToDownload": [
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-cuda.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]"
+      "[uri(deployment().properties.templateLink.uri, 'scripts/0_install_cuda.sh')]",
+      "[uri(deployment().properties.templateLink.uri, 'scripts/1_install_cuda.sh')]",
+      "[uri(deployment().properties.templateLink.uri, 'scripts/2_install_cuda.sh')]",
+      "[uri(deployment().properties.templateLink.uri, 'scripts/3_install_cuda.sh')]",
+      "[uri(deployment().properties.templateLink.uri, 'scripts/4_install_cuda.sh')]"
     ],
     "commandToExecute": "[concat('bash install-cuda.sh -s ',variables('masterName'),';','bash install-chainer.sh')]"    
   },
@@ -208,7 +193,7 @@
                 "publicKeys": [
                   {
                     "path": "[variables('sshKeyPath')]",
-                    "keyData": "[parameters('sshKeyData')]"
+                    "keyData": "[parameters('adminPublicKey')]"
                   }
                 ]
               }

@@ -3,67 +3,32 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineName": {
-      "type": "String",
-      "defaultValue": "jumpbox",
+      "type": "string",
+      "defaultValue": "jumpbox"
     },
-      "vmImage": {
+    "vmImage": {
       "type": "string",
       "defaultValue": "Ubuntu_16.04",
       "allowedValues": [
         "Ubuntu_16.04"
-      ],
-      "metadata": {
-        "description": "The VM OS image"
-      }
+      ]
     },
     "virtualMachineSize": {
       "type": "string",
-      "defaultValue": "Standard_L8s",
-      "allowedValues": [
-        "Standard_DS1",
-        "Standard_DS2",
-        "Standard_DS3",
-        "Standard_DS4",
-        "Standard_DS11",
-        "Standard_DS12",
-        "Standard_DS13",
-        "Standard_DS14",
-        "Standard_DS1_v2",
-        "Standard_DS2_v2",
-        "Standard_DS3_v2",
-        "Standard_DS4_v2",
-        "Standard_DS5_v2",
-        "Standard_DS11_v2",
-        "Standard_DS12_v2",
-        "Standard_DS13_v2",
-        "Standard_DS14_v2",
-        "Standard_DS15_v2",
-        "Standard_F1s",
-        "Standard_F2s",
-        "Standard_F4s",
-        "Standard_F8s",
-        "Standard_F16s",
-        "Standard_GS1",
-        "Standard_GS2",
-        "Standard_GS3",
-        "Standard_GS4",
-        "Standard_GS5",
-        "Standard_L4s",
-        "Standard_L8s",
-        "Standard_L16s",
-        "Standard_L32s"
-
-      ],
-      "metadata": {
-        "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
-      }
+      "defaultValue": "Standard_DS3_v2"
     },
     "adminUsername": {
-      "type": "String",
-      "defaultValue": "ubuntu",
+      "type": "string",
+      "defaultValue": "ubuntu"
     },
     "adminPublicKey": {
-      "type": "String"
+      "type": "string"
+    },
+    "scriptURLs": {
+      "type": "array"
+    },
+    "executeCommand": {
+      "type": "string"
     }
   },
   "variables": {
@@ -89,7 +54,7 @@
       },
       "P30": {
         "size": 1024
-      }    
+      }
     },
     "computeImages": {
       "Ubuntu_16.04": {
@@ -219,7 +184,7 @@
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "storageProfile": {
-         "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
+          "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
           "osDisk": {
             "createOption": "fromImage",
             "managedDisk": {
@@ -251,10 +216,8 @@
         "typeHandlerVersion": "2.0",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]"
-          ],
-          "commandToExecute": "bash jumpbox-setup.sh"
+          "fileUris": "[parameters('scriptURLs')]",
+          "commandToExecute": "[parameters('executeCommand')]"
         }
       }
     }
