@@ -139,11 +139,11 @@ def main():
     parser.add_argument('--restart', '-r', action='store_true', default=False)
     args = parser.parse_args()
 
-    # create_resource_group(args.location, args.resource_group)
+    create_resource_group(args.location, args.resource_group)
     script_urls = upload_script_files(
         args.location, args.resource_group, args.storage_account_name, args.storage_blob_name,
         args.blob_container_name, args.restart)
-    # jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
+    jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
     vmss_deploy(
         args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,
         script_urls, args.vmss_command)
