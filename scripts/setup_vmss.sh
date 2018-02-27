@@ -68,6 +68,6 @@ echo 'export I_MPI_FALLBACK_DEVICE=0' | tee -a /home/ubuntu/.bashrc
 echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' | tee -a /home/ubuntu/.bashrc
 exec $SHELL
 
-source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
+sh /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
 sudo -E sh -c 'sudo pip install chainermn==1.2.0'
 sudo reboot
