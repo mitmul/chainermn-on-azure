@@ -81,7 +81,7 @@ exec $SHELL
 cd /opt
 git clone https://github.com/chainer/chainermn
 cd chainermn
-bash /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh
-echo "printenv after sourcing mpivars.sh"
-printenv
+LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
+PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
+CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
 python setup.py install
