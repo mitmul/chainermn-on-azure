@@ -241,7 +241,7 @@ setup_cuda_ubuntu()
 	#apt-get update
 	#apt-get install -y cuda
 	#nvidia-smi
-	
+	cd /usr/local
 	sudo apt-get install -y linux-headers-$(uname -r)
 	#using CUDA_local_DEB_Package_around_1.2GB
 	#CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
