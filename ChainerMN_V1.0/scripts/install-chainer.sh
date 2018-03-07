@@ -206,13 +206,14 @@ setup_cuda()
 {
 
 	log "setup_cuda8"
-	if is_centos; then
-		setup_cuda_centos
-	fi
-	if is_ubuntu; then
-		setup_cuda_ubuntu
-	fi
-	rsync -a /usr/local/cuda-9.1/targets/x86_64-linux/include /usr/local/cuda/include/
+	setup_cuda_centos
+	#if is_centos; then
+		#setup_cuda_centos
+	#fi
+	#if is_ubuntu; then
+		#setup_cuda_ubuntu
+	#fi
+	#rsync -a /usr/local/cuda-9.1/targets/x86_64-linux/include /usr/local/cuda/include/
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh	
 
