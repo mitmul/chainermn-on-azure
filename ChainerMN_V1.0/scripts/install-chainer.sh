@@ -206,13 +206,13 @@ setup_cuda()
 {
 
 	log "setup_cuda8"
-	setup_cuda_centos
-	#if is_centos; then
-		#setup_cuda_centos
-	#fi
-	#if is_ubuntu; then
-		#setup_cuda_ubuntu
-	#fi
+	#setup_cuda_centos
+	if is_centos; then
+		setup_cuda_centos
+	fi
+	if is_ubuntu; then
+		setup_cuda_ubuntu
+	fi
 	#rsync -a /usr/local/cuda-9.1/targets/x86_64-linux/include /usr/local/cuda/include/
 	echo "export CUDA_PATH=/usr/local/cuda" >> /etc/profile.d/cuda.sh
 	echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> /etc/profile.d/cuda.sh	
@@ -235,15 +235,22 @@ setup_cuda_centos()
 setup_cuda_ubuntu()
 {
 	#Insall Kernal 
-	sudo apt-get install -y linux-headers-$(uname -r)
-	#using CUDA_local_DEB_Package_around_1.2GB
-	CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
-	sudo dpkg -i  ${CUDA_DEB}
-	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-	sudo apt-get -y update
-	sudo apt-get -y install cuda
+	apt-get install -y linux-headers-$(uname -r)
+	curl -O http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	dpkg -i cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	apt-get update
+	apt-get install -y cuda
 	nvidia-smi
+	
+	#sudo apt-get install -y linux-headers-$(uname -r)
+	#using CUDA_local_DEB_Package_around_1.2GB
+	#CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	#sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
+	#sudo dpkg -i  ${CUDA_DEB}
+	#sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+	#sudo apt-get -y update
+	#sudo apt-get -y install cuda
+	#nvidia-smi
 }
 mkdir -p /var/local
 SETUP_MARKER=/var/local/chainer-setup.marker
