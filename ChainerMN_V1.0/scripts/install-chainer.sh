@@ -244,13 +244,15 @@ setup_cuda_ubuntu()
 	cd /usr/local
 	sudo apt-get install -y linux-headers-$(uname -r)
 	#using CUDA_local_DEB_Package_around_1.2GB
-	#CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
-	CUDA_DEB=cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+	CUDA_DEB=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+	#CUDA_DEB=cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
 	sudo curl -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/${CUDA_DEB}
 	sudo dpkg -i  ${CUDA_DEB}
 	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	sudo apt-get -y update
-	sudo apt-get -y install cuda
+        sudo apt-get -y install cuda-drivers
+        sudo apt-get -y install cuda-8-0
+	#sudo apt-get -y install cuda
 	nvidia-smi
 }
 mkdir -p /var/local
