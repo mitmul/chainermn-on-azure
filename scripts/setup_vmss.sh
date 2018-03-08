@@ -82,12 +82,12 @@ exec $SHELL
 cd /opt
 git clone https://github.com/chainer/chainermn
 cd chainermn
-LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
-PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
-CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
+LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
+PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/bin:$PATH \
+CPATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/include64:$CPATH \
 pip install mpi4py
 pip install cffi
-LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
-PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
-CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
+LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
+PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/bin:$PATH \
+CPATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/include64:$CPATH \
 python setup.py install
