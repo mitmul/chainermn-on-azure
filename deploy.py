@@ -122,6 +122,16 @@ def vmss_deploy(resource_group, vmss_template, vm_size, count, public_key, scrip
     result.wait()
 
 
+def get_jumpbox_ip(resource_group):
+    cmd = """ \
+    az vm list-ip-addresses \
+    -g {resource_group} -n jumpbox \
+    --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" -o tsv
+    """.format(resource_group=resource_group)
+    ip_address = subprocess.check_output(cmd, shell=True).decode('utf-8')
+    return ip_address.strip()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--resource-group', '-g', type=str, default='chainermn')
@@ -144,9 +154,13 @@ def main():
         args.location, args.resource_group, args.storage_account_name, args.storage_blob_name,
         args.blob_container_name, args.restart)
     jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
-    vmss_deploy(
-        args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,
-        script_urls, args.vmss_command)
+
+    ip_address = get_jumpbox_ip(args.resource_group)
+    print('ssh -i {} ubuntu@{}'.format(os.path.splitext(args.public_key_file)[0], ip_address))
+
+    # vmss_deploy(
+    #     args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,
+    #     script_urls, args.vmss_command)
 
 
 if __name__ == '__main__':

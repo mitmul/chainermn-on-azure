@@ -1,22 +1,45 @@
 #!/bin/bash
 
+# Setup hpcuser
+HPC_USER=hpcuser
+HPC_UID=7007
+HPC_GROUP=hpc
+HPC_GID=7007
+groupadd -g $HPC_GID $HPC_GROUP
+
+# sudo setting
+echo "$HPC_USER ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
+sed -i 's/^Defaults[ ]*requiretty/# Defaults requiretty/g' /etc/sudoers
+
+# Setup shared home dir
+SHARE_HOME=/share/home
+MASTER_NAME=jumpbox
+apt-get update
+apt-get -y install nfs-common
+mkdir -p $SHARE_HOME
+echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs rsize=8192,wsize=8192,timeo=14,intr" | tee -a /etc/fstab
+showmount -e ${MASTER_NAME}
+mount -a
+mount
+
+# Create user
+useradd -c "HPC User" -g $HPC_GROUP -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
+
 # Install CUDA driver and CUDA
 CUDA_REPO_PKG=cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
 wget -O /tmp/${CUDA_REPO_PKG} http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/${CUDA_REPO_PKG}
 dpkg -i /tmp/${CUDA_REPO_PKG}
 apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 rm -f /tmp/${CUDA_REPO_PKG}
-apt-get update
 apt-get install -y cuda-drivers
 apt-get install -y cuda-8-0
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' | tee -a /home/ubuntu/.bashrc
-echo 'export CPATH=/usr/local/cuda/include:$CPATH' | tee -a /home/ubuntu/.bashrc
-echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' | tee -a /home/ubuntu/.bashrc
-echo 'export PATH=/usr/local/cuda/bin:$PATH' | tee -a /home/ubuntu/.bashrc
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-export CPATH=/usr/local/include:$CPATH
-export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-export PATH=/usr/local/cuda/bin:$PATH
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LD_LIBRARY_PATH"; then;
+else
+    echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export CPATH=/usr/local/cuda/include:$CPATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export PATH=/usr/local/cuda/bin:$PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+fi
 
 # Install Python3
 apt-get install -y ccache python3 python3-pip python3-cffi
@@ -24,8 +47,11 @@ update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 # Set environment variables
-echo 'export LANG=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
-echo 'export LC_CTYPE=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LANG"; then;
+else
+    echo 'export LANG=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export LC_CTYPE=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+fi
 
 # Install cuDNN
 cd /usr/local
@@ -71,15 +97,17 @@ rm -rf l_mpi_2017.3.196.tgz
 cd l_mpi_2017.3.196
 sed -i -e "s/decline/accept/g" silent.cfg
 ./install.sh --silent silent.cfg
-echo 0 | tee -a /proc/sys/kernel/yama/ptrace_scope
-echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a /home/ubuntu/.bashrc
-echo 'export I_MPI_FABRICS=shm:dapl' | tee -a /home/ubuntu/.bashrc
-echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' | tee -a /home/ubuntu/.bashrc
-echo 'export I_MPI_DYNAMIC_CONNECTION=0' | tee -a /home/ubuntu/.bashrc
-echo 'export I_MPI_FALLBACK_DEVICE=0' | tee -a /home/ubuntu/.bashrc
-echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' | tee -a /home/ubuntu/.bashrc
-echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' | tee -a /home/ubuntu/.bashrc
-exec $SHELL
+
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "I_MPI_FABRICS"; then;
+else
+    echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export I_MPI_FABRICS=shm:dapl' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export I_MPI_DYNAMIC_CONNECTION=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export I_MPI_FALLBACK_DEVICE=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+    echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
+fi
 
 # Install ChainerMN
 cd /opt
@@ -93,7 +121,3 @@ LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/
 PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
 CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
 python setup.py install
-
-# Add .ssh/config
-echo 'Host *' | tee -a /home/ubuntu/.ssh/config
-echo '    StrictHostKeyChecking no' | tee -a /home/ubuntu/.ssh/config
