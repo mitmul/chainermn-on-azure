@@ -31,27 +31,14 @@ wget -O /tmp/${CUDA_REPO_PKG} http://developer.download.nvidia.com/compute/cuda/
 dpkg -i /tmp/${CUDA_REPO_PKG}
 apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 rm -f /tmp/${CUDA_REPO_PKG}
+apt-get update
 apt-get install -y cuda-drivers
 apt-get install -y cuda-8-0
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LD_LIBRARY_PATH"; then :;
-else
-    echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export CPATH=/usr/local/cuda/include:$CPATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export PATH=/usr/local/cuda/bin:$PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-fi
 
 # Install Python3
 apt-get install -y ccache python3 python3-pip python3-cffi
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
-
-# Set environment variables
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LANG"; then :;
-else
-    echo 'export LANG=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export LC_CTYPE=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-fi
 
 # Install cuDNN
 cd /usr/local
@@ -97,17 +84,6 @@ rm -rf l_mpi_2017.3.196.tgz
 cd l_mpi_2017.3.196
 sed -i -e "s/decline/accept/g" silent.cfg
 ./install.sh --silent silent.cfg
-
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "I_MPI_FABRICS"; then :;
-else
-    echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export I_MPI_FABRICS=shm:dapl' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export I_MPI_DYNAMIC_CONNECTION=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export I_MPI_FALLBACK_DEVICE=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-    echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
-fi
 
 # Install ChainerMN
 cd /opt
