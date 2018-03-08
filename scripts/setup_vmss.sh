@@ -90,3 +90,7 @@ LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/
 PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
 CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
 python setup.py install
+
+# Add .ssh/config
+echo 'Host *' | tee -a /home/ubuntu/.ssh/config
+echo '    StrictHostKeyChecking no' | tee -a /home/ubuntu/.ssh/config
