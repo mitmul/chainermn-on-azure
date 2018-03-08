@@ -33,7 +33,7 @@ apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos
 rm -f /tmp/${CUDA_REPO_PKG}
 apt-get install -y cuda-drivers
 apt-get install -y cuda-8-0
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LD_LIBRARY_PATH"; then;
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LD_LIBRARY_PATH"; then :;
 else
     echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
     echo 'export CPATH=/usr/local/cuda/include:$CPATH' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
@@ -47,7 +47,7 @@ update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 # Set environment variables
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LANG"; then;
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "LANG"; then :;
 else
     echo 'export LANG=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
     echo 'export LC_CTYPE=en_US.UTF-8' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
@@ -98,7 +98,7 @@ cd l_mpi_2017.3.196
 sed -i -e "s/decline/accept/g" silent.cfg
 ./install.sh --silent silent.cfg
 
-if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "I_MPI_FABRICS"; then;
+if cat ${SHARE_HOME}/${HPC_USER}/.bashrc | grep -q "I_MPI_FABRICS"; then :;
 else
     echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
     echo 'export I_MPI_FABRICS=shm:dapl' | tee -a ${SHARE_HOME}/${HPC_USER}/.bashrc
