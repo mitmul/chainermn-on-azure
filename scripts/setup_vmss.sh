@@ -61,13 +61,12 @@ echo " *               soft    memlock          unlimited" | tee -a /etc/securit
 
 # Install IntelMPI
 cd /opt
-curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12414/l_mpi_2018.1.163.tgz
-tar zxvf l_mpi_2018.1.163.tgz
-rm -rf l_mpi_2018.1.163.tgz
-cd l_mpi_2018.1.163
+wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+tar zxvf l_mpi_2017.3.196.tgz
+rm -rf l_mpi_2017.3.196.tgz
+cd l_mpi_2017.3.196
 sed -i -e "s/decline/accept/g" silent.cfg
 ./install.sh --silent silent.cfg
-
 echo 0 | tee -a /proc/sys/kernel/yama/ptrace_scope
 echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a /home/ubuntu/.bashrc
 echo 'export I_MPI_FABRICS=shm:dapl' | tee -a /home/ubuntu/.bashrc
@@ -82,12 +81,12 @@ exec $SHELL
 cd /opt
 git clone https://github.com/chainer/chainermn
 cd chainermn
-LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
-PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/bin:$PATH \
-CPATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/include64:$CPATH \
+LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
+PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
+CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
 pip install mpi4py
 pip install cffi
-LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
-PATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/intel64/bin:$PATH \
-CPATH=/opt/intel/compilers_and_libraries_2018.1.163/linux/mpi/include64:$CPATH \
+LD_LIBRARY_PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/lib:$LD_LIBRARY_PATH \
+PATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin:$PATH \
+CPATH=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/include64:$CPATH \
 python setup.py install
