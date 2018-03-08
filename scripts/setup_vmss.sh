@@ -19,7 +19,7 @@ export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
 export PATH=/usr/local/cuda/bin:$PATH
 
 # Install Python3
-apt-get install -y ccache python3 python3-pip
+apt-get install -y ccache python3 python3-pip python3-cffi
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
@@ -40,7 +40,11 @@ pip install cython
 cd /opt
 git clone https://github.com/cupy/cupy
 cd cupy
-PATH=$PATH python setup.py install
+LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
+PATH=/usr/local/bin:/usr/local/cuda/bin:$PATH \
+CPATH=/usr/local/include:$CPATH \
+LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH \
+python setup.py install
 git clone https://github.com/chainer/chainer
 python setup.py install
 
