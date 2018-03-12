@@ -319,6 +319,11 @@ if check_gpu; then
 		if is_Ubuntu; then
 		create_cron_job()
 		{
+			cat >  /root/rdma-autoload.sh << "EOF"
+			#!/bin/bash
+			sudo modprobe rdma_ucm
+			sudo tee /proc/sys/kernel/yama/ptrace_scope
+			EOF		
 			# Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 			crontab -l > downloadsecretcron
 			echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
