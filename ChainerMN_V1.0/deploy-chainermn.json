@@ -154,6 +154,7 @@
     "networkApiVersion": "2016-03-30",
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
     "scriptsToDownload": [
+      "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]"
     ],
