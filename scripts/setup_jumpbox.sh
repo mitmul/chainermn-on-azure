@@ -18,19 +18,19 @@ mkdir -p $SHARE_HOME/$HPC_USER
 mkdir -p $SHARE_HOME/$HPC_USER/.ssh
 
 # Put all environment settings here for VMSS worker nodes
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export CPATH=/usr/local/cuda/include:$CPATH' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export LANG=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export LC_CTYPE=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export I_MPI_FABRICS=shm:dapl' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export I_MPI_FALLBACK_DEVICE=0' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
-echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> ${SHARE_HOME}/${HPC_USER}/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export CPATH=/usr/local/cuda/include:$CPATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export LANG=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export LC_CTYPE=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export I_MPI_FABRICS=shm:dapl' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export I_MPI_FALLBACK_DEVICE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 
 # Create user
 useradd -c "HPC User" -g $HPC_GROUP -m -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
