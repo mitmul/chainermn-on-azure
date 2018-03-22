@@ -46,6 +46,13 @@ curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.0.5/cudn
 tar zxvf cudnn-8.0-linux-x64-v7.tgz
 rm -rf cudnn-8.0-linux-x64-v7.tgz
 
+# Install NCCL1
+cd /opt
+git clone https://github.com/NVIDIA/nccl.git
+cd nccl
+make CUDA_HOME=/usr/local/cuda-8-0 test
+make install
+
 # Install cupy, chainer
 export LANG=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
@@ -60,13 +67,6 @@ LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH \
 python setup.py install
 git clone https://github.com/chainer/chainer
 python setup.py install
-
-# Install NCCL1
-cd /opt
-git clone https://github.com/NVIDIA/nccl.git
-cd nccl
-make CUDA_HOME=/usr/local/cuda-8-0 test
-make install
 
 # Setup RDMA network
 apt-get update
