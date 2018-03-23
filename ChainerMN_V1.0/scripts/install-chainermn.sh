@@ -270,6 +270,13 @@ setup_chainermn_gpu_infiniband()
 		MPICC=/opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 		install_chainermn
 		alias python=python3
+		
+		export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH} >> ~hpcuser/.bashrc
+		export LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LIBRARY_PATH} >> ~hpcuser/.bashrc
+		export CPATH=/usr/loca/include]/usr/loca/cuda/include:${CPATH} >> ~hpcuser/.bashrc
+		export ./opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpivars.sh >> ~hpcuser/.bashrc
+		export PATH=/opt/anaconda3/bin:${PATH} >> ~hpcuser/.bashrc
+
 
 }
 
