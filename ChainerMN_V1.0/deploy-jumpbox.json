@@ -58,7 +58,7 @@
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
-    "SerialNo.IntelMPI": {
+    "SerialNoIntelMPI": {
     "type": "string",
     "defaultValue":"",
     "metadata": {
@@ -75,6 +75,7 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "adminUserName": "[parameters('adminUserName')]",
+    "SerialNoIntelMPI": "[parameters('SerialNoIntelMPI')]",
     "virtualNetworkName": "chainer-vnet",
     "networkInterfaceName": "[concat(parameters('virtualMachineName'), 'nic')]",
     "networkSecurityGroupName": "nsg-master",
@@ -264,7 +265,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]"
+            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh', variables('SerialNoIntelMPI'))]"
           ],
           "commandToExecute": "bash jumpbox-setup.sh"
         }
