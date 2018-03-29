@@ -59,7 +59,7 @@
       }
     },
     "IntelMPISerialNo": {
-    "type": "string",
+    "type": "securestring",
     "defaultValue":"",
     "metadata": {
       "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
