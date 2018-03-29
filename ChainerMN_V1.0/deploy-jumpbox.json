@@ -58,7 +58,7 @@
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
-    "SerialNoIntelMPI": {
+    "IntelMPISerialNo": {
     "type": "string",
     "defaultValue":"",
     "metadata": {
@@ -75,7 +75,7 @@
   "variables": {
     "location": "[resourceGroup().location]",
     "adminUserName": "[parameters('adminUserName')]",
-    "SerialNoIntelMPI": "[parameters('SerialNoIntelMPI')]",
+    "SerialNoIntelMPI": "[parameters('IntelMPISerialNo')]",
     "virtualNetworkName": "chainer-vnet",
     "networkInterfaceName": "[concat(parameters('virtualMachineName'), 'nic')]",
     "networkSecurityGroupName": "nsg-master",
