@@ -58,6 +58,12 @@
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
+    "siteNamePrefix": {
+    "type": "string",
+    "metadata": {
+      "description": "The name prefix of the web app that you wish to create."
+    }
+  },
     "adminUsername": {
       "type": "String"
     },
