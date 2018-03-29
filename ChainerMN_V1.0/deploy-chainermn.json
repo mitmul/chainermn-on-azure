@@ -102,6 +102,13 @@
         "description": "Name of jumpbox"
       }
     },
+    "SerialNoIntelMPI": {
+    "type": "string",
+    "defaultValue":"",
+    "metadata": {
+      "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
+    }
+  },
     "adminUserName": {
       "type": "string",
       "metadata": {
@@ -117,6 +124,7 @@
   },
   "variables": {
     "location": "[resourceGroup().location]",
+    "SerialNoIntelMPI": "[parameters('SerialNoIntelMPI')]",
     "namingInfix": "[toLower(substring(concat(parameters('vmPrefixName'), uniqueString(resourceGroup().id)), 0, 15))]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
     "masterName": "[parameters('masterName')]",
@@ -170,7 +178,7 @@
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
       "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]"
     ],
-    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh')]"
+    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh ', variables('SerialNoIntelMPI'))]"
   },
   "resources": [
     {
