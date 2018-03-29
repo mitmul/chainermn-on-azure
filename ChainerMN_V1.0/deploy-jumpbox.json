@@ -58,10 +58,10 @@
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
-    "siteNamePrefix": {
+    "SerialNo.IntelMPI": {
     "type": "string",
     "metadata": {
-      "description": "The name prefix of the web app that you wish to create."
+      "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
     }
   },
     "adminUsername": {
