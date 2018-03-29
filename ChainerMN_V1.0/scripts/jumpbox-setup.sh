@@ -18,7 +18,7 @@ while getopts :a:k:u:t:p optname; do
 		;;
   esac
 done
-
+ ACTIVATION_SERIAL_NUMBER=$1
 # Shares
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
@@ -97,7 +97,7 @@ install_intelmpi()
   sudo rm -rf l_mpi_p_5.1.3.223.tgz
   cd l_mpi_p_5.1.3.223
   sudo sed -i -e "s/decline/accept/g" silent.cfg
-  sudo sed -i -e "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=VTDT-4246MB9S/g" silent.cfg
+  sudo sed -i -e "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=${ACTIVATION_SERIAL_NUMBER}/g" silent.cfg
   sudo sed -i -e "s/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/g" silent.cfg
   sudo ./install.sh --silent silent.cfg
   
