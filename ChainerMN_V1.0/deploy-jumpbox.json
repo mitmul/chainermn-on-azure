@@ -265,9 +265,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh', variables('SerialNoIntelMPI'))]"
+            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]"
           ],
-          "commandToExecute": "bash jumpbox-setup.sh"
+          "commandToExecute":"[concat('bash jumpbox-setup.sh ', variables('SerialNoIntelMPI'))]" 
         }
       }
     }
