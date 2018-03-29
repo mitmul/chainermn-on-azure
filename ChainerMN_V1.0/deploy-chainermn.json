@@ -102,7 +102,7 @@
         "description": "Name of jumpbox"
       }
     },
-    "SerialNoIntelMPI": {
+    "IntelMPISerialNo": {
     "type": "string",
     "defaultValue":"",
     "metadata": {
@@ -124,7 +124,7 @@
   },
   "variables": {
     "location": "[resourceGroup().location]",
-    "SerialNoIntelMPI": "[parameters('SerialNoIntelMPI')]",
+    "SerialNoIntelMPI": "[parameters('IntelMPISerialNo')]",
     "namingInfix": "[toLower(substring(concat(parameters('vmPrefixName'), uniqueString(resourceGroup().id)), 0, 15))]",
     "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
     "masterName": "[parameters('masterName')]",
