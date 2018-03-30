@@ -29,6 +29,7 @@ You have to provide these parameters to the template :
 * _Virtual Machine Size_ : Select virtual machine size from the dropdown.
 * _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
+* _Intel MPI Serial No_ : The Serial No. to activate intel mpi.
 
 ## Deploy jumpbox
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fchainermnphase2%2FChainerMN_V1.0%2Fdeploy-jumpbox.json)
@@ -44,7 +45,8 @@ You have to provide these parameters to the template :
 * _VM Image_ : Default is **CentOS_7.3** allowed values are (CentOS_7.3, CentOS-HPC_7.3 ) recommended CentOS-HPC_7.3.
 * _VM prefix Name_ : It is vm prefix.
 * _Instance Count_ : it is the no. of instances inside a VMSS.
-* _Master Name_ : The short name of the Master VM
+* _Master Name_ : The short name of the Master VM.
+* _Intel MPI Serial No_ : The Serial No. to activate intel mpi.
 * _Admin User Name_ : This is the name of the administrator account to create on the VM.
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
 
