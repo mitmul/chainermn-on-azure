@@ -27,9 +27,10 @@ You have to provide these parameters to the template :
 * _Location_ : Select the location where NC series is available(for example East US,South Central US). 
 * _Virtual Machine Name_ : Enter the virtual machine name. 
 * _Virtual Machine Size_ : Select virtual machine size from the dropdown.
+* _Intel MPI Serial No_ : The Serial No. to activate intel mpi.
 * _Admin Username_ : This is the name of the administrator account to create on the VM.
 * _Admin Public Key_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'
-* _Intel MPI Serial No_ : The Serial No. to activate intel mpi.
+
 
 ## Deploy jumpbox
 [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazmigproject%2FChainerMN%2Fchainermnphase2%2FChainerMN_V1.0%2Fdeploy-jumpbox.json)
