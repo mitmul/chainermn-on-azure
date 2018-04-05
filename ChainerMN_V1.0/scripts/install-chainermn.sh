@@ -86,7 +86,7 @@ install_intel_mpi
 #install_Intel _MPI
 		if [ ! -d /opt/l_mpi_p_5.1.3.223 ]; then
 			cd /opt
-			#sudo mv intel intel_old
+			sudo mv intel intel_old
 			
 			#sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz			
 			sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
