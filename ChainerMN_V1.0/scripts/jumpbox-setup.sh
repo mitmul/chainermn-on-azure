@@ -115,6 +115,7 @@ mount_nfs()
 		log "install NFS CentOS"
 		yum -y install nfs-utils nfs-utils-lib	
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
+		echo "$DISK_MOUNT    *(rw,async)" >> /etc/exports
 		systemctl enable rpcbind || echo "Already enabled"
 			systemctl enable nfs-server || echo "Already enabled"
 				systemctl start rpcbind || echo "Already enabled"
@@ -125,6 +126,7 @@ mount_nfs()
 		sudo apt-get update
 		sudo apt-get -y install nfs-kernel-server		
 		echo "$SHARE_HOME    *(rw,async)" >> /etc/exports
+		echo "$DISK_MOUNT    *(rw,async)" >> /etc/exports
 		exportfs -a		
 			sudo systemctl enable nfs-kernel-server.service
 		sudo systemctl start nfs-kernel-server.service
