@@ -109,6 +109,7 @@ install_intelmpi()
 
 mount_nfs()
 {
+	mount_disk
 	if is_centos; then
 		log "install NFS CentOS"
 		yum -y install nfs-utils nfs-utils-lib	
@@ -130,6 +131,34 @@ mount_nfs()
   
 		
 }
+mount_disk()
+{
+	fdisk /dev/sdc <<EOF
+	n
+	p
+	
+	1
+	
+	
+	w
+EOF
+	sleep 10
+	mkdir  ${DISK_MOUNT}
+	mkfs.ext4 /dev/sdc1
+	mount -t ext4 /dev/sdc1 ${DISK_MOUNT}
+	sleep 10
+	echo "/dev/sdc1    ${DISK_MOUNT}    ext4 defaults    0    1" >> /etc/fstab
+}
+Set_variables()
+{
+	chmod 777 ~hpcuser/.bashrc
+	echo 'export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}' >> ~hpcuser/.bashrc
+	echo 'export LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LIBRARY_PATH}' >> ~hpcuser/.bashrc
+	echo 'export CPATH=/usr/loca/include]/usr/loca/cuda/include:${CPATH}' >> ~hpcuser/.bashrc
+	echo 'source /opt/intel/impi/2017.3.196/bin64/mpivars.sh' >> ~hpcuser/.bashrc
+	echo 'export PATH=/opt/anaconda3/bin:${PATH}' >> ~hpcuser/.bashrc
+
+}
 SETUP_MARKER=/var/tmp/master-setup.marker
 if [ -e "$SETUP_MARKER" ]; then
 	echo "We're already configured, exiting..."
@@ -139,6 +168,7 @@ install_intelmpi
 setup_disks
 mount_nfs
 setup_user
+Set_variables
 # Create marker file so we know we're configured
 touch $SETUP_MARKER
 exit 0
