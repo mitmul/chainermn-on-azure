@@ -4,6 +4,7 @@ SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
 NFS_ON_MASTER=/share/home
 NFS_MOUNT=/data
+DISK_MOUNT=/data1
 #User
 HPC_USER=hpcuser
 HPC_UID=7007
@@ -96,27 +97,28 @@ base_pkgs_centos()
 	
 }
 
+mount_nfs_common()
+{
+		mkdir -p ${NFS_MOUNT}
+		log "mounting NFS on " ${MASTER_NAME}
+		showmount -e ${MASTER_NAME}
+		mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
+		mount -t nfs ${MASTER_NAME}:${DISK_MOUNT} ${DISK_MOUNT}
+		
+		echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+		echo "${MASTER_NAME}:${DISK_MOUNT} ${DISK_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+}
 mount_nfs()
 {
 	if is_centos; then
 		yum -y install nfs-utils nfs-utils-lib
 		log "install NFS"
-		mkdir -p ${NFS_MOUNT}
-		log "mounting NFS on " ${MASTER_NAME}
-		showmount -e ${MASTER_NAME}
-		mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
-		
-		echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+		mount_nfs_common
 	fi
 	if is_ubuntu; then	
 		sudo apt-get -y install nfs-common	
 		log "install NFS"
-		mkdir -p ${NFS_MOUNT}
-		log "mounting NFS on " ${MASTER_NAME}
-		showmount -e ${MASTER_NAME}
-		mount -t nfs ${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT}
-		
-		echo "${MASTER_NAME}:${NFS_ON_MASTER} ${NFS_MOUNT} nfs defaults,nofail  0 0" >> /etc/fstab
+		mount_nfs_common
 	fi
 }
 
