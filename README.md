@@ -47,7 +47,7 @@ You have to provide these parameters to the template :
 * _VM prefix Name_ : It is vm prefix.
 * _Instance Count_ : it is the no. of instances inside a VMSS.
 * _Master Name_ : The short name of the Master VM.
-* _Intel MPI Serial No_ : The Serial No. to activate intel mpi.
+* _Intel MPI Serial No_ : The Serial No. to activate intel mpi (If it is blank/wrong, intel mpi would not be install).
 * _Admin User Name_ : This is the name of the administrator account to create on the VM.
 * _SSH Key Data_ : The public SSH key to associate with the administrator user. Format has to be on a single line 'ssh-rsa key'.
 
