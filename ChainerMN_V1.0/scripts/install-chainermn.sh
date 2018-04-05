@@ -84,7 +84,7 @@ install_chainermn()
 install_intel_mpi
 {
 #install_Intel _MPI
-		if [ ! -d /opt/l_mpi_2017.3.196 ]; then
+		if [ ! -d /opt/l_mpi_p_5.1.3.223 ]; then
 			cd /opt
 			sudo mv intel intel_old
 			
