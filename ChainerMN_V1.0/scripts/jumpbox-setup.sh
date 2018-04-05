@@ -23,6 +23,7 @@ done
 SHARE_HOME=/share/home
 SHARE_SCRATCH=/share/scratch
 SHARE_APPS=/share/apps
+DISK_MOUNT=/data1
 
 # User
 HPC_USER=hpcuser
