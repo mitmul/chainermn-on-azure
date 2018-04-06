@@ -14,7 +14,7 @@ Table of Contents
 # ChainerMN on Azure
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
-# Chainermn on centos
+# Chainermn on centos and Ubuntu
 # Deployment steps
 To setup ChainerMN two steps need to be executed :
 1. Create the jumpbox
