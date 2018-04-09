@@ -1,5 +1,5 @@
 
-<div align="center"><img src="docs/Images/chainermn1000px.png" width="800"/></div>
+
 
 
 
@@ -14,7 +14,7 @@ Table of Contents
   * [Validating MPI](#validating-mpi)
 * [Check status of the ChainerMN nodes](#Check-status-of-the-ChainerMN-nodes)
  
-# ChainerMN on Azure
+<div align="left"><img src="docs/Images/chainermn1000px.png" width="150"/></div> ChainerMN on Azure
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
 # Chainermn on centos and Ubuntu
