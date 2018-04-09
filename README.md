@@ -1,5 +1,8 @@
 
 <div align="center"><img src="docs/Images/chainermn1000px.png" width="800"/></div>
+
+
+
 Table of Contents
 =================
 * [Compute grid in Azure](#compute-grid-in-azure)
