@@ -1,5 +1,5 @@
 
-
+<div align="center"><img src="docs/image/chainermn1000px.png" width="800"/></div>
 Table of Contents
 =================
 * [Compute grid in Azure](#compute-grid-in-azure)
@@ -12,9 +12,6 @@ Table of Contents
 * [Check status of the ChainerMN nodes](#Check-status-of-the-ChainerMN-nodes)
  
 # ChainerMN on Azure
-
-<div align="center"><img src="docs/image/chainermn1000px.png" width="800"/></div>
-
 
 These templates will build a compute grid made by a single jumpbox VM running the management services, multiple VM Scaleset for ChainerMN.
 # Chainermn on centos and Ubuntu
