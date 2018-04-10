@@ -131,7 +131,7 @@ mount_nfs()
 			sudo systemctl enable nfs-kernel-server.service
 		sudo systemctl start nfs-kernel-server.service
 	fi   		
-  
+  	chmod go+w /data1
 		
 }
 mount_disk()
