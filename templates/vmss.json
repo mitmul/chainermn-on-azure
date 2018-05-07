@@ -103,12 +103,12 @@
       }
     },
     "IntelMPISerialNo": {
-    "type": "securestring",
-    "defaultValue":"",
-    "metadata": {
-      "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
-    }
-  },
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
+      }
+    },
     "adminUserName": {
       "type": "string",
       "metadata": {
@@ -120,6 +120,12 @@
       "metadata": {
         "description": "SSH rsa public key file as a string."
       }
+    },
+    "scriptURLs": {
+      "type": "array"
+    },
+    "executeCommand": {
+      "type": "string"
     }
   },
   "variables": {
@@ -137,14 +143,12 @@
       "chainerSubnetPrefix": "10.0.0.0/21",
       "chainersubnetRef": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/',variables('vnetRG'), '/providers/Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'), '/subnets/', variables('subnetName'))]"
     },
-
     "vmSettings": {
       "name": "[variables('namingInfix')]",
       "publicIPDomainName": "[variables('namingInfix')]",
       "nicName": "[concat(parameters('vmPrefixName'), 'nic')]",
       "ipConfigName": "[concat(parameters('vmPrefixName'), 'ipconfig')]"
     },
-
     "vmOSSettings": {
       "adminUserName": "[parameters('adminUserName')]",
       "sshKeyData": "[parameters('sshKeyData')]",
@@ -173,12 +177,8 @@
     "computeApiVersion": "2016-04-30-preview",
     "networkApiVersion": "2016-03-30",
     "sshKeyPath": "[concat('/home/',parameters('adminUserName'),'/.ssh/authorized_keys')]",
-    "scriptsToDownload": [
-      "[uri(deployment().properties.templateLink.uri, 'scripts/rdma-autoload.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainer.sh')]",
-      "[uri(deployment().properties.templateLink.uri, 'scripts/install-chainermn.sh')]"
-    ],
-    "commandToExecute": "[concat('bash install-chainer.sh -s ',variables('masterName'),';','bash install-chainermn.sh ', variables('SerialNoIntelMPI'))]"
+    "scriptsToDownload": "[parameters('scriptURLs')]",
+    "commandToExecute": "[parameters('executeCommand')]"
   },
   "resources": [
     {

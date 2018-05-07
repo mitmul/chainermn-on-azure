@@ -5,12 +5,12 @@
     "virtualMachineName": {
       "type": "String"
     },
-      "vmImage": {
+    "vmImage": {
       "type": "string",
       "defaultValue": "Ubuntu_16.04",
       "allowedValues": [
         "CentOS_7.3",
-        "Ubuntu_16.04"		
+        "Ubuntu_16.04"
       ],
       "metadata": {
         "description": "The VM OS image"
@@ -52,24 +52,29 @@
         "Standard_L8s",
         "Standard_L16s",
         "Standard_L32s"
-
       ],
       "metadata": {
         "description": "sku to use for the storage nodes - only premium disks VMs are allowed"
       }
     },
     "IntelMPISerialNo": {
-    "type": "securestring",
-    "defaultValue":"",
-    "metadata": {
-      "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
-    }
-  },
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The serial no. to activate intel mpi. leave blank if want to install evolution version"
+      }
+    },
     "adminUsername": {
       "type": "String"
     },
     "adminPublicKey": {
       "type": "String"
+    },
+    "scriptURLs": {
+      "type": "array"
+    },
+    "executeCommand": {
+      "type": "string"
     }
   },
   "variables": {
@@ -96,7 +101,7 @@
       },
       "P30": {
         "size": 1023
-      }    
+      }
     },
     "computeImages": {
       "CentOS_7.3": {
@@ -232,7 +237,7 @@
           "vmSize": "[parameters('virtualMachineSize')]"
         },
         "storageProfile": {
-         "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
+          "imageReference": "[variables('computeImages')[parameters('vmImage')]]",
           "osDisk": {
             "createOption": "fromImage",
             "managedDisk": {
@@ -264,10 +269,8 @@
         "typeHandlerVersion": "2.0",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "fileUris": [
-            "[uri(deployment().properties.templateLink.uri, 'scripts/jumpbox-setup.sh')]"
-          ],
-          "commandToExecute":"[concat('bash jumpbox-setup.sh ', variables('SerialNoIntelMPI'))]" 
+          "fileUris": "[parameters('scriptURLs')]",
+          "commandToExecute": "[parameters('executeCommand')]"
         }
       }
     }
