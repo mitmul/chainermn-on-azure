@@ -42,9 +42,87 @@ apt-get install -y cuda-drivers
 apt-get install -y cuda-8-0
 
 # Install Python3
-apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi
+apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi python3-setuptools
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
+
+# Install packages for OpenCV build
+apt-get update -y && apt-get install -y \
+curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs
+
+# Install Intel MKL
+cd /opt
+wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12725/l_mkl_2018.2.199.tgz && \
+tar zxvf l_mkl_2018.2.199.tgz && rm -rf l_mkl_2018.2.199.tgz && \
+cd l_mkl_2018.2.199 && \
+sed -i -E "s/ACCEPT_EULA=decline/ACCEPT_EULA=accept/g" silent.cfg && \
+./install.sh -s silent.cfg
+echo 'source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64' | tee -a $SHARE_HOME/$HPC_USER.bash_profile
+source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64
+
+# Install numpy & scipy with mkl backend
+echo "[mkl]" >> $HOME/.numpy-site.cfg
+echo "library_dirs = /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/lib/intel64" >> $HOME/.numpy-site.cfg
+echo "include_dirs = /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/include" >> $HOME/.numpy-site.cfg
+echo "mkl_libs = mkl_rt" >> $HOME/.numpy-site.cfg
+echo "lapack_libs =" >> $HOME/.numpy-site.cfg
+pip install --no-binary :all: numpy
+pip install --no-binary :all: scipy
+
+# Install libjpeg-turbo
+cd /opt
+mkdir libjpeg-turbo && cd libjpeg-turbo
+wget https://jaist.dl.sourceforge.net/project/libjpeg-turbo/1.5.1/libjpeg-turbo-1.5.1.tar.gz && \
+tar zxvf libjpeg-turbo-1.5.1.tar.gz && \
+rm -rf libjpeg-turbo-1.5.1.tar.gz && \
+cd libjpeg-turbo-1.5.1 && \
+./configure --prefix=${HOME} && \
+make -j$(nproc) && \
+make install
+
+# Install OpenCV with libjpeg-turbo
+cd /opt
+mkdir opencv && cd opencv
+wget https://github.com/opencv/opencv/archive/3.4.1.tar.gz && \
+tar zxvf 3.4.1.tar.gz && rm -rf 3.4.1.tar.gz && \
+wget https://github.com/opencv/opencv_contrib/archive/3.4.1.tar.gz && \
+tar zxvf 3.4.1.tar.gz && rm -rf 3.4.1.tar.gz && \
+mkdir build && cd build && \
+cmake \
+-DCMAKE_BUILD_TYPE=RELEASE \
+-DCMAKE_INSTALL_PREFIX=/usr/local \
+-DWITH_TBB=ON \
+-DWITH_EIGEN=OFF \
+-DWITH_FFMPEG=ON \
+-DWITH_QT=OFF \
+-DWITH_OPENCL=OFF \
+-DWITH_CUDA=ON \
+-DCUDA_ARCH_BIN=6.0 \
+-DCUDA_ARCH_PTX= \
+-DWITH_JPEG=ON \
+-DBUILD_JPEG=OFF \
+-DJPEG_INCLUDE_DIR=${HOME}/include \
+-DJPEG_LIBRARY=${HOME}/lib/libjpeg.so \
+-DOPENCV_EXTRA_MODULES_PATH=/opt/opencv/opencv_contrib-3.4.1/modules \
+-DBUILD_opencv_python3=ON \
+-DPYTHON3_EXECUTABLE=$(which python3) \
+-DPYTHON3_INCLUDE_DIR=$(python3 -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())') \
+-DPYTHON3_NUMPY_INCLUDE_DIRS=$(python3 -c 'import numpy; print(numpy.get_include())') \
+-DPYTHON3_LIBRARY="/usr/lib/x86_64-linux-gnu/libpython3.5m.so" \
+-DPYTHON_INCLUDE_DIR=$(python3 -c 'from distutils.sysconfig import get_python_inc; print(get_python_inc())') \
+-DPYTHON_LIBRARY="/usr/lib/x86_64-linux-gnu/libpython3.5m.so" \
+/opt/opencv/opencv-3.4.1 && \
+make -j8 && \
+make install
+
+# Install Python packages
+pip install --no-cache-dir \
+ipython \
+jupyter \
+cython \
+matplotlib \
+scikit-learn \
+pandas
 
 # Install cuDNN
 cd /usr/local
@@ -80,6 +158,7 @@ echo " *               hard    memlock          unlimited" | tee -a /etc/securit
 echo " *               soft    memlock          unlimited" | tee -a /etc/security/limits.conf
 
 # Install IntelMPI
+source /opt/intel/impi/2017.3.196/bin64/mpivars.sh
 cd /opt
 wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
 tar zxvf l_mpi_2017.3.196.tgz
@@ -90,7 +169,10 @@ sed -i -e "s/decline/accept/g" silent.cfg
 
 # Install ChainerMN
 pip install mpi4py
-pip install chainermn
+cd /opt
+git clone git@github.com:chainer/chainermn.git
+cd chainermn
+python setup.py install
 
 # Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
