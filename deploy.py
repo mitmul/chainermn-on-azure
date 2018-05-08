@@ -27,7 +27,7 @@ from azure.storage.blob import PublicAccess
 CREDENTIALS, SUBSCRIPTION_ID = credentials.get_azure_cli_credentials()
 
 
-def upload_script_files(location, resource_group, account_name, share_name, container_name, restart):
+def upload_script_files(location, resource_group, account_name, share_name, container_name, retry):
     client = StorageManagementClient(CREDENTIALS, SUBSCRIPTION_ID)
     if client.storage_accounts.check_name_availability(account_name).name_available:
         result = client.storage_accounts.create(
@@ -41,7 +41,7 @@ def upload_script_files(location, resource_group, account_name, share_name, cont
         )
         result.wait()
     else:
-        if not restart:
+        if not retry:
             raise ValueError('{} is not available for storage account name.'.format(account_name))
         else:
             print('{} exists but continue deploying.'.format(account_name))
@@ -147,13 +147,13 @@ def main():
     parser.add_argument('--vmss-command', type=str, default='bash setup_vmss.sh')
     parser.add_argument('--vmss-size', '-z', type=str, default='Standard_NC24r')
     parser.add_argument('--vmss-instance-count', '-n', type=int, default=1)
-    parser.add_argument('--restart', '-r', action='store_true', default=False)
+    parser.add_argument('--retry', '-r', action='store_true', default=False)
     args = parser.parse_args()
 
     create_resource_group(args.location, args.resource_group)
     script_urls = upload_script_files(
         args.location, args.resource_group, args.storage_account_name, args.storage_blob_name,
-        args.blob_container_name, args.restart)
+        args.blob_container_name, args.retry)
     
     jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
     ip_address = get_jumpbox_ip(args.resource_group)

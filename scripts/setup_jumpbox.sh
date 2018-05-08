@@ -31,7 +31,7 @@ echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bash_
 echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_FALLBACK_DEVICE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
-echo 'sudo echo 0 >> /proc/sys/kernel/yama/ptrace_scope' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'echo 0 | sudo tee -a /proc/sys/kernel/yama/ptrace_scope' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 
 # Create user
 useradd -c "HPC User" -g $HPC_GROUP -m -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
@@ -50,14 +50,6 @@ chmod 644 $SHARE_HOME/$HPC_USER/.ssh/authorized_keys
 chmod 600 $SHARE_HOME/$HPC_USER/.ssh/id_rsa
 chmod 644 $SHARE_HOME/$HPC_USER/.ssh/id_rsa.pub
 
-# Install NFS
-apt-get update
-apt-get -y install nfs-kernel-server		
-echo "$SHARE_HOME    *(rw,async)" | tee -a /etc/exports
-exportfs -a		
-systemctl enable nfs-kernel-server.service
-systemctl start nfs-kernel-server.service
-
 # Mount NFS
 fdisk /dev/sdc <<EOF
 n
@@ -74,6 +66,15 @@ mkfs.ext4 /dev/sdc1
 mount -t ext4 /dev/sdc1 ${DISK_MOUNT}
 sleep 10
 echo "/dev/sdc1    ${DISK_MOUNT}    ext4 defaults    0    1" | tee -a /etc/fstab
+
+# Install NFS
+apt-get update
+apt-get -y install nfs-kernel-server		
+echo "$SHARE_HOME    *(rw,async,no_subtree_check)" | tee -a /etc/exports
+echo "$DISK_MOUNT    *(rw,async,no_subtree_check)" | tee -a /etc/exports
+exportfs -a		
+systemctl enable nfs-kernel-server.service
+systemctl start nfs-kernel-server.service
 
 # Install Python3
 apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip
