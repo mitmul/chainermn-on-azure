@@ -91,19 +91,13 @@ setup_user() {
 install_intelmpi() {
 	cd /opt
 	sudo mv intel intel_old
-	sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
-	sudo tar zxvf l_mpi_p_5.1.3.223.tgz
-	sudo rm -rf l_mpi_p_5.1.3.223.tgz
-	cd l_mpi_p_5.1.3.223
-	sudo sed -i -e "s/decline/accept/g" silent.cfg
-	sudo sed -i -e "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=${ACTIVATION_SERIAL_NUMBER}/g" silent.cfg
-	sudo sed -i -e "s/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/g" silent.cfg
-	sudo ./install.sh --silent silent.cfg
 
-	#sudo cd /etc/security
-	#sudo echo '*            hard   memlock           unlimited' >> limits.conf
-	#sudo echo '*            soft   memlock           unlimited' >> limits.conf
-	#sudo cd ~
+	curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+	tar zxvf l_mpi_2017.3.196.tgz
+	rm -rf l_mpi_2017.3.196.tgz
+	cd l_mpi_2017.3.196
+	sed -i -e "s/decline/accept/g" silent.cfg
+	./install.sh --silent silent.cfg
 }
 
 mount_nfs() {
@@ -134,13 +128,13 @@ mount_nfs() {
 
 mount_disk() {
 	fdisk /dev/sdc <<EOF
-	n
-	p
+n
+p
 
-	1
+1
 
 
-	w
+w
 EOF
 	sleep 10
 	mkdir ${DISK_MOUNT}
@@ -155,7 +149,7 @@ Set_variables() {
 	echo 'export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}' >>~hpcuser/.bashrc
 	echo 'export LIBRARY_PATH=/usr/local/lib:/usr/local/cuda/lib64:${LIBRARY_PATH}' >>~hpcuser/.bashrc
 	echo 'export CPATH=/usr/loca/include]/usr/loca/cuda/include:${CPATH}' >>~hpcuser/.bashrc
-	echo 'source /opt/intel/impi/5.1.3.223/bin64/mpivars.sh' >>~hpcuser/.bashrc
+	echo 'source /opt/intel/impi/2017.3.196/bin64/mpivars.sh' >>~hpcuser/.bashrc
 	echo 'export PATH=/opt/anaconda3/bin:${PATH}' >>~hpcuser/.bashrc
 
 }

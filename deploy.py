@@ -142,10 +142,9 @@ def main():
     parser.add_argument('--storage-blob-name', '-b', type=str, default='scripts')
     parser.add_argument('--blob-container-name', '-o', type=str, default='scripts')
     parser.add_argument('--jumpbox-template', '-j', type=str, default='templates/jumpbox.json')
-    parser.add_argument('--jumpbox-command', type=str, default='bash jumpbox-setup.sh')
+    parser.add_argument('--jumpbox-command', type=str, default='bash setup_jumpbox.sh')
     parser.add_argument('--vmss-template', '-v', type=str, default='templates/vmss.json')
-    parser.add_argument(
-        '--vmss-command', type=str, default='bash install-chainer.sh -s jumpbox && bash install-chainermn.sh')
+    parser.add_argument('--vmss-command', type=str, default='bash setup_vmss.sh')
     parser.add_argument('--vmss-size', '-z', type=str, default='Standard_NC24r')
     parser.add_argument('--vmss-instance-count', '-n', type=int, default=1)
     parser.add_argument('--restart', '-r', action='store_true', default=False)
@@ -156,9 +155,9 @@ def main():
         args.location, args.resource_group, args.storage_account_name, args.storage_blob_name,
         args.blob_container_name, args.restart)
     
-    # jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
-    # ip_address = get_jumpbox_ip(args.resource_group)
-    # print('ssh -i {} ubuntu@{}'.format(os.path.splitext(args.public_key_file)[0], ip_address))
+    jumpbox_deploy(args.resource_group, args.jumpbox_template, args.public_key_file, script_urls, args.jumpbox_command)
+    ip_address = get_jumpbox_ip(args.resource_group)
+    print('ssh -i {} ubuntu@{}'.format(os.path.splitext(args.public_key_file)[0], ip_address))
 
     vmss_deploy(
         args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,

@@ -29,6 +29,7 @@ install_Chainer() {
 	cd /usr/local
 	#install numpy and six required version as chainer is dependent on numpy
 	#install_cython_protobuf #required for numpy/six/cupy
+	conda install -y cython numpy
 	pip install -U cython
 	sudo curl -L -O https://pypi.python.org/packages/b2/30/ab593c6ae73b45a5ef0b0af24908e8aec27f79efcda2e64a3df7af0b92a2/protobuf-3.1.0-py2.py3-none-any.whl ##md5=f02742e46128f1e0655b44c33d8c9718
 	pip install protobuf-3.1.0-py2.py3-none-any.whl
@@ -80,28 +81,23 @@ install_intel_mpi() {
 	#install_Intel _MPI
 	if [ ! -d /opt/l_mpi_p_5.1.3.223 ]; then
 		cd /opt
-		sudo mv intel intel_old
+		mv intel intel_old
 
-		#sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-		sudo curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
-		#gzip -d ${PKG_Name}
-		sudo tar zxvf l_mpi_p_5.1.3.223.tgz
-		sudo rm -rf l_mpi_p_5.1.3.223.tgz
-		cd l_mpi_p_5.1.3.223
-		sudo sed -i -e "s/decline/accept/g" silent.cfg
-		sudo sed -i -e "s/#ACTIVATION_SERIAL_NUMBER=snpat/ACTIVATION_SERIAL_NUMBER=${ACTIVATION_SERIAL_NUMBER}/g" silent.cfg
-		sudo sed -i -e "s/ACTIVATION_TYPE=exist_lic/ACTIVATION_TYPE=serial_number/g" silent.cfg
-		sudo ./install.sh --silent silent.cfg
+		curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
+		tar zxvf l_mpi_2017.3.196.tgz
+		rm -rf l_mpi_2017.3.196.tgz
+		cd l_mpi_2017.3.196
+		sed -i -e "s/decline/accept/g" silent.cfg
+		./install.sh --silent silent.cfg
 	fi
 
 	if grep -q "I_MPI" ~/.bashrc; then :; else
-		echo 'export I_MPI_FABRICS=shm:dapl' >>~/.bashrc
-		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >>~/.bashrc
-		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >>~/.bashrc
-		echo 'export I_MPI_FALLBACK_DEVICE=0' >>~/.bashrc
-		echo 'export PATH=/usr/local/cuda/bin:$PATH' >>~/.bashrc
-		echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpivars.sh' >>~/.bashrc
-		#echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
+		echo 'export I_MPI_FABRICS=shm:dapl' >> ~/.bashrc
+		echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ~/.bashrc
+		echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ~/.bashrc
+		echo 'export I_MPI_FALLBACK_DEVICE=0' >> ~/.bashrc
+		echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ~/.bashrc
+		echo 'source /opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpivars.sh' >> ~/.bashrc
 	fi
 }
 
@@ -226,31 +222,19 @@ setup_chainermn_gpu_infiniband() {
 	fi
 
 	if grep -q "LD_LIBRARY_PATH" ~/.bashrc; then :; else
-		echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >>~/.bashrc
+		echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> ~/.bashrc
 	fi
 
 	#cudnn 7.0.4
 	if [ ! -f /usr/local/cuda/include/cudnn.h ]; then
 		cd /usr/local
-		#if is_centos; then
-		sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cudnn-8.0-linux-x64-v7.tgz.gz
-		gzip -d cudnn-8.0-linux-x64-v7.tgz.gz
-		sudo tar zxvf cudnn-8.0-linux-x64-v7.tgz
-		sudo rm -rf cudnn-8.0-linux-x64-v7.tgz
-		#fi
-		#if is_Ubuntu; then
-		#sudo curl -L -O https://pfnresources.blob.core.windows.net/chainermn-v1-packages/cudnn-9.0-linux-x64-v7.tgz.gz
-		#gzip -d cudnn-9.0-linux-x64-v7.tgz.gz
-		#sudo tar zxvf cudnn-9.0-linux-x64-v7.tgz
-		#sudo rm -rf cudnn-9.0-linux-x64-v7.tgz
-		#fi
-		#Copy CUDNN files to required locaiton
-		sudo cp cuda/include/cudnn.h /usr/local/cuda/include
-		sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+		curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.0.5/cudnn-8.0-linux-x64-v7.tgz
+		tar zxvf cudnn-8.0-linux-x64-v7.tgz
+		rm -rf cudnn-8.0-linux-x64-v7.tgz
 		chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 	fi
 
-	#install Chainer V3.1.0
+	#install Chainer
 	install_Chainer
 	#MPICC=/opt/intel/compilers_and_libraries_2017.4.196/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
 	MPICC=/opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/intel64/bin/mpicc pip install mpi4py --no-cache-dir
