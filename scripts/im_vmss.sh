@@ -2,7 +2,7 @@
 
 az vmss create \
 --image /subscriptions/74e4da0b-6512-49b0-867a-3dff205b77e5/resourceGroups/chainermn/providers/Microsoft.Compute/images/vmss-image \
---size Standard_NC24r \
+--vm-sku Standard_NC24r \
 --lb '' \
 --name vmss \
 --resource-group chainermn \

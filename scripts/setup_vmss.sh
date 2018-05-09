@@ -158,19 +158,21 @@ echo " *               hard    memlock          unlimited" | tee -a /etc/securit
 echo " *               soft    memlock          unlimited" | tee -a /etc/security/limits.conf
 
 # Install IntelMPI
+apt-get install -y cpio
 cd /opt
-wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-tar zxvf l_mpi_2017.3.196.tgz
-rm -rf l_mpi_2017.3.196.tgz
-cd l_mpi_2017.3.196
+curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
+tar zxvf l_mpi_p_5.1.3.223.tgz
+rm -rf l_mpi_p_5.1.3.223.tgz
+cd l_mpi_p_5.1.3.223
 sed -i -e "s/decline/accept/g" silent.cfg
+sed -i -e "s/exist_lic/trial_lic/g" silent.cfg
 ./install.sh --silent silent.cfg
-source /opt/intel/impi/2017.3.196/bin64/mpivars.sh
+source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh
 
 # Install ChainerMN
 pip install mpi4py
 cd /opt
-git clone git@github.com:chainer/chainermn.git
+git clone https://github.com/chainer/chainermn.git
 cd chainermn
 python setup.py install
 

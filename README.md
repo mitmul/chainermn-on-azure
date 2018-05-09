@@ -36,3 +36,29 @@ $ ./deploy.py \
 --public-key-file ~/.ssh/id_rsa.pub
 ```
 
+## Create images
+
+### 1. Create jumpbox VM
+
+```
+python deploy.py \
+-k ~/.ssh/id_rsa.pub \
+-g chainermn-image \
+-s chainermnscriptsimage \
+--jumpbox-only
+```
+
+Login to the jumpbox server and run:
+
+```
+sudo waagent -deprovision+user -force
+```
+
+Then logout, then run these commands from your local machine:
+
+```
+az vm deallocate --resource-group chainermn-image --name jumpbox
+az vm generalize --resource-group chainermn-image --name jumpbox
+az image create --resource-group chainermn-image --name jumpbox-image --source jumpbox
+python utils.py -g chainermn-images delete-vm jumpbox
+```

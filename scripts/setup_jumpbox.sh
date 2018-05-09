@@ -97,3 +97,9 @@ sed -i -e "s/exist_lic/trial_lic/g" silent.cfg
 ./install.sh --silent silent.cfg
 echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' | tee -a /home/ubuntu/.bashrc
 exec $SHEEL
+
+echo 'export LANG=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
+echo 'export LANG=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export LC_CTYPE=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
+echo 'export LC_CTYPE=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+

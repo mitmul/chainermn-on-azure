@@ -3,8 +3,9 @@
 ```
 git clone https://github.com/chainer/chainermn
 cd chainermn/examples/mnist
-mpiexec \
--hosts localhost \
--ppn 4 -n 4 \
+mpirun \
+-hosts 10.0.0.7,10.0.0.8 \
+-ppn 4 -n 8 \
+-envall \
 python train_mnist.py -g --communicator non_cuda_aware
 ```
