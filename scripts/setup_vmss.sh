@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 CUPY_VERSION=4.0.0
 CHAINER_VERSION=4.0.0
@@ -57,7 +57,7 @@ tar zxvf l_mkl_2018.2.199.tgz && rm -rf l_mkl_2018.2.199.tgz && \
 cd l_mkl_2018.2.199 && \
 sed -i -E "s/ACCEPT_EULA=decline/ACCEPT_EULA=accept/g" silent.cfg && \
 ./install.sh -s silent.cfg
-echo 'source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64' | tee -a $SHARE_HOME/$HPC_USER.bash_profile
+echo 'source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64' | tee -a $SHARE_HOME/$HPC_USER/.bash_profile
 source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64
 
 # Install numpy & scipy with mkl backend
@@ -134,7 +134,7 @@ rm -rf cudnn-8.0-linux-x64-v7.tgz
 cd /opt
 git clone https://github.com/NVIDIA/nccl.git
 cd nccl
-make CUDA_HOME=/usr/local/cuda-8-0 test
+make CUDA_HOME=/usr/local/cuda test
 make install
 
 # Install cupy, chainer

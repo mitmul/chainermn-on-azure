@@ -148,6 +148,7 @@ def main():
     parser.add_argument('--vmss-size', '-z', type=str, default='Standard_NC24r')
     parser.add_argument('--vmss-instance-count', '-n', type=int, default=1)
     parser.add_argument('--retry', '-r', action='store_true', default=False)
+    parser.add_argument('--jumpbox-only', action='store_true', default=False)
     args = parser.parse_args()
 
     create_resource_group(args.location, args.resource_group)
@@ -159,9 +160,10 @@ def main():
     ip_address = get_jumpbox_ip(args.resource_group)
     print('ssh -i {} ubuntu@{}'.format(os.path.splitext(args.public_key_file)[0], ip_address))
 
-    # vmss_deploy(
-    #     args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,
-    #     script_urls, args.vmss_command)
+    if not args.jumpbox_only:
+        vmss_deploy(
+            args.resource_group, args.vmss_template, args.vmss_size, args.vmss_instance_count, args.public_key_file,
+            script_urls, args.vmss_command)
 
 
 if __name__ == '__main__':
