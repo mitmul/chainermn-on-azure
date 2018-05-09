@@ -158,7 +158,6 @@ echo " *               hard    memlock          unlimited" | tee -a /etc/securit
 echo " *               soft    memlock          unlimited" | tee -a /etc/security/limits.conf
 
 # Install IntelMPI
-source /opt/intel/impi/2017.3.196/bin64/mpivars.sh
 cd /opt
 wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
 tar zxvf l_mpi_2017.3.196.tgz
@@ -166,6 +165,7 @@ rm -rf l_mpi_2017.3.196.tgz
 cd l_mpi_2017.3.196
 sed -i -e "s/decline/accept/g" silent.cfg
 ./install.sh --silent silent.cfg
+source /opt/intel/impi/2017.3.196/bin64/mpivars.sh
 
 # Install ChainerMN
 pip install mpi4py

@@ -25,7 +25,7 @@ echo 'export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH' >> ${SHARE_HOME}/
 echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LANG=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_CTYPE=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
-echo 'source /opt/intel/impi/2017.3.196/bin64/mpivars.sh' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_FABRICS=shm:dapl' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
@@ -86,13 +86,14 @@ echo 'export LANG=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
 echo 'export LC_CTYPE=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
 
 # Install IntelMPI
+apt-get install -y cpio
 cd /opt
-wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/11595/l_mpi_2017.3.196.tgz
-tar zxvf l_mpi_2017.3.196.tgz
-rm -rf l_mpi_2017.3.196.tgz
-cd l_mpi_2017.3.196
+curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
+tar zxvf l_mpi_p_5.1.3.223.tgz
+rm -rf l_mpi_p_5.1.3.223.tgz
+cd l_mpi_p_5.1.3.223
 sed -i -e "s/decline/accept/g" silent.cfg
+sed -i -e "s/exist_lic/trial_lic/g" silent.cfg
 ./install.sh --silent silent.cfg
-echo 'source /opt/intel/impi/2017.3.196/bin64/mpivars.sh' | tee -a /home/ubuntu/.bashrc
-echo 'source /opt/intel/compilers_and_libraries/linux/mpi/intel64/bin/mpivars.sh' | tee -a /home/ubuntu/.bashrc
-exec $SHELL
+echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' | tee -a /home/ubuntu/.bashrc
+exec $SHEEL
