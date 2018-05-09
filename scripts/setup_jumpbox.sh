@@ -26,6 +26,7 @@ echo 'export PATH=/usr/local/cuda/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_
 echo 'export LANG=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_CTYPE=en_US.UTF-8' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64' >> $SHARE_HOME/$HPC_USER/.bash_profile
 echo 'export I_MPI_FABRICS=shm:dapl' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile

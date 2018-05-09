@@ -57,7 +57,6 @@ tar zxvf l_mkl_2018.2.199.tgz && rm -rf l_mkl_2018.2.199.tgz && \
 cd l_mkl_2018.2.199 && \
 sed -i -E "s/ACCEPT_EULA=decline/ACCEPT_EULA=accept/g" silent.cfg && \
 ./install.sh -s silent.cfg
-echo 'source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64' | tee -a $SHARE_HOME/$HPC_USER/.bash_profile
 source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64
 
 # Install numpy & scipy with mkl backend
