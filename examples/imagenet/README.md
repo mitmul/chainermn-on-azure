@@ -14,3 +14,16 @@ pip install kaggle
 cd /data1
 kaggle competitions download -c imagenet-object-localization-challenge -p ./
 ```
+
+## Get list of IPs in VMSS
+
+```
+az vmss nic list -g chainermn --vmss-name vmss \
+--query "[*].ipConfigurations[0].privateIpAddress" -o tsv
+```
+
+## Scale out
+
+```
+az vmss scale -g chainermn -n vmss --new-capacity 32
+```

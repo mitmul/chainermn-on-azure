@@ -103,3 +103,8 @@ az vm generalize --resource-group chainermn-image --name  && \
 az image create --resource-group chainermn-image --name vmss-image --source vmss-image && \
 python utils.py -g chainermn-image delete-vm vmss-image
 ```
+
+## Deploy using images
+
+### 1. Deploy jumpbox
+
