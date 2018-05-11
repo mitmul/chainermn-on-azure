@@ -38,7 +38,7 @@ $ ./deploy.py \
 
 ## Create images
 
-### 1. Create jumpbox image
+### 1. Create jumpbox
 
 ```
 python deploy.py \
@@ -48,33 +48,7 @@ python deploy.py \
 --jumpbox-only
 ```
 
-Login to the jumpbox server and run:
-
-```
-sudo waagent -deprovision+user -force
-```
-
-Then logout, then run these commands from your local machine:
-
-```
-az vm deallocate --resource-group chainermn-image --name jumpbox && \
-az vm generalize --resource-group chainermn-image --name jumpbox && \
-az image create --resource-group chainermn-image --name jumpbox-image --source jumpbox && \
-python utils.py -g chainermn-image delete-vm jumpbox
-```
-
 ### 2. Create VMSS image
-
-```
-az vm create \
---image /subscriptions/74e4da0b-6512-49b0-867a-3dff205b77e5/resourceGroups/chainermn-image/providers/Microsoft.Compute/images/jumpbox-image \
---name jumpbox \
---resource-group chainermn-images \
---size Standard_DS3_v2 \
---admin-username ubuntu \
---ssh-key-value $HOME/.ssh/id_rsa.pub \
---vnet-name chainer-vnet
-```
 
 ```
 az vm create \
@@ -99,9 +73,26 @@ Logout and run these commands on your local machine:
 
 ```
 az vm deallocate --resource-group chainermn-image --name vmss-image && \
-az vm generalize --resource-group chainermn-image --name  && \
+az vm generalize --resource-group chainermn-image --name vmss-image && \
 az image create --resource-group chainermn-image --name vmss-image --source vmss-image && \
 python utils.py -g chainermn-image delete-vm vmss-image
+```
+
+### 3. Create jumpbox image
+
+Login to the jumpbox server and run:
+
+```
+sudo waagent -deprovision+user -force
+```
+
+Then logout, then run these commands from your local machine:
+
+```
+az vm deallocate --resource-group chainermn-image --name jumpbox && \
+az vm generalize --resource-group chainermn-image --name jumpbox && \
+az image create --resource-group chainermn-image --name jumpbox-image --source jumpbox && \
+python utils.py -g chainermn-image delete-vm jumpbox
 ```
 
 ## Deploy using images

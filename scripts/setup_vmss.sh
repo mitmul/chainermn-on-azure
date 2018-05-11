@@ -48,7 +48,7 @@ update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 # Install packages for OpenCV build
 apt-get update -y && apt-get install -y \
-curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs libssl-dev
+curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs libssl-dev libffi-dev
 
 # Install Intel MKL
 cd /opt

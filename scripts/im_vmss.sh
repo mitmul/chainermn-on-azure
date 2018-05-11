@@ -1,7 +1,9 @@
 #!/bin/bash
 
+image_id=$(az image show -g chainermn-image -n vmss-image --query "id" -o tsv)
+
 az vmss create \
---image /subscriptions/74e4da0b-6512-49b0-867a-3dff205b77e5/resourceGroups/chainermn-image/providers/Microsoft.Compute/images/vmss-image \
+--image ${image_id} \
 --vm-sku Standard_NC24r \
 --lb '' \
 --name vmss \

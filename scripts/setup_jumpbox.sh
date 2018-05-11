@@ -30,13 +30,10 @@ echo 'export I_MPI_DAPL_PROVIDER=ofa-v2-ib0' >> ${SHARE_HOME}/${HPC_USER}/.bash_
 echo 'export I_MPI_DYNAMIC_CONNECTION=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_FALLBACK_DEVICE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
-echo 'echo 0 | sudo tee -a /proc/sys/kernel/yama/ptrace_scope' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LANG="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_ALL="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_CTYPE="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export PATH=$HOME/.local/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
-echo 'Host *' >> ${SHARE_HOME}/${HPC_USER}/.ssh/config
-echo '    StrictHostKeyChecking   no' >> ${SHARE_HOME}/${HPC_USER}/.ssh/config
 
 # Create user
 useradd -c "HPC User" -g $HPC_GROUP -m -d $SHARE_HOME/$HPC_USER -s /bin/bash -u $HPC_UID $HPC_USER
@@ -87,11 +84,12 @@ update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 100
 
 # Set environment variables
-echo 'export LANG=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
-echo 'export LC_CTYPE=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
+echo 'export LANG="en_US.UTF-8"' | tee -a /home/ubuntu/.bashrc
+echo 'export LC_CTYPE="en_US.UTF-8"' | tee -a /home/ubuntu/.bashrc
+echo 'export LC_ALL="en_US.UTF-8"' | tee -a /home/ubuntu/.bashrc
 
 # Install IntelMPI
-apt-get install -y cpio
+apt-get install -y cpio libffi-dev libssl-dev
 cd /opt
 curl -L -O http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/9278/l_mpi_p_5.1.3.223.tgz
 tar zxvf l_mpi_p_5.1.3.223.tgz
@@ -103,5 +101,9 @@ sed -i -e "s/exist_lic/trial_lic/g" silent.cfg
 echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' | tee -a /home/ubuntu/.bashrc
 exec $SHEEL
 
-echo 'export LANG=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
-echo 'export LC_CTYPE=en_US.UTF-8' | tee -a /home/ubuntu/.bashrc
+export LANG="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+pip install -U cryptography
+pip install -U azure-cli

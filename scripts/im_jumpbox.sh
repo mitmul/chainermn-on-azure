@@ -1,7 +1,11 @@
 #!/bin/bash
 
+az group create -g chainermn -l eastus
+
+image_id=$(az image show -g chainermn-image -n jumpbox-image --query "id" -o tsv)
+
 az vm create \
---image /subscriptions/74e4da0b-6512-49b0-867a-3dff205b77e5/resourceGroups/chainermn-image/providers/Microsoft.Compute/images/jumpbox-image \
+--image ${image_id} \
 --name jumpbox \
 --resource-group chainermn \
 --size Standard_DS3_v2 \
