@@ -19,8 +19,10 @@ do
         echo "Can't communicate with ${ip}";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
-    elif ! ${cuda_status}; then
-        echo "CUDA is broken on ${ip}. Restarting...";
+    elif [[ ${cuda_status} = *"CUDARuntimeError"* ]]; then
+        echo "CUDA is broken on ${ip}."
+        echo ${cuda_status}
+        echo "Restarting...";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
     elif ! ${cupy_status}; then
