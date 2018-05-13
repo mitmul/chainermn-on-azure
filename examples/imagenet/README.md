@@ -61,7 +61,17 @@ mpirun -f ~/hosts.txt -ppn 1 -n 32 -envall IMB-MPI1 pingpong
 
 for ip in `cat ~/hosts.txt`;
 do
-    mpirun -n 1 -ppn 1 \
-    -hosts ${ip} -envall \
-    python train_mnist.py -g --communicator non_cuda_aware
+    mpirun -n 2 -ppn 1 \
+    -hosts localhost,${ip} -envall \
+    IMB-MPI1 pingpong;
 done
+
+
+mpirun -n 1 -ppn 4 -hosts localhost \
+-envall python train_imagenet_check.py \
+train_cls_random.txt val_random.txt \
+--root_train /data1/ILSVRC/Data/CLS-LOC/train \
+--root_val /data1/ILSVRC/Data/CLS-LOC/val \
+--batchsize 1 --communicator non_cuda_aware
+
+mpirun -n 128 -ppn 4 -f ~/hosts.txt -envall IMB-MPI1 pingpong

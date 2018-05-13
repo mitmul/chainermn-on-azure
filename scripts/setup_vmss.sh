@@ -75,7 +75,7 @@ wget https://jaist.dl.sourceforge.net/project/libjpeg-turbo/1.5.1/libjpeg-turbo-
 tar zxvf libjpeg-turbo-1.5.1.tar.gz && \
 rm -rf libjpeg-turbo-1.5.1.tar.gz && \
 cd libjpeg-turbo-1.5.1 && \
-./configure --prefix=${HOME} && \
+./configure --prefix=/usr/local && \
 make -j$(nproc) && \
 make install
 
@@ -100,8 +100,8 @@ cmake \
 -DCUDA_ARCH_PTX= \
 -DWITH_JPEG=ON \
 -DBUILD_JPEG=OFF \
--DJPEG_INCLUDE_DIR=${HOME}/include \
--DJPEG_LIBRARY=${HOME}/lib/libjpeg.so \
+-DJPEG_INCLUDE_DIR=/usr/local/include \
+-DJPEG_LIBRARY=/usr/local/lib/libjpeg.so \
 -DOPENCV_EXTRA_MODULES_PATH=/opt/opencv/opencv_contrib-3.4.1/modules \
 -DBUILD_opencv_python3=ON \
 -DPYTHON3_EXECUTABLE=$(which python3) \
@@ -121,7 +121,8 @@ jupyter \
 cython \
 matplotlib \
 scikit-learn \
-pandas
+pandas \
+pillow
 
 # Install cuDNN
 cd /usr/local
@@ -175,14 +176,17 @@ git clone https://github.com/chainer/chainermn.git
 cd chainermn
 python setup.py install
 
+# Install ChainerCV
+pip install chainercv
+
+# Install Azure CLI
+pip install azure-cli
+
 # Register cron tab so when machine restart it downloads the secret from azure downloadsecret
 mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
 crontab -l > downloadsecretcron
 echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
 crontab downloadsecretcron
 rm downloadsecretcron
-
-# Install Azure CLI
-pip install azure-cli
 
 shutdown -r +1

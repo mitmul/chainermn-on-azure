@@ -13,9 +13,7 @@ for ip in `cat ~/hosts.txt`;
 do
     host=`head -n 1 ~/hosts.txt`
     cuda_status=$(ssh ${ip} "source /share/home/hpcuser/.bash_profile && python -c 'import chainer; chainer.print_runtime_info()'")
-    cupy_status=$(ssh ${ip} "source /share/home/hpcuser/.bash_profile && python -c 'import cupy; cupy.array(0)'")
-    chainermn_status=$(mpirun -n 2 -ppn 1 -hosts ${host},${ip} -envall python -c "import chainermn; comm = chainermn.create_communicator('hierarchical'); comm.rank")
-    if ! ${chainermn_status}; then
+    if ! $(mpirun -n 2 -ppn 1 -hosts ${host},${ip} -envall python -c "import chainermn; comm = chainermn.create_communicator('hierarchical'); comm.rank"); then
         echo "Can't communicate with ${ip}";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
@@ -25,7 +23,7 @@ do
         echo "Restarting...";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
-    elif ! ${cupy_status}; then
+    elif ! $(ssh ${ip} "source /share/home/hpcuser/.bash_profile && timeout 30 python -c 'import cupy; cupy.array(0)'"); then
         echo "CuPy cannot run correctly on ${ip}. Restarting...";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
