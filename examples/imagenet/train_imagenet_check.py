@@ -27,7 +27,7 @@ os.environ["CHAINER_TYPE_CHECK"] = "0"
 
 class PreprocessedDataset(chainer.dataset.DatasetMixin):
 
-    def __init__(self, path, root, mean, crop_size, random=True):
+    def __init__(self, path, root, crop_size, random=True):
         self.base = chainer.datasets.LabeledImageDataset(path, root)
         self.mean = np.array(
             [123.152, 115.903, 103.063], dtype=np.float32)  # RGB
@@ -94,7 +94,6 @@ def main():
     parser.add_argument('--out', '-o', default='result',
                         help='Output directory')
     parser.add_argument('--communicator', default='hierarchical')
-    parser.add_argument('--mean-npy', default='mean.npy')
     parser.set_defaults(test=False)
     args = parser.parse_args()
 
@@ -127,7 +126,7 @@ def main():
     #
     if comm.rank == 0:
         train = PreprocessedDataset(
-            args.train, args.root_train, args.mean_npy, model.predictor.insize)
+            args.train, args.root_train, model.predictor.insize)
     else:
         train = None
     train = chainermn.scatter_dataset(train, comm)
