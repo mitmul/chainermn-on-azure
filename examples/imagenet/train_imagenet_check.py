@@ -47,7 +47,7 @@ class PreprocessedDataset(chainer.dataset.DatasetMixin):
         crop_size = self.crop_size
 
         path, int_label = self.base._pairs[i]
-        full_path = os.path.join(self.base._root, path) + '.JPEG'
+        full_path = os.path.join(self.base._root, path)
 
         image = cv.imread(full_path).astype(self.base._dtype)
         image = image[:, :, ::-1].transpose(2, 0, 1)  # to RGB
@@ -103,8 +103,8 @@ def main():
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
-    chainer.config.autotune = True
+    # chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
+    # chainer.config.autotune = True
 
     #
     # Logging
