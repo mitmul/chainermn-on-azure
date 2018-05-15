@@ -165,7 +165,7 @@ def main():
     # Trainer
     #
     log_interval = (10, 'iteration')
-    stop_trigger = (210, 'iteration')
+    stop_trigger = (10, 'iteration')
 
     updater = training.StandardUpdater(train_iter, optimizer, device=device)
     trainer = training.Trainer(updater, stop_trigger, result_directory)

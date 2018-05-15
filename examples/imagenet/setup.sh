@@ -23,7 +23,7 @@ do
         echo "Restarting...";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
-    elif ! $(ssh ${ip} "source /share/home/hpcuser/.bash_profile && timeout 60 python -c 'import cupy; cupy.array(0)'"); then
+    elif ! $(ssh ${ip} "source /share/home/hpcuser/.bash_profile && timeout 120 python -c 'import cupy; cupy.array(0)'"); then
         echo "CuPy cannot run correctly on ${ip}. Restarting...";
         id=$(python get_id.py ${ip});
         az vmss restart -n ${VMSS_NAME} -g ${RESOURCE_GROUP} --instance-ids $id;
