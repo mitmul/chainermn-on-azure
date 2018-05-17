@@ -32,6 +32,7 @@ echo 'export I_MPI_FALLBACK_DEVICE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_DAPL_TRANSLATION_CACHE=0' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export I_MPI_SHM_LMT=shm' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LANG="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
+echo 'export LANGUAGE="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_ALL="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export LC_CTYPE="en_US.UTF-8"' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
 echo 'export PATH=$HOME/.local/bin:$PATH' >> ${SHARE_HOME}/${HPC_USER}/.bash_profile
@@ -103,8 +104,10 @@ echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpiva
 exec $SHEEL
 
 export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+locale-gen en_US.UTF-8
 
 pip install -U cryptography
 pip install -U azure-cli

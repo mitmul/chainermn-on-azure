@@ -8,9 +8,14 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dirname', '-d', type=str)
+args = parser.parse_args()
 
 result = []
-for fn in sorted(glob.glob('results/*/log')):
+for fn in sorted(glob.glob('{}/*/log'.format(args.dirname))):
     n_gpus = int(os.path.dirname(fn).split('_')[-1])
     log = json.load(open(fn))
     whole_time = log[-1]['elapsed_time'] - log[0]['elapsed_time']

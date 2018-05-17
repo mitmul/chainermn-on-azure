@@ -61,6 +61,7 @@ def main():
                   'because only naive supports CPU-only execution')
         comm = chainermn.create_communicator('naive')
         device = -1
+    print('device:', device)
 
     if comm.mpi_comm.rank == 0:
         print('==========================================')
@@ -85,13 +86,13 @@ def main():
 
     # Split and distribute the dataset. Only worker 0 loads the whole dataset.
     # Datasets of worker 0 are evenly split and distributed to all workers.
-    train, test = chainer.datasets.get_mnist()
-    # if comm.rank == 0:
-    #     train, test = chainer.datasets.get_mnist()
-    # else:
-    #     train, test = None, None
-    # train = chainermn.scatter_dataset(train, comm, shuffle=True)
-    # test = chainermn.scatter_dataset(test, comm, shuffle=True)
+    # train, test = chainer.datasets.get_mnist()
+    if comm.rank == 0:
+        train, test = chainer.datasets.get_mnist()
+    else:
+        train, test = None, None
+    train = chainermn.scatter_dataset(train, comm, shuffle=True)
+    test = chainermn.scatter_dataset(test, comm, shuffle=True)
 
     train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
     test_iter = chainer.iterators.SerialIterator(test, args.batchsize,

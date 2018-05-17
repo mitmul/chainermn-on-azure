@@ -93,7 +93,7 @@ def main():
                         help='Number of parallel data loading processes')
     parser.add_argument('--out', '-o', default='result',
                         help='Output directory')
-    parser.add_argument('--communicator', default='hierarchical')
+    parser.add_argument('--communicator', default='non_cuda_aware')
     parser.set_defaults(test=False)
     args = parser.parse_args()
 
