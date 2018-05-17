@@ -102,8 +102,8 @@ def main():
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
-    chainer.config.autotune = True
+    # chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
+    # chainer.config.autotune = True
     if comm.rank == 0:
         print('Initialized')
 

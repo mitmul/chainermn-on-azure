@@ -30,6 +30,7 @@ else
         echo "ECC has already been disabled."
         ssh ${ip} "sudo nvidia-smi -pm 1";
     else
+        echo "ECC is just disabled now. Rebooting..."
         ssh ${ip} "sudo reboot";
     fi
 fi

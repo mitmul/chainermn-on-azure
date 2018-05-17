@@ -57,11 +57,13 @@ echo '    StrictHostKeyChecking   no' >> /share/home/hpcuser/.ssh/config
 ## Check all nodes
 
 ```
-cat ~/hosts.txt | parallel -a - bash setup_k80.sh {}
+bash setup.sh
 ```
 
-Some nodes may be rebooted due to errors. After that, run this to ensure all nodes can run NNIST example
-with `mpirun` command using multiple nodes.
+Some nodes may be rebooted due to errors.
+
+After that, if you want to ensure all nodes can run NNIST example
+with `mpirun` command using multiple nodes, run this:
 
 ```
 bash check_mnist_seq.sh

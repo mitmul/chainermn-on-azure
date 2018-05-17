@@ -10,7 +10,7 @@
 
 mpitune \
 --application \"mpirun -n 128 -ppn 4 -f ~/hosts.txt ./tune_cmd.sh\" \
--o tune_128
+-of tune_128
 
 # mpitune \
 # --skip-check-hosts \
