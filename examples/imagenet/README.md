@@ -57,7 +57,10 @@ echo '    StrictHostKeyChecking   no' >> /share/home/hpcuser/.ssh/config
 ## Check all nodes
 
 ```
-bash setup.sh
+sudo apt-get install -y parallel
+
+bash save_hosts.sh chainermn-k80
+bash setup.sh chainermn-k80
 ```
 
 Some nodes may be rebooted due to errors.
@@ -74,7 +77,7 @@ bash check_mnist_seq.sh
 This shell script runs IMB-MPI1 Pingpong benchmark to check the performance of nodes.
 
 ```
-bash check_pingpong.sh
+bash check_pingpong.sh chainermn-k80
 ```
 
 ## Dataset 
@@ -82,7 +85,7 @@ bash check_pingpong.sh
 With the following two commands, you create Managed Disks for each node based on a snapshot which have ImageNet-1K dataset inside. Then you copy the dataset to local SSD of each node for faster data access. Note that you need to copy the archive of image data first (`imagenet_object_localization.tar.gz`), and then extract images from it on the SSD of each node. Do not copy the extracted images from Managed Disk to SSD, it takes much more time!
 
 ```
-bash attach_disks.sh
+bash attach_disks.sh chainermn-k80
 bash copy_to_ssd.sh
 ```
 

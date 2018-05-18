@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 if [ ! -d result/scaleout_$1 ]; then
-    mkdir result/scaleout_$1
+    mkdir -p result/scaleout_$1
 fi
 
 mpirun \

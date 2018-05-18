@@ -1,3 +1,9 @@
 #!/bin/bash
 
-cat ~/hosts.txt | parallel -a - bash setup_k80.sh {}
+RESOURCE_GROUP=$1
+VMSS_NAME="vmss"
+
+echo ${RESOURCE_GROUP}
+echo ${VMSS_NAME}
+
+cat ~/hosts.txt | parallel -a - bash setup_each.sh ${RESOURCE_GROUP} ${VMSS_NAME} {}

@@ -130,13 +130,19 @@ def main():
     if comm.rank == 0:
         train = PreprocessedDataset(
             args.train, args.root_train, model.predictor.insize)
+        val = PreprocessedDataset(
+            args.val, args.root_val, model.predictor.insize, False)
     else:
         train = None
+        val = None
     train = chainermn.scatter_dataset(train, comm)
+    val = chainermn.scatter_dataset(val, comm)
 
     multiprocessing.set_start_method('forkserver')
     train_iter = chainer.iterators.MultiprocessIterator(
         train, args.batchsize, n_processes=args.loaderjob)
+    val_iter = chainer.iterators.MultiprocessIterator(
+        val, args.batchsize, repeat=False, n_processes=args.loaderjob)
 
     #
     # Optimizer
@@ -163,17 +169,32 @@ def main():
     #
     # Trainer
     #
-    log_interval = (10, 'iteration')
-    stop_trigger = (210, 'iteration')
+    log_interval = (1, 'epoch')
+    val_interval = (1, 'epoch')
+    stop_trigger = (90, 'epoch')
 
     updater = training.StandardUpdater(train_iter, optimizer, device=device)
     trainer = training.Trainer(updater, stop_trigger, result_directory)
+
+    evaluator = extensions.Evaluator(val_iter, model, device=device)
+    evaluator = chainermn.create_multi_node_evaluator(evaluator, comm)
+    trainer.extend(evaluator, trigger=val_interval, name='val')
+
+    trainer.extend(
+        trigger=(30, 'epoch'),
+        extension=extensions.ExponentialShift('lr', 0.1, optimizer=optimizer))
 
     log_report_ext = extensions.LogReport(trigger=log_interval)
     trainer.extend(log_report_ext)
 
     if comm.rank == 0:
         trainer.extend(extensions.ProgressBar(update_interval=10))
+        trainer.extend(extensions.PrintReport([
+            'elapsed_time', 'epoch', 'main/loss', 'val/main/loss',
+            'main/accuracy', 'val/main/accuracy', 'lr'
+        ]), trigger=log_interval)
+        trainer.extend(extensions.snapshot_object(
+            model, 'snapshot_{.updater.epoch}'), trigger=(10, 'epoch'))
 
     trainer.run()
 

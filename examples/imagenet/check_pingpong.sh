@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESOURCE_GROUP="chainermn-k80"
+RESOURCE_GROUP=$1
 VMSS_NAME="vmss"
 
 rm -rf pingpong_result
