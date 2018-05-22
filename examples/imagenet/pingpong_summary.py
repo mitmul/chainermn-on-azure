@@ -22,11 +22,11 @@ for ip, usecs in sorted(ip_usec.items()):
     order.append(ip)
     means.append(np.mean(usecs))
     stds.append(np.std(usecs))
-    mean_ip.append((np.min(usecs), np.mean(usecs), np.std(usecs), np.min(usecs), np.max(usecs), ip))
+    mean_ip.append((np.mean(usecs), np.std(usecs), np.min(usecs), np.max(usecs), ip))
 
 fp = open('/share/home/hpcuser/hosts.txt', 'w')
 print(len(mean_ip))
-for min__, mean, std, min_, max_, ip in sorted(mean_ip):
+for mean, std, min_, max_, ip in sorted(mean_ip):
     print(ip, min_, max_, mean, std)
     print(ip, file=fp)
 fp.close()

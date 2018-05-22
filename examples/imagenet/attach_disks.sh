@@ -13,18 +13,29 @@ prepare_disk () {
     fi
 
     disk_names=$(az disk list -g ${RESOURCE_GROUP} --query "[].name" -o tsv)
-
+    id=$(az vmss nic list -g ${RESOURCE_GROUP} --vmss-name ${VMSS_NAME} --query "[?ipConfigurations[0].privateIpAddress=='${ip}'].virtualMachine.id" -o tsv | xargs basename);
+    echo "$ip - $id ($SKU)";
     if ! [[ "$disk_names" =~ .*${ip}[[:space:]].* ]]; then
+        echo "Creating disk-${ip} to $id"
         az disk create -g ${RESOURCE_GROUP} -n disk-${ip} --source ${SNAPSHOT_ID} --sku ${SKU};
     fi;
-    id=$(az vmss nic list -g ${RESOURCE_GROUP} --vmss-name ${VMSS_NAME} --query "[?ipConfigurations[0].privateIpAddress=='${ip}'].virtualMachine.id" -o tsv | xargs basename);
-    echo "$ip - $id";
     managed_by=$(az disk list -g ${RESOURCE_GROUP} --query "[?name=='disk-${ip}'].managedBy" -o tsv)
     if ! [[ "$managed_by" == *"${id}" ]]; then
+        echo "Attaching disk-${ip} to $id"
         az vmss disk attach -g ${RESOURCE_GROUP} --name ${VMSS_NAME} --disk disk-${ip} --instance-id ${id};
     fi
-    ssh ${ip} "if [ ! -d /imagenet1k ]; then sudo mkdir /imagenet1k; fi && sudo mount -t ext4 /dev/sdc1 /imagenet1k";
+    dir_exist=$(ssh ${ip} "if [ -d /imagenet1k/archives ]; then echo \"exist\"; fi")
+    if [[ "$dir_exist" == "exist" ]]; then
+        echo "$ip has /imagenet1k dir";
+    else
+        ssh ${ip} "sudo mkdir /imagenet1k";
+        ssh ${ip} "sudo mount -t ext4 /dev/sdc1 /imagenet1k";
+    fi
 }
 
 export -f prepare_disk
-parallel prepare_disk $1 ::: $(cat ~/hosts.txt)
+for ip in $(cat ~/hosts.txt);
+do
+    prepare_disk $1 $ip &
+done
+

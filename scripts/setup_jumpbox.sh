@@ -81,9 +81,37 @@ systemctl enable nfs-kernel-server.service
 systemctl start nfs-kernel-server.service
 
 # Install Python3
-apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip
+apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip parallel htop
 update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 100
+
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+locale-gen en_US.UTF-8
+
+# Install packages
+apt-get update -y && apt-get install -y \
+curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs libssl-dev libffi-dev parallel htop
+
+# Install Intel MKL
+cd /opt
+wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12725/l_mkl_2018.2.199.tgz && \
+tar zxvf l_mkl_2018.2.199.tgz && rm -rf l_mkl_2018.2.199.tgz && \
+cd l_mkl_2018.2.199 && \
+sed -i -E "s/ACCEPT_EULA=decline/ACCEPT_EULA=accept/g" silent.cfg && \
+./install.sh -s silent.cfg
+source /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/bin/mklvars.sh intel64
+
+# Install numpy & scipy with mkl backend
+echo "[mkl]" >> $HOME/.numpy-site.cfg
+echo "library_dirs = /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/lib/intel64" >> $HOME/.numpy-site.cfg
+echo "include_dirs = /opt/intel/compilers_and_libraries_2018.2.199/linux/mkl/include" >> $HOME/.numpy-site.cfg
+echo "mkl_libs = mkl_rt" >> $HOME/.numpy-site.cfg
+echo "lapack_libs =" >> $HOME/.numpy-site.cfg
+pip install --no-binary :all: numpy
+pip install --no-binary :all: scipy
 
 # Set environment variables
 echo 'export LANG="en_US.UTF-8"' | tee -a /home/ubuntu/.bashrc
@@ -102,12 +130,6 @@ sed -i -e "s/exist_lic/trial_lic/g" silent.cfg
 ./install.sh --silent silent.cfg
 echo 'source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh' | tee -a /home/ubuntu/.bashrc
 exec $SHEEL
-
-export LANG="en_US.UTF-8"
-export LANGUAGE="en_US.UTF-8"
-export LC_CTYPE="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-locale-gen en_US.UTF-8
 
 pip install -U cryptography
 pip install -U azure-cli

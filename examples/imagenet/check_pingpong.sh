@@ -11,7 +11,7 @@ fi
 az vmss nic list -g ${RESOURCE_GROUP} --vmss-name ${VMSS_NAME} \
 --query "[*].ipConfigurations[0].privateIpAddress" -o tsv > ~/hosts.txt
 
-for ((i=0; i < 100; i++));
+for ((i=0; i < 10; i++));
 do
     echo "---------- ${i} ----------"
     masterip=$(head -n 1 ~/hosts.txt)

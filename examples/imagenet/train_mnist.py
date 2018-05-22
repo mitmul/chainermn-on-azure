@@ -85,13 +85,12 @@ def main():
 
     # Split and distribute the dataset. Only worker 0 loads the whole dataset.
     # Datasets of worker 0 are evenly split and distributed to all workers.
-    train, test = chainer.datasets.get_mnist()
-    # if comm.rank == 0:
-    #     train, test = chainer.datasets.get_mnist()
-    # else:
-    #     train, test = None, None
-    # train = chainermn.scatter_dataset(train, comm, shuffle=True)
-    # test = chainermn.scatter_dataset(test, comm, shuffle=True)
+    if comm.rank == 0:
+        train, test = chainer.datasets.get_mnist()
+    else:
+        train, test = None, None
+    train = chainermn.scatter_dataset(train, comm, shuffle=True)
+    test = chainermn.scatter_dataset(test, comm, shuffle=True)
 
     train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
     test_iter = chainer.iterators.SerialIterator(test, args.batchsize,

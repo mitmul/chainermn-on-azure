@@ -1,14 +1,10 @@
 from __future__ import print_function
 
 import argparse
-import collections
-import datetime
-import glob
 import json
 import multiprocessing
 import os
 import random
-import sys
 
 import chainermn
 import cv2 as cv
@@ -22,7 +18,8 @@ from chainer.training import extensions
 from chainercv import transforms
 import resnet50
 
-# os.environ["CHAINER_TYPE_CHECK"] = "0"
+os.environ["CHAINER_TYPE_CHECK"] = "0"
+
 
 class PreprocessedDataset(chainer.dataset.DatasetMixin):
 
@@ -189,6 +186,7 @@ def main():
 
     if comm.rank == 0:
         trainer.extend(extensions.ProgressBar(update_interval=10))
+        trainer.extend(extensions.observe_lr(), trigger=log_interval)
         trainer.extend(extensions.PrintReport([
             'elapsed_time', 'epoch', 'main/loss', 'val/main/loss',
             'main/accuracy', 'val/main/accuracy', 'lr'

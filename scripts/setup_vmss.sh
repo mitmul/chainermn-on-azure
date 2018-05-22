@@ -39,16 +39,16 @@ apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos
 rm -f /tmp/${CUDA_REPO_PKG}
 apt-get update
 apt-get install -y cuda-drivers
-apt-get install -y cuda-8-0
+apt-get install -y cuda
 
 # Install Python3
-apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi python3-setuptools
+apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi python3-setuptools language-pack-UTF-8
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 
 # Install packages for OpenCV build
 apt-get update -y && apt-get install -y \
-curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs libssl-dev libffi-dev
+curl git build-essential gfortran nasm tmux sudo openssh-client libgoogle-glog-dev rsync curl wget cmake automake libgmp3-dev cpio libtool libyaml-dev realpath valgrind software-properties-common unzip libz-dev vim emacs libssl-dev libffi-dev parallel htop
 
 # Install Intel MKL
 cd /opt
@@ -126,9 +126,9 @@ pillow
 
 # Install cuDNN
 cd /usr/local
-curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.0.5/cudnn-8.0-linux-x64-v7.tgz
-tar zxvf cudnn-8.0-linux-x64-v7.tgz
-rm -rf cudnn-8.0-linux-x64-v7.tgz
+curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.1.4/cudnn-9.2-linux-x64-v7.1.tgz
+tar zxvf cudnn-9.2-linux-x64-v7.1.tgz
+rm -rf cudnn-9.2-linux-x64-v7.1.tgz
 
 # Install NCCL1
 cd /opt
