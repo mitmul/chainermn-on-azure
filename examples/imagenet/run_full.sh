@@ -16,3 +16,6 @@ val_random.txt \
 --batchsize 32 \
 --communicator non_cuda_aware \
 --out result/full
+
+
+

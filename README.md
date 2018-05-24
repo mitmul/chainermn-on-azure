@@ -113,7 +113,7 @@ image_id=$(az image show -g chainermn-images -n jumpbox-image --query "id" -o ts
 az vm create \
 --image ${image_id} \
 --name jumpbox \
---resource-group chainermn-k80 \
+--resource-group chainermn-v100 \
 --size Standard_DS3_v2 \
 --admin-username ubuntu \
 --ssh-key-value $HOME/.ssh/id_rsa.pub \
@@ -127,10 +127,11 @@ image_id=$(az image show -g chainermn-images -n vmss-image --query "id" -o tsv)
 
 az vmss create \
 --image ${image_id} \
---vm-sku Standard_NC24r \
+--vm-sku Standard_NC24rs_v3 \
+--instance-count 64 \
 --lb '' \
 --name vmss \
---resource-group chainermn-k80 \
+--resource-group chainermn-v100 \
 --admin-username ubuntu \
 --public-ip-address '' \
 --ssh-key-value $HOME/.ssh/id_rsa.pub \

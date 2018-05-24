@@ -42,7 +42,7 @@ apt-get install -y cuda-drivers
 apt-get install -y cuda
 
 # Install Python3
-apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi python3-setuptools language-pack-UTF-8
+apt-get install -y ccache python3 python3-dev python3-dbg python3-wheel python3-pip python3-cffi python3-setuptools python3-tk
 update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10
 

@@ -73,12 +73,15 @@ def main():
         print('Num epoch: {}'.format(args.epoch))
         print('==========================================')
 
-    model = L.Classifier(MLP(args.unit, 10))
-    if device >= 0:
-        chainer.cuda.get_device(device).use()
-        model.to_gpu()
+    chainer.cuda.get_device(device).use()
+    chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
+    chainer.config.autotune = True
 
     # Create a multi node optimizer from a standard Chainer optimizer.
+    model = L.Classifier(MLP(args.unit, 10))
+    model.to_gpu()
+    model.device = device
+    model.rank = comm.mpi_comm.rank
     optimizer = chainermn.create_multi_node_optimizer(
         chainer.optimizers.Adam(), comm)
     optimizer.setup(model)

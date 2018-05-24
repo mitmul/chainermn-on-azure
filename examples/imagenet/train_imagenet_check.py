@@ -54,6 +54,7 @@ class PreprocessedDataset(chainer.dataset.DatasetMixin):
         if image.shape[1] < crop_size or image.shape[2] < crop_size:
             image = transforms.scale(image, crop_size)
 
+        assert int_label < 1000
         label = np.array(int_label, dtype=self.base._label_dtype)
 
         _, h, w = image.shape

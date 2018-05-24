@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-for ((i=1; i <= 32; i=i*2));
+for ((i=1; i <= 128; i=i*2));
 do
     echo "# of GPUs: $i"
     bash run_test.sh $i
