@@ -92,10 +92,5 @@ bash copy_to_ssd.sh
 ## Experiment
 
 ```
-mpirun -n 128 -ppn 4 -hosts ~/hosts.txt \
--envall python -O train_imagenet_check.py \
-train_cls_random.txt val_random.txt \
---root_train /data1/ILSVRC/Data/CLS-LOC/train \
---root_val /data1/ILSVRC/Data/CLS-LOC/val \
---batchsize 32 --communicator non_cuda_aware
+bash scaleout_test.sh
 ```
