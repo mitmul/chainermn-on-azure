@@ -91,9 +91,11 @@ bash copy_to_ssd.sh
 
 ## Experiment
 
-mpirun -n 1 -ppn 4 -hosts localhost \
--envall python train_imagenet_check.py \
+```
+mpirun -n 128 -ppn 4 -hosts ~/hosts.txt \
+-envall python -O train_imagenet_check.py \
 train_cls_random.txt val_random.txt \
 --root_train /data1/ILSVRC/Data/CLS-LOC/train \
 --root_val /data1/ILSVRC/Data/CLS-LOC/val \
---batchsize 1 --communicator non_cuda_aware
+--batchsize 32 --communicator non_cuda_aware
+```
