@@ -5,6 +5,7 @@ if [ ! -d result/scaleout_$1 ]; then
 fi
 
 # -tune /share/home/hpcuser/examples/imagenet/tune_128 \
+# nvprof -o profile_%q{PMI_RANK}.nvprof \
 mpirun \
 -n $1 -ppn 4 -f ~/hosts.txt \
 -genvall -genv I_MPI_DAPL_TRANSLATION_CACHE=1 \

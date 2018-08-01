@@ -1,6 +1,7 @@
 #!/bin/bash -xe
 
-CUPY_VERSION=5.0.0b2
+CUPY_VERSION=5.0.0b3
+CHAINER_VERSION=5.0.0b3
 
 # Setup hpcuser
 HPC_USER=hpcuser
@@ -145,11 +146,8 @@ wget https://github.com/cupy/cupy/archive/v${CUPY_VERSION}.tar.gz
 tar zxvf v${CUPY_VERSION}.tar.gz
 rm -rf v${CUPY_VERSION}.tar.gz
 cd cupy-${CUPY_VERSION}
+pip install chainer==${CHAINER_VERSION}
 python setup.py install
-
-# Install DALI
-pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
-pip install git+https://github.com/anaruse/chainer.git@support_dali
 
 # Setup RDMA network
 apt-get update
@@ -174,8 +172,9 @@ source /opt/intel/compilers_and_libraries_2016.3.223/linux/mpi/bin64/mpivars.sh
 # Install ChainerMN
 pip install mpi4py
 cd /opt
-git clone https://github.com/chainer/chainermn.git
+git clone https://github.com/mitmul/chainermn.git
 cd chainermn
+git checkout -b fix-non-cuda-comm
 python setup.py install
 
 # Install ChainerCV

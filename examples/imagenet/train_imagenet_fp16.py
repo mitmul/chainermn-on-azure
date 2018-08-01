@@ -32,74 +32,11 @@ from chainer.training import extensions
 from chainercv import transforms
 import resnet50_fp16
 
-try:
-    from nvidia import dali
-    from nvidia.dali import pipeline
-    from nvidia.dali import ops
-    _dali_available = True
-except ImportError:
-    _dali_available = False
-
 
 def _pair(x):
     if hasattr(x, '__getitem__'):
         return x
     return x, x
-
-
-class ImagenetDaliPipeline(pipeline.Pipeline):
-
-    def __init__(self, file_list, file_root, crop_size,
-                 batch_size, num_threads, device_id,
-                 random_shuffle=False, seed=-1,
-                 mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
-                 std=[0.229 * 255, 0.224 * 255, 0.225 * 255]):
-        super(ImagenetDaliPipeline, self).__init__(batch_size, num_threads,
-                                                   device_id, seed=seed)
-        crop_size = _pair(crop_size)
-        self.loader = ops.FileReader(file_root=file_root, file_list=file_list,
-                                     random_shuffle=random_shuffle)
-        self.decode = ops.HostDecoder()
-        self.rrcrop = ops.RandomResizedCrop(device="gpu", size=crop_size)
-        self.cmnorm = ops.CropMirrorNormalize(
-            device="gpu", crop=crop_size, mean=mean, std=std)
-        self.coin = ops.CoinFlip(probability=0.5)
-
-    def define_graph(self):
-        jpegs, labels = self.loader()
-        images = self.decode(jpegs)
-        images = self.rrcrop(images.gpu())
-        images = self.cmnorm(images, mirror=self.coin())
-        return [images, labels]
-
-
-def dali_converter(inputs, device=None):
-    """Convert DALI arrays to Numpy/CuPy arrays"""
-
-    outputs = []
-    for i in range(len(inputs)):
-        x = inputs[i].as_tensor()
-        if (isinstance(x, dali.backend_impl.TensorCPU)):
-            x = np.array(x)
-            if x.ndim == 2 and x.shape[1] == 1:
-                x = x.squeeze(axis=1)
-            if device is not None and device >= 0:
-                x = cuda.to_gpu(x, device)
-        elif (isinstance(x, dali.backend_impl.TensorGPU)):
-            x_cupy = cuda.cupy.empty(shape=x.shape(), dtype=x.dtype())
-            # Synchronization is necessary here to avoid data corruption
-            # because DALI and CuPy will use different CUDA streams.
-            cuda.cupy.cuda.runtime.deviceSynchronize()
-            # copy data from DALI array to CuPy array
-            x.copy_to_external(ctypes.c_void_p(x_cupy.data.ptr))
-            cuda.cupy.cuda.runtime.deviceSynchronize()
-            x = x_cupy
-            if device is not None and device < 0:
-                x = cuda.to_cpu(x)
-        else:
-            raise ValueError('Unexpected object')
-        outputs.append(x)
-    return tuple(outputs)
 
 
 class PreprocessedDataset(chainer.dataset.DatasetMixin):
@@ -167,7 +104,7 @@ def main():
                         help='Number of epochs to train')
     parser.add_argument('--initmodel',
                         help='Initialize the model from given file')
-    parser.add_argument('--loaderjob', '-j', type=int,
+    parser.add_argument('--loaderjob', '-j', type=int, default=24,
                         help='Number of parallel data loading processes')
     parser.add_argument('--mean', '-m', default='mean.npy',
                         help='Mean file (computed by compute_mean.py)')
@@ -193,12 +130,13 @@ def main():
     #
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
-    print('Device:', device)
+
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
+    chainer.cuda.set_max_workspace_size(1024 * 1024 * 1024)
     config.use_cudnn_tensor_core = 'auto'
     config.autotune = True
     config.cudnn_fast_batch_normalization = True
+
     if comm.rank == 0:
         print('Initialized')
 
@@ -214,7 +152,6 @@ def main():
     #
     # Model
     #
-    print('GPU:', device)
     model = L.Classifier(resnet50_fp16.ResNet50_fp16())
     model.to_gpu()
     if comm.rank == 0:
@@ -234,14 +171,11 @@ def main():
 
     # These iterators load the images with subprocesses running in parallel
     # to the training/validation.
-    # multiprocessing.set_start_method('forkserver')
-    train_iter = chainer.iterators.MultithreadIterator(train, args.batchsize)
-    val_iter = chainer.iterators.MultithreadIterator(
-        val, args.batchsize, repeat=False, shuffle=False)
-    # train_iter = chainer.iterators.MultiprocessIterator(
-    #     train, args.batchsize, n_processes=args.loaderjob)
-    # val_iter = chainer.iterators.MultiprocessIterator(
-    #     val, args.batchsize, repeat=False, n_processes=args.loaderjob)
+    multiprocessing.set_start_method('forkserver')
+    train_iter = chainer.iterators.MultiprocessIterator(
+        train, args.batchsize, n_processes=args.loaderjob)
+    val_iter = chainer.iterators.MultiprocessIterator(
+        val, args.batchsize, repeat=False, n_processes=args.loaderjob)
     # converter = dataset.concat_examples
     converter = convert.ConcatWithAsyncTransfer()
 
@@ -273,11 +207,16 @@ def main():
         train_iter, optimizer, device=device, converter=converter,
         loss_scale=128)
 
-    trainer = training.Trainer(
-        updater, (args.epoch, 'epoch'), result_directory)
+    if args.test:
+        val_interval = (210, 'iteration')
+        log_interval = (100, 'iteration')
+        train_length = (210, 'iteration')
+    else:
+        val_interval = (100000, 'iteration')
+        log_interval = (10, 'iteration')
+        train_length = (90, 'epoch')
 
-    val_interval = (200 if args.test else 100000), 'iteration'
-    log_interval = (210 if args.test else 1000), 'iteration'
+    trainer = training.Trainer(updater, train_length, result_directory)
 
     # trainer.extend(extensions.Evaluator(
     #     val_iter, model, converter=converter,
