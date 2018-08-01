@@ -94,3 +94,17 @@ bash copy_to_ssd.sh
 ```
 bash scaleout_test.sh
 ```
+
+# Experiment on V100
+
+## Install DALI
+
+```
+pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+```
+
+## Install DALI-supported Chainer 
+
+```
+sudo pip install git+https://github.com/anaruse/chainer.git@support_dali
+```

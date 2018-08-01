@@ -38,4 +38,3 @@ for ip in $(cat ~/hosts.txt);
 do
     prepare_disk $1 $ip &
 done
-

@@ -1,7 +1,6 @@
 #!/bin/bash -xe
 
-CUPY_VERSION=4.0.0
-CHAINER_VERSION=4.0.0
+CUPY_VERSION=5.0.0b2
 
 # Setup hpcuser
 HPC_USER=hpcuser
@@ -22,8 +21,8 @@ apt-get update
 apt-get -y install nfs-common
 mkdir -p $SHARE_HOME
 mkdir -p $DISK_MOUNT
-echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs defaults,nofail,no_root_squash  0 0" | tee -a /etc/fstab
-echo "$MASTER_NAME:$DISK_MOUNT $DISK_MOUNT    nfs defaults,nofail,no_root_squash  0 0" | tee -a /etc/fstab
+echo "$MASTER_NAME:$SHARE_HOME $SHARE_HOME    nfs defaults,nofail  0 0" | tee -a /etc/fstab
+echo "$MASTER_NAME:$DISK_MOUNT $DISK_MOUNT    nfs defaults,nofail  0 0" | tee -a /etc/fstab
 showmount -e ${MASTER_NAME}
 mount -a
 mount
@@ -147,7 +146,10 @@ tar zxvf v${CUPY_VERSION}.tar.gz
 rm -rf v${CUPY_VERSION}.tar.gz
 cd cupy-${CUPY_VERSION}
 python setup.py install
-pip install chainer==${CHAINER_VERSION}
+
+# Install DALI
+pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
+pip install git+https://github.com/anaruse/chainer.git@support_dali
 
 # Setup RDMA network
 apt-get update
@@ -183,10 +185,14 @@ pip install chainercv
 pip install azure-cli
 
 # Register cron tab so when machine restart it downloads the secret from azure downloadsecret
-mv /var/lib/waagent/custom-script/download/1/rdma-autoload.sh ~
+cd $HOME
+echo '#!/bin/bash' >> $HOME/rdma-autoload.sh
+echo 'echo "rdma_ucm is executed"' >> $HOME/rdma-autoload.sh
+echo 'sudo modprobe rdma_ucm' >> $HOME/rdma-autoload.sh
+echo 'sudo echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope' >> $HOME/rdma-autoload.sh
 crontab -l > downloadsecretcron
 echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
 crontab downloadsecretcron
 rm downloadsecretcron
 
-shutdown -r +1
+# shutdown -r +1
