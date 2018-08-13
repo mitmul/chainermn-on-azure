@@ -18,3 +18,4 @@ val_random.txt \
 --communicator non_cuda_aware \
 --out result/scaleout_$1 \
 --test
+

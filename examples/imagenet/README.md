@@ -80,6 +80,12 @@ This shell script runs IMB-MPI1 Pingpong benchmark to check the performance of n
 bash check_pingpong.sh chainermn-k80
 ```
 
+Then deallocate slow (far from the master node) VMs:
+
+```
+bash dealloc_slow_vms.sh chainermn-v100
+```
+
 ## Dataset 
 
 With the following two commands, you create Managed Disks for each node based on a snapshot which have ImageNet-1K dataset inside. Then you copy the dataset to local SSD of each node for faster data access. Note that you need to copy the archive of image data first (`imagenet_object_localization.tar.gz`), and then extract images from it on the SSD of each node. Do not copy the extracted images from Managed Disk to SSD, it takes much more time!
@@ -98,17 +104,6 @@ bash scaleout_test.sh
 # Experiment on V100
 
 To use TensorCores of V100, you need to convert all the parameters of your model into float16 preliminarliry.
-## Install DALI
-
-```
-pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali
-```
-
-## Install DALI-supported Chainer 
-
-```
-sudo pip install git+https://github.com/anaruse/chainer.git@support_dali
-```
 
 ## NVPROF
 

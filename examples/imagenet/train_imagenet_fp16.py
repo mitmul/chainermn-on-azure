@@ -132,7 +132,7 @@ def main():
     device = comm.intra_rank
 
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1024 * 1024 * 1024)
+    chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
     config.use_cudnn_tensor_core = 'auto'
     config.autotune = True
     config.cudnn_fast_batch_normalization = True
@@ -155,7 +155,7 @@ def main():
     model = L.Classifier(resnet50_fp16.ResNet50_fp16())
     model.to_gpu()
     if comm.rank == 0:
-        print('Model prepared')
+        print('Model prepared: ResNet50_fp16')
 
     # Load the dataset files
     if comm.rank == 0:
@@ -208,11 +208,9 @@ def main():
         loss_scale=128)
 
     if args.test:
-        val_interval = (210, 'iteration')
-        log_interval = (100, 'iteration')
+        log_interval = (10, 'iteration')
         train_length = (210, 'iteration')
     else:
-        val_interval = (100000, 'iteration')
         log_interval = (10, 'iteration')
         train_length = (90, 'epoch')
 
@@ -230,11 +228,10 @@ def main():
     # (it determines when to emit log rather than when to read observations)
     if comm.rank == 0:
         trainer.extend(extensions.LogReport(trigger=log_interval))
-        trainer.extend(extensions.observe_lr(), trigger=log_interval)
-        trainer.extend(extensions.PrintReport([
-            'epoch', 'iteration', 'main/loss', 'validation/main/loss',
-            'main/accuracy', 'validation/main/accuracy', 'lr'
-        ]), trigger=log_interval)
+        # trainer.extend(extensions.PrintReport([
+        #     'epoch', 'iteration', 'main/loss', 'validation/main/loss',
+        #     'main/accuracy', 'validation/main/accuracy', 'elapsed_time'
+        # ]), trigger=log_interval)
         trainer.extend(extensions.ProgressBar(update_interval=10))
 
     if args.resume:

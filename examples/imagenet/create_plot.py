@@ -22,3 +22,6 @@ for fn in sorted(glob.glob('{}/*/log'.format(args.dirname))):
     n_iter = log[-1]['iteration'] - log[0]['iteration']
     iters_per_sec = n_iter / whole_time
     print('{},{}'.format(n_gpus, iters_per_sec))
+    last_t = log[-1]['elapsed_time'] - log[-2]['elapsed_time']
+    n_iter = log[-1]['iteration'] - log[-2]['iteration']
+    print('{},{}'.format(n_gpus, n_iter / last_t))
