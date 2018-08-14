@@ -9,7 +9,7 @@
 # --skip-check-hosts
 
 mpitune \
---application \"mpirun -n 128 -ppn 4 -f ~/hosts.txt ./tune_cmd.sh\" \
+--application \"mpirun -n 128 -ppn 4 -f ~/hosts.txt -genvall ./tune_cmd.sh\" \
 -of tune_128
 
 # mpitune \

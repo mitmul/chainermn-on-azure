@@ -126,9 +126,9 @@ pillow
 
 # Install cuDNN
 cd /usr/local
-curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.1.4/cudnn-9.2-linux-x64-v7.1.tgz
-tar zxvf cudnn-9.2-linux-x64-v7.1.tgz
-rm -rf cudnn-9.2-linux-x64-v7.1.tgz
+curl -L -O http://developer.download.nvidia.com/compute/redist/cudnn/v7.2.1/cudnn-9.2-linux-x64-v7.2.1.38.tgz
+tar zxvf cudnn-9.2-linux-x64-v7.2.1.38.tgz
+rm -rf cudnn-9.2-linux-x64-v7.2.1.38.tgz
 
 # Install NCCL1
 cd /opt
@@ -174,8 +174,8 @@ pip install mpi4py
 cd /opt
 git clone https://github.com/mitmul/chainermn.git
 cd chainermn
-git checkout -b fix-non-cuda-comm
-python setup.py install
+git checkout -b fix-non-cuda-comm origin/fix-non-cuda-comm
+CPATH=/usr/local/cuda/include python setup.py install
 
 # Install ChainerCV
 pip install chainercv
@@ -193,5 +193,8 @@ crontab -l > downloadsecretcron
 echo '@reboot /root/rdma-autoload.sh >> /root/execution.log' >> downloadsecretcron
 crontab downloadsecretcron
 rm downloadsecretcron
+
+locale-gen
+update-locale LC_ALL="en_US.UTF-8"
 
 # shutdown -r +1

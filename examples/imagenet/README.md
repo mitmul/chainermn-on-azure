@@ -43,12 +43,13 @@ sudo su hpcuser
 ```
 
 Then, let's login to a worker node.
+
 ```
-ip=$(head -n 1 ~/hosts.txt)
-ssh $ip
+ssh $(head -n 1 ~/hosts.txt)
 ```
 
 Run this first on a worker node:
+
 ```
 echo 'Host *' >> /share/home/hpcuser/.ssh/config
 echo '    StrictHostKeyChecking   no' >> /share/home/hpcuser/.ssh/config
@@ -57,43 +58,53 @@ echo '    StrictHostKeyChecking   no' >> /share/home/hpcuser/.ssh/config
 ## Check all nodes
 
 ```
-sudo apt-get install -y parallel
-
-bash save_hosts.sh chainermn-k80
-bash setup.sh chainermn-k80
+python setup.py
 ```
 
-Some nodes may be rebooted due to errors.
-
-After that, if you want to ensure all nodes can run NNIST example
-with `mpirun` command using multiple nodes, run this:
-
-```
-bash check_mnist_seq.sh
-```
+If it finds a broken instance, it deletes that from the VMSS.
 
 ## Check Pingpong performance
 
 This shell script runs IMB-MPI1 Pingpong benchmark to check the performance of nodes.
 
 ```
-bash check_pingpong.sh chainermn-k80
+python check_pingpong.py
 ```
 
-Then deallocate slow (far from the master node) VMs:
+## Try MNIST training
+
+After that, if you want to ensure all nodes can run NNIST example
+with `mpirun` command using multiple nodes, run this:
 
 ```
-bash dealloc_slow_vms.sh chainermn-v100
+mpirun -n 128 -ppn 4 -f ~/hosts.txt -genvall \
+python train_mnist.py -g -e 3 --communicator non_cuda_aware
 ```
 
 ## Dataset 
 
-With the following two commands, you create Managed Disks for each node based on a snapshot which have ImageNet-1K dataset inside. Then you copy the dataset to local SSD of each node for faster data access. Note that you need to copy the archive of image data first (`imagenet_object_localization.tar.gz`), and then extract images from it on the SSD of each node. Do not copy the extracted images from Managed Disk to SSD, it takes much more time!
+With the following two commands, you create Managed Disks for each node based on a snapshot which have ImageNet-1K dataset stored.
 
 ```
-bash attach_disks.sh chainermn-k80
-bash copy_to_ssd.sh
+python attach_disks.py
 ```
+
+## MPI-Tune
+
+```
+mpitune \
+--application \"mpirun -n 128 -ppn 4 -f ~/hosts.txt -genvall \
+python train_imagenet_fp16.py \
+train_cls_random.txt \
+val_random.txt \
+--root_train /imagenet1k/ILSVRC/Data/CLS-LOC/train \
+--root_val /imagenet1k/ILSVRC//Data/CLS-LOC/val \
+--batchsize 32 \
+--communicator non_cuda_aware \
+--test \
+\" \
+-of tune_128
+
 
 ## Experiment
 
