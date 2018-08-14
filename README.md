@@ -38,7 +38,7 @@ $ ./deploy.py \
 --public-key-file ~/.ssh/id_rsa.pub
 ```
 
-## Create images
+## Create images (Faster)
 
 ### 1. Create jumpbox
 
@@ -46,7 +46,7 @@ $ ./deploy.py \
 python deploy.py \
 -k ~/.ssh/id_rsa.pub \
 -g chainermn-images \
--s chainermnscriptsimage \
+-s chainermnscripts \
 --jumpbox-only
 ```
 
