@@ -208,8 +208,8 @@ def main():
         loss_scale=128)
 
     if args.test:
-        log_interval = (10, 'iteration')
-        train_length = (210, 'iteration')
+        log_interval = (1, 'iteration')
+        train_length = (2, 'iteration')
     else:
         log_interval = (10, 'iteration')
         train_length = (90, 'epoch')

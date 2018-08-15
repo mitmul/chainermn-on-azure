@@ -27,7 +27,7 @@ az vmss scale -g chainermn -n vmss --new-capacity 32
 # Login to jumpbox
 
 # Save VMSS IP list
-az vmss nic list -g chainermn --vmss-name vmss \
+az vmss nic list -g chainermn-v100 --vmss-name vmss \
 --query "[*].ipConfigurations[0].privateIpAddress" -o tsv > ~/hosts.txt
 ```
 
@@ -92,19 +92,8 @@ python attach_disks.py
 ## MPI-Tune
 
 ```
-mpitune \
---application \"mpirun -n 128 -ppn 4 -f ~/hosts.txt -genvall \
-python train_imagenet_fp16.py \
-train_cls_random.txt \
-val_random.txt \
---root_train /imagenet1k/ILSVRC/Data/CLS-LOC/train \
---root_val /imagenet1k/ILSVRC//Data/CLS-LOC/val \
---batchsize 32 \
---communicator non_cuda_aware \
---test \
-\" \
--of tune_128
-
+mpitune --application \"mpirun -n 1 -ppn 4 -f ~/hosts.txt -genvall -genv I_MPI_DAPL_TRANSLATION_CACHE=1 bash tune_cmd.sh\" -of tune_128 -hf ~/hosts.txt
+```
 
 ## Experiment
 

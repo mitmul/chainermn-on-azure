@@ -38,10 +38,6 @@ def delete_disk(resource_group, vmss_name, disk):
 
 
 def prepare_disk(resource_group, vmss_name, ip, disk_snapshot):
-    subprocess.check_output(
-        'az snapshot show -g chainermn-images -n imagenet1k --query="id" -o tsv',
-        shell=True)
-
     if resource_group.endswith('k80'):
         sku = 'Standard_LRS'
     else:

@@ -47,7 +47,7 @@ def main():
         print(ip, '\t', usec)
         if i < args.num:
             print(ip, file=fp)
-        else i >= args.num:
+        else:
             print(ip, 'deleting...')
             instance_id = get_id(args.resource_group, args.vmss_name, ip)
             subprocess.check_output(

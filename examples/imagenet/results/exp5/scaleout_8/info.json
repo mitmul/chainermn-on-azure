@@ -1,1 +1,0 @@
-{"lr": 0.1, "local_batchsize": 32, "global_batchsize": 256, "n_gpus": 8}

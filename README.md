@@ -64,7 +64,7 @@ az vm create \
 --ssh-key-value $HOME/.ssh/id_rsa.pub
 ```
 
-Login to the VM and run the `scripts/setup_vmss.sh`.
+Login to the VM and run the `scripts/setup_vmss_cuda92.sh`.
 Then reboot it once, then run:
 
 ```
@@ -76,7 +76,7 @@ Logout and run these commands on your local machine:
 ```
 az vm deallocate --resource-group chainermn-images --name vmss-image && \
 az vm generalize --resource-group chainermn-images --name vmss-image && \
-az image create --resource-group chainermn-images --name vmss-image --source vmss-image && \
+az image create --resource-group chainermn-images --name vmss-image-cuda92 --source vmss-image && \
 python utils.py -g chainermn-images delete-vm vmss-image
 ```
 
@@ -102,14 +102,13 @@ python utils.py -g chainermn-images delete-vm jumpbox
 First, please create a resource group.
 
 ```
-az group create -g chainermn-k80 -l eastus
+az group create -g chainermn-v100 -l eastus
 ```
 
 ### 1. Deploy jumpbox
 
 ```
-image_id=$(az image show -g chainermn-images -n jumpbox-image --query "id" -o tsv)
-
+image_id=$(az image show -g chainermn-images -n jumpbox-image --query "id" -o tsv) && \
 az vm create \
 --image ${image_id} \
 --name jumpbox \
@@ -123,8 +122,7 @@ az vm create \
 ### 2. Deploy VMSS
 
 ```
-image_id=$(az image show -g chainermn-images -n vmss-image --query "id" -o tsv)
-
+image_id=$(az image show -g chainermn-images -n vmss-image-cuda92 --query "id" -o tsv) && \
 az vmss create \
 --image ${image_id} \
 --vm-sku Standard_NC24rs_v3 \
