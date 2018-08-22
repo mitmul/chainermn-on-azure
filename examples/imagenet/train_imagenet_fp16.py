@@ -208,17 +208,19 @@ def main():
         loss_scale=128)
 
     if args.test:
-        log_interval = (1, 'iteration')
-        train_length = (2, 'iteration')
+        log_interval = (10, 'iteration')
+        train_length = (210, 'iteration')
     else:
         log_interval = (10, 'iteration')
+        val_interval = (1, 'epoch')
         train_length = (90, 'epoch')
 
     trainer = training.Trainer(updater, train_length, result_directory)
 
-    # trainer.extend(extensions.Evaluator(
-    #     val_iter, model, converter=converter,
-    #     device=device), trigger=val_interval)
+    if not args.test:
+        trainer.extend(extensions.Evaluator(
+            val_iter, model, converter=converter,
+            device=device), trigger=val_interval)
     # trainer.extend(extensions.dump_graph('main/loss'))
     # trainer.extend(extensions.snapshot(), trigger=val_interval)
     # trainer.extend(extensions.snapshot_object(
@@ -228,10 +230,10 @@ def main():
     # (it determines when to emit log rather than when to read observations)
     if comm.rank == 0:
         trainer.extend(extensions.LogReport(trigger=log_interval))
-        # trainer.extend(extensions.PrintReport([
-        #     'epoch', 'iteration', 'main/loss', 'validation/main/loss',
-        #     'main/accuracy', 'validation/main/accuracy', 'elapsed_time'
-        # ]), trigger=log_interval)
+        trainer.extend(extensions.PrintReport([
+            'epoch', 'iteration', 'main/loss', 'validation/main/loss',
+            'main/accuracy', 'validation/main/accuracy', 'elapsed_time'
+        ]), trigger=log_interval)
         trainer.extend(extensions.ProgressBar(update_interval=10))
 
     if args.resume:

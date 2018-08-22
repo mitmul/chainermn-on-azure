@@ -14,6 +14,7 @@ def main():
     parser.add_argument('--vmss-name', type=str, default='vmss')
     parser.add_argument('--home-dir', type=str, default='/share/home/hpcuser')
     parser.add_argument('--num', '-n', type=int, default=32)
+    parser.add_argument('--delete-slow-intances', '-d', action='store_true', default=False)
     args = parser.parse_args()
 
     subprocess.check_output(
@@ -47,7 +48,7 @@ def main():
         print(ip, '\t', usec)
         if i < args.num:
             print(ip, file=fp)
-        else:
+        elif args.delete_slow_instances:
             print(ip, 'deleting...')
             instance_id = get_id(args.resource_group, args.vmss_name, ip)
             subprocess.check_output(

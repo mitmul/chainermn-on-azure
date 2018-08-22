@@ -13,10 +13,10 @@ from setup import get_id
 def delete_disk(resource_group, vmss_name, disk):
     if disk.startswith('disk-'):
         ip = disk.split('-')[-1]
-        instance_id = int(get_id(resource_group, vmss_name, ip))
 
-        print('Detaching {} from {}'.format(disk, instance_id))
+        print('Detaching {} from {}'.format(disk, ip))
         try:
+            instance_id = int(get_id(resource_group, vmss_name, ip))
             subprocess.check_output(
                 'az vmss disk detach --lun 0 -g {} --name {} --instance-id {}'.format(
                     resource_group, vmss_name, instance_id),
