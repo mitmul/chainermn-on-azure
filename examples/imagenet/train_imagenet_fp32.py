@@ -99,7 +99,6 @@ def main():
     #
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
-    print('device:', device)
     chainer.cuda.get_device(device).use()
     chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
     chainer.config.use_cudnn_tensor_core = 'auto'
