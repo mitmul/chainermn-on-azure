@@ -4,6 +4,10 @@ for ((i=1; i <= 128; i=i*2));
 do
     echo "# of GPUs: $i"
     bash run_test.sh $i
+    bash run_test.sh $i
+    bash run_test.sh $i
+    bash run_test.sh $i
+    bash run_test.sh $i
     echo "done"
     sleep 1m
 done

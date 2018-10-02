@@ -15,7 +15,7 @@ train_random.txt \
 val_random.txt \
 --root_train /imagenet1k/ILSVRC/Data/CLS-LOC/train \
 --root_val /imagenet1k/ILSVRC//Data/CLS-LOC/val \
---batchsize 64 \
+--batchsize 32 \
 --communicator non_cuda_aware \
 --out result/scaleout_$1 \
 --test

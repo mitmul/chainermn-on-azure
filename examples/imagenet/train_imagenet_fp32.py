@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import argparse
+import datetime
 import json
 import multiprocessing
 import os
@@ -112,6 +113,11 @@ def main():
     #
     if comm.rank == 0:
         result_directory = args.out
+        if os.path.exists(result_directory):
+            n = datetime.datetime.now()
+            result_directory += '_batchsize-{}_'.format(args.batchsize) + n.strftime('%Y-%m-%d_%H-%M-%S-%f')
+        if not os.path.exists(result_directory):
+            os.makedirs(result_directory)
     else:
         import tempfile
         result_directory = tempfile.mkdtemp(dir='/tmp/')
@@ -159,7 +165,7 @@ def main():
             'n_gpus': comm.size,
             'lr': lr
         }
-        json.dump(info, open(os.path.join(args.out, 'info.json'), 'w'))
+        json.dump(info, open(os.path.join(result_directory, 'info.json'), 'w'))
 
     weight_decay = 0.0001
     optimizer = chainer.optimizers.MomentumSGD(lr=lr, momentum=0.9)

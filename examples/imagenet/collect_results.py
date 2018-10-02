@@ -17,7 +17,7 @@ args = parser.parse_args()
 result = []
 for fn in sorted(glob.glob('{}/*/log'.format(args.dirname))):
     try:
-        n_gpus = int(os.path.dirname(fn).split('_')[-1])
+        n_gpus = int(os.path.dirname(fn).split('_')[1])
         log = json.load(open(fn))
         whole_time = log[-1]['elapsed_time'] - log[0]['elapsed_time']
         n_iter = log[-1]['iteration'] - log[0]['iteration']
