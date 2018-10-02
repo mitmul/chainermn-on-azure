@@ -68,7 +68,7 @@ If it finds a broken instance, it deletes that from the VMSS.
 This shell script runs IMB-MPI1 Pingpong benchmark to check the performance of nodes.
 
 ```
-python check_pingpong.py
+python check_pingpong.py -d
 ```
 
 ## Try MNIST training

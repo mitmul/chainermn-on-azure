@@ -34,7 +34,7 @@ def upload_script_files(location, resource_group, account_name, share_name, cont
             resource_group_name=resource_group,
             account_name=account_name,
             parameters=StorageAccountCreateParameters(
-                sku=Sku('Standard_LRS'),
+                sku=Sku(name='Standard_LRS'),
                 kind=Kind.storage,
                 location=location
             )

@@ -14,7 +14,7 @@ def main():
     parser.add_argument('--vmss-name', type=str, default='vmss')
     parser.add_argument('--home-dir', type=str, default='/share/home/hpcuser')
     parser.add_argument('--num', '-n', type=int, default=32)
-    parser.add_argument('--delete-slow-intances', '-d', action='store_true', default=False)
+    parser.add_argument('--delete-slow-instances', '-d', action='store_true', default=False)
     args = parser.parse_args()
 
     subprocess.check_output(
