@@ -17,4 +17,5 @@ val_random.txt \
 --root_val /imagenet1k/ILSVRC//Data/CLS-LOC/val \
 --batchsize 32 \
 --communicator non_cuda_aware \
---out result/scaleout_$1
+--out result/scaleout_$1 \
+--test

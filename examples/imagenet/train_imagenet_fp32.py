@@ -99,6 +99,7 @@ def main():
     #
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
+    print('device:', device)
     chainer.cuda.get_device(device).use()
     chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
     chainer.config.use_cudnn_tensor_core = 'auto'
@@ -181,9 +182,10 @@ def main():
     updater = training.StandardUpdater(train_iter, optimizer, converter=converter, device=device)
     trainer = training.Trainer(updater, train_length, result_directory)
 
-    evaluator = extensions.Evaluator(val_iter, model, converter=converter, device=device)
-    evaluator = chainermn.create_multi_node_evaluator(evaluator, comm)
-    trainer.extend(evaluator, trigger=val_interval, name='val')
+    if not args.test:
+        evaluator = extensions.Evaluator(val_iter, model, converter=converter, device=device)
+        evaluator = chainermn.create_multi_node_evaluator(evaluator, comm)
+        trainer.extend(evaluator, trigger=val_interval, name='val')
 
     if not args.test:
         trainer.extend(

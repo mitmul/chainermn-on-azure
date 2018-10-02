@@ -142,7 +142,7 @@ def main():
 
     ips = [ip.strip() for ip in open(os.path.join(args.home_dir, 'hosts.txt'))]
 
-    p = Pool(2)
+    p = Pool(1)
     res = [p.apply_async(prepare_disk, args=(args.resource_group, args.vmss_name, ip, disk_snapshot))
            for ip in ips]
     for r in res:
