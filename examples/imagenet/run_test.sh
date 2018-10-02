@@ -10,7 +10,7 @@ mpirun \
 -genvall \
 -genv I_MPI_DAPL_TRANSLATION_CACHE=1 \
 -genv I_MPI_RDMA_SCALABLE_PROGRESS=0 \
-python train_imagenet_full.py \
+python train_imagenet_fp32.py \
 train_random.txt \
 val_random.txt \
 --root_train /imagenet1k/ILSVRC/Data/CLS-LOC/train \

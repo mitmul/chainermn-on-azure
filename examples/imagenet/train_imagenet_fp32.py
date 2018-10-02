@@ -15,6 +15,7 @@ from chainer import training
 import chainer.cuda
 import chainer.links as L
 from chainer.training import extensions
+from chainer.dataset import convert
 from chainercv import transforms
 import resnet50
 
@@ -90,7 +91,7 @@ def main():
     parser.add_argument('--out', '-o', default='result',
                         help='Output directory')
     parser.add_argument('--communicator', default='non_cuda_aware')
-    parser.set_defaults(test=False)
+    parser.add_argument('--test', action='store_true', default=False)
     args = parser.parse_args()
 
     #
@@ -99,8 +100,10 @@ def main():
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1 * 1024 * 1024 * 1024)
+    chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
+    chainer.config.use_cudnn_tensor_core = 'auto'
     chainer.config.autotune = True
+    chainer.config.cudnn_fast_batch_normalization = True
     if comm.rank == 0:
         print('Initialized')
 
@@ -140,6 +143,7 @@ def main():
         train, args.batchsize, n_processes=args.loaderjob)
     val_iter = chainer.iterators.MultiprocessIterator(
         val, args.batchsize, repeat=False, n_processes=args.loaderjob)
+    converter = convert.ConcatWithAsyncTransfer()
 
     #
     # Optimizer
@@ -166,20 +170,25 @@ def main():
     #
     # Trainer
     #
-    log_interval = (1, 'epoch')
-    val_interval = (1, 'epoch')
-    stop_trigger = (90, 'epoch')
+    if args.test:
+        log_interval = (10, 'iteration')
+        train_length = (210, 'iteration')
+    else:
+        log_interval = (10, 'iteration')
+        val_interval = (1, 'epoch')
+        train_length = (90, 'epoch')
 
-    updater = training.StandardUpdater(train_iter, optimizer, device=device)
-    trainer = training.Trainer(updater, stop_trigger, result_directory)
+    updater = training.StandardUpdater(train_iter, optimizer, converter=converter, device=device)
+    trainer = training.Trainer(updater, train_length, result_directory)
 
-    evaluator = extensions.Evaluator(val_iter, model, device=device)
+    evaluator = extensions.Evaluator(val_iter, model, converter=converter, device=device)
     evaluator = chainermn.create_multi_node_evaluator(evaluator, comm)
     trainer.extend(evaluator, trigger=val_interval, name='val')
 
-    trainer.extend(
-        trigger=(30, 'epoch'),
-        extension=extensions.ExponentialShift('lr', 0.1, optimizer=optimizer))
+    if not args.test:
+        trainer.extend(
+            trigger=(30, 'epoch'),
+            extension=extensions.ExponentialShift('lr', 0.1, optimizer=optimizer))
 
     log_report_ext = extensions.LogReport(trigger=log_interval)
     trainer.extend(log_report_ext)
