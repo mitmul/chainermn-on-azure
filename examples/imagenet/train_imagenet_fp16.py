@@ -145,6 +145,11 @@ def main():
     #
     if comm.rank == 0:
         result_directory = args.out
+        if os.path.exists(result_directory):
+            n = datetime.datetime.now()
+            result_directory += '_batchsize-{}_'.format(args.batchsize) + n.strftime('%Y-%m-%d_%H-%M-%S-%f')
+        if not os.path.exists(result_directory):
+            os.makedirs(result_directory)
     else:
         import tempfile
         result_directory = tempfile.mkdtemp(dir='/tmp/')

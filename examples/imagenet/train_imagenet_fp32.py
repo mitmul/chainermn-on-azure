@@ -101,7 +101,7 @@ def main():
     comm = chainermn.create_communicator(args.communicator)
     device = comm.intra_rank
     chainer.cuda.get_device(device).use()
-    chainer.cuda.set_max_workspace_size(1048 * 1024 * 1024)
+    chainer.cuda.set_max_workspace_size(1024 * 1024 * 1024)
     chainer.config.use_cudnn_tensor_core = 'auto'
     chainer.config.autotune = True
     chainer.config.cudnn_fast_batch_normalization = True
@@ -180,7 +180,7 @@ def main():
         log_interval = (10, 'iteration')
         train_length = (210, 'iteration')
     else:
-        log_interval = (10, 'iteration')
+        log_interval = (1, 'epoch')
         val_interval = (1, 'epoch')
         train_length = (90, 'epoch')
 
